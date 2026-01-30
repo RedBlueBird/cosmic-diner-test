@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Diner: Terminal Simulation</title>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #33ff33;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #terminal {
+            width: 900px;
+            height: 600px;
+            border: 2px solid #33ff33;
+            background-color: #000;
+            display: grid;
+            grid-template-columns: 250px 1fr 250px;
+            grid-template-rows: 80px 1fr 150px;
+            gap: 10px;
+            padding: 10px;
+            box-shadow: 0 0 20px rgba(51, 255, 51, 0.2);
+            position: relative;
+        }
+
+        /* Scanlines */
+        #terminal::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* Layout Areas */
+        header {
+            grid-column: 1 / -1;
+            border-bottom: 1px dashed #33ff33;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10px;
+            font-weight: bold;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        /* Progress Bar */
+        #progress-container {
+            width: 100%;
+            height: 15px;
+            border: 1px solid #555;
+            background-color: #111;
+            position: relative;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background-color: #33ff33;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        #progress-text {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #000;
+            line-height: 15px;
+            font-weight: bold;
+        }
+
+        #left-panel {
+            grid-column: 1;
+            border-right: 1px dashed #33ff33;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        #center-panel {
+            grid-column: 2;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        #right-panel {
+            grid-column: 3;
+            border-left: 1px dashed #33ff33;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        #log-panel {
+            grid-column: 1 / -1;
+            border-top: 1px dashed #33ff33;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 0.9em;
+            color: #aaffaa;
+        }
+
+        /* UI Elements */
+        .btn {
+            background: transparent;
+            border: 1px solid #33ff33;
+            color: #33ff33;
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: inherit;
+            text-transform: uppercase;
+            font-size: 0.85em;
+        }
+        .btn:hover {
+            background: #33ff33;
+            color: #000;
+        }
+        .btn:disabled {
+            border-color: #555;
+            color: #555;
+            cursor: not-allowed;
+        }
+
+        .item-slot {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+            cursor: pointer;
+        }
+        .item-slot:hover {
+            background-color: #113311;
+        }
+        .item-slot.selected {
+            background-color: #33ff33;
+            color: #000;
+        }
+
+        .ascii-art {
+            white-space: pre;
+            font-size: 10px;
+            line-height: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
+
+        .design-alert {
+            color: #ff3333;
+            font-weight: bold;
+        }
+        
+        .game-over {
+            color: #ff3333;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #000;
+            border: 2px solid #33ff33;
+            padding: 20px;
+            z-index: 10;
+            width: 350px;
+            max-height: 500px;
+            overflow-y: auto;
+            box-shadow: 0 0 30px rgba(51, 255, 51, 0.5);
+            text-align: center;
+        }
+        .hidden { display: none; }
+        .grid-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .sanity-critical { animation: pulse 1s infinite; }
+        @keyframes pulse {
+            0%, 100% { color: #ff3333; }
+            50% { color: #ff9999; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="terminal">
+    <header>
+        <div class="header-top">
+            <span>COSMIC DINER v0.3</span>
+            <span>DAY: <span id="day-display">1</span> | RENT DUE: $<span id="rent-display">20</span></span>
+        </div>
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+            <div id="progress-text">SHIFT PROGRESS</div>
+        </div>
+    </header>
+
+    <div id="left-panel">
+        <h3>STATUS</h3>
+        <div>MONEY: $<span id="money">50</span></div>
+        <div>SANITY: <span id="sanity">100</span>%</div>
+        <br>
+        <h3>COUNTERTOP (Storage)</h3>
+        <div id="countertop-list">
+            <!-- Items go here -->
+        </div>
+        <br>
+        <button class="btn" onclick="game.clearSelection()">Deselect All</button>
+    </div>
+
+    <div id="center-panel">
+        <div class="ascii-art" id="appliance-art">
+   _____  
+  |     | 
+  |  P  | 
+  |_____| 
+   /   \  
+        </div>
+        
+        <h3>KITCHEN APPLIANCES</h3>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+            <button class="btn" onclick="game.useFridge()">[FRIDGE]</button>
+            <button class="btn" onclick="game.usePan()">[PAN]</button>
+            <button class="btn" onclick="game.useBoard()">[BOARD]</button>
+            <button class="btn" onclick="game.useAmp()">[AMP]</button>
+            <button class="btn" onclick="game.useMicrowave()">[MICRO]</button>
+            <button class="btn" onclick="game.useTrash()">[TRASH]</button>
+        </div>
+
+        <br>
+        <h3>ACTIONS</h3>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+            <button class="btn" onclick="game.tasteTest()">[TASTE -10 S]</button>
+            <button class="btn" onclick="game.serveCustomer()">[SERVE]</button>
+        </div>
+    </div>
+
+    <div id="right-panel">
+        <h3>CURRENT CUSTOMER</h3>
+        <div id="customer-view">
+            <pre id="customer-avatar">
+   O
+  /|\  
+  / \
+            </pre>
+            <p id="customer-name" style="font-weight:bold;">Unknown</p>
+            <p>"<span id="customer-quote">...</span>"</p>
+            <p>ORDER: <span id="customer-order" style="color:#ffff00">???</span></p>
+        </div>
+    </div>
+
+    <div id="log-panel">
+        <div>> SYSTEM INITIALIZED...</div>
+    </div>
+
+    <!-- Modal for Fridge -->
+    <div id="fridge-modal" class="modal hidden">
+        <h3>FRIDGE STORAGE</h3>
+        <div id="fridge-items" class="grid-buttons">
+            <!-- Buttons injected here -->
+        </div>
+        <button class="btn" onclick="game.closeFridge()">[CLOSE]</button>
+    </div>
+</div>
+
+<script>
+/* EXPANDED GAME DATA & LOGIC */
+
+const RECIPES = {
+    // Basic Combinations (Pan)
+    "Rice+Meat": "Beef Bowl", "Meat+Rice": "Beef Bowl",
+    "Water+Heat": "Steam", "Heat+Water": "Steam",
+    "Meat+Heat": "Steak", "Heat+Meat": "Steak",
+    "Bread+Meat": "Burger", "Meat+Bread": "Burger",
+    "Bread+Heat": "Toast", "Heat+Bread": "Toast",
+    "Bread+Water": "Soggy Bread", "Water+Bread": "Soggy Bread",
+    "Meat+Pepper": "Spicy Meat", "Pepper+Meat": "Spicy Meat",
+    "Rice+Fish": "Sushi", "Fish+Rice": "Sushi",
+    
+    // Expanded Recipes
+    "Noodles+Water": "Ramen Base", "Water+Noodles": "Ramen Base",
+    "Noodles+Heat": "Fried Noodles", "Heat+Noodles": "Fried Noodles",
+    "Cheese+Bread": "Grilled Cheese", "Bread+Cheese": "Grilled Cheese",
+    "Cheese+Heat": "Melted Cheese", "Heat+Cheese": "Melted Cheese",
+    "Tomato+Heat": "Tomato Sauce", "Heat+Tomato": "Tomato Sauce",
+    "Egg+Heat": "Fried Egg", "Heat+Egg": "Fried Egg",
+    "Egg+Water": "Poached Egg", "Water+Egg": "Poached Egg",
+    "Rice+Egg": "Egg Rice", "Egg+Rice": "Egg Rice",
+    "Potato+Heat": "Baked Potato", "Heat+Potato": "Baked Potato",
+    "Potato+Oil": "French Fries", "Oil+Potato": "French Fries",
+    "Milk+Heat": "Hot Milk", "Heat+Milk": "Hot Milk",
+    "Milk+Ice": "Ice Cream Base", "Ice+Milk": "Ice Cream Base",
+    "Chocolate+Milk": "Chocolate Milk", "Milk+Chocolate": "Chocolate Milk",
+    "Coffee+Water": "Black Coffee", "Water+Coffee": "Black Coffee",
+    "Coffee+Milk": "Latte", "Milk+Coffee": "Latte",
+    "Tea+Water": "Tea", "Water+Tea": "Tea",
+    "Sugar+Water": "Sugar Water", "Water+Sugar": "Sugar Water",
+    "Salt+Water": "Salt Water", "Water+Salt": "Salt Water",
+    "Lettuce+Tomato": "Salad", "Tomato+Lettuce": "Salad",
+    "Meat+Salt": "Salted Meat", "Salt+Meat": "Salted Meat",
+    "Fish+Salt": "Salted Fish", "Salt+Fish": "Salted Fish",
+    "Oil+Heat": "Hot Oil", "Heat+Oil": "Hot Oil",
+    "Meat+Oil": "Fried Meat", "Oil+Meat": "Fried Meat",
+    "Fish+Oil": "Fried Fish", "Oil+Fish": "Fried Fish",
+    
+    // Complex Recipes
+    "Ramen Base+Egg": "Ramen", "Egg+Ramen Base": "Ramen",
+    "Tomato Sauce+Noodles": "Pasta", "Noodles+Tomato Sauce": "Pasta",
+    "Pasta+Cheese": "Mac and Cheese", "Cheese+Pasta": "Mac and Cheese",
+    "Burger+Cheese": "Cheeseburger", "Cheese+Burger": "Cheeseburger",
+    "Toast+Egg": "Egg Toast", "Egg+Toast": "Egg Toast",
+    "Salad+Oil": "Dressed Salad", "Oil+Salad": "Dressed Salad",
+    "Steak+Pepper": "Peppered Steak", "Pepper+Steak": "Peppered Steak",
+    "Ice Cream Base+Sugar": "Ice Cream", "Sugar+Ice Cream Base": "Ice Cream",
+    "Chocolate Milk+Ice": "Chocolate Shake", "Ice+Chocolate Milk": "Chocolate Shake",
+    "Latte+Sugar": "Sweet Latte", "Sugar+Latte": "Sweet Latte",
+    "French Fries+Salt": "Salted Fries", "Salt+French Fries": "Salted Fries",
+    "Fried Egg+Rice": "Egg Fried Rice", "Rice+Fried Egg": "Egg Fried Rice",
+    "Sushi+Pepper": "Spicy Sushi", "Pepper+Sushi": "Spicy Sushi",
+    "Beef Bowl+Egg": "Deluxe Beef Bowl", "Egg+Beef Bowl": "Deluxe Beef Bowl",
+    
+    // Void Combinations
+    "Void+Void": "The Abyss", 
+    "Void+Rice": "Void", "Rice+Void": "Void",
+    "Void+Meat": "Void", "Meat+Void": "Void",
+    "Void+Water": "Void", "Water+Void": "Void",
+    
+    // Fire Combinations
+    "Fire+Bread": "Charred Bread", "Bread+Fire": "Charred Bread",
+    "Fire+Meat": "Charred Meat", "Meat+Fire": "Charred Meat",
+    "Fire+Rice": "Burnt Rice", "Rice+Fire": "Burnt Rice",
+    "Fire+Oil": "Grease Fire", "Oil+Fire": "Grease Fire",
+    
+    // Mutations (Microwave)
+    "Meat": "Mystery Meat",
+    "Fish": "Three-Eyed Fish",
+    "Egg": "Glowing Egg",
+    "Potato": "Mutant Potato",
+    "Cheese": "Sentient Cheese",
+    
+    // Amplifications (Amplifier)
+    "Heat": "Fire",
+    "Pepper": "Ghost Pepper",
+    "Steak": "Charred Steak",
+    "Spicy Meat": "Inferno Meat",
+    "Ice": "Absolute Zero",
+    "Salt": "Salt Crystal",
+    "Sugar": "Pure Sugar",
+    "Coffee": "Espresso Shot",
+    "Sadness": "Depression",
+    "Fear": "Terror",
+};
+
+const ATOMS = [
+    "Rice", "Meat", "Water", "Heat", "Bread", "Pepper", "Fish",
+    "Noodles", "Cheese", "Tomato", "Egg", "Potato", "Oil", "Milk",
+    "Ice", "Chocolate", "Coffee", "Tea", "Sugar", "Salt", "Lettuce",
+    "Void", "Sadness", "Fear"
+];
+
+const ATTRIBUTES = {
+    // Basic Items
+    "Rice": ["Bland", "Filling"], 
+    "Meat": ["Raw", "Protein"], 
+    "Water": ["Wet", "Pure"], 
+    "Heat": ["Hot", "Burning"],
+    "Bread": ["Bland", "Carbs"], 
+    "Pepper": ["Spicy", "Sharp"], 
+    "Fish": ["Raw", "Fishy", "Protein"],
+    "Noodles": ["Bland", "Chewy"],
+    "Cheese": ["Creamy", "Salty"],
+    "Tomato": ["Tangy", "Juicy"],
+    "Egg": ["Rich", "Protein"],
+    "Potato": ["Starchy", "Filling"],
+    "Oil": ["Greasy", "Slippery"],
+    "Milk": ["Creamy", "Rich"],
+    "Ice": ["Cold", "Refreshing"],
+    "Chocolate": ["Sweet", "Rich"],
+    "Coffee": ["Bitter", "Energizing"],
+    "Tea": ["Calming", "Herbal"],
+    "Sugar": ["Sweet", "Crystalline"],
+    "Salt": ["Salty", "Mineral"],
+    "Lettuce": ["Crunchy", "Fresh"],
+    "Void": ["Empty", "Terrifying"],
+    "Sadness": ["Depressing", "Blue"],
+    "Fear": ["Scary", "Unsettling"],
+    
+    // Cooked Items
+    "Beef Bowl": ["Salty", "Filling", "Savory"],
+    "Steak": ["Salty", "Savory", "Protein"],
+    "Burger": ["Filling", "Salty", "Savory"],
+    "Toast": ["Dry", "Crunchy", "Warm"],
+    "Soggy Bread": ["Wet", "Sad", "Mushy"],
+    "Sushi": ["Fishy", "Cold", "Fresh"],
+    "Spicy Meat": ["Spicy", "Savory", "Hot"],
+    "Steam": ["Hot", "Wet", "Pure"],
+    "Fire": ["Burning", "Dangerous", "Bright"],
+    "Ramen Base": ["Soupy", "Warm", "Mild"],
+    "Ramen": ["Soupy", "Filling", "Savory"],
+    "Fried Noodles": ["Oily", "Savory", "Hot"],
+    "Grilled Cheese": ["Cheesy", "Warm", "Comforting"],
+    "Melted Cheese": ["Gooey", "Hot", "Savory"],
+    "Tomato Sauce": ["Tangy", "Savory", "Warm"],
+    "Fried Egg": ["Protein", "Savory", "Rich"],
+    "Poached Egg": ["Soft", "Delicate", "Rich"],
+    "Egg Rice": ["Filling", "Savory", "Simple"],
+    "Baked Potato": ["Starchy", "Warm", "Fluffy"],
+    "French Fries": ["Crispy", "Salty", "Greasy"],
+    "Hot Milk": ["Warm", "Comforting", "Creamy"],
+    "Ice Cream Base": ["Cold", "Creamy", "Sweet"],
+    "Chocolate Milk": ["Sweet", "Rich", "Creamy"],
+    "Black Coffee": ["Bitter", "Energizing", "Strong"],
+    "Latte": ["Creamy", "Mild", "Warm"],
+    "Tea": ["Calming", "Warm", "Herbal"],
+    "Sugar Water": ["Sweet", "Liquid"],
+    "Salt Water": ["Salty", "Undrinkable"],
+    "Salad": ["Fresh", "Crunchy", "Healthy"],
+    "Salted Meat": ["Salty", "Preserved", "Savory"],
+    "Salted Fish": ["Salty", "Fishy", "Preserved"],
+    "Hot Oil": ["Burning", "Dangerous", "Oily"],
+    "Fried Meat": ["Crispy", "Greasy", "Savory"],
+    "Fried Fish": ["Crispy", "Fishy", "Greasy"],
+    "Pasta": ["Tangy", "Filling", "Savory"],
+    "Mac and Cheese": ["Cheesy", "Creamy", "Comforting"],
+    "Cheeseburger": ["Filling", "Cheesy", "Savory"],
+    "Egg Toast": ["Protein", "Crunchy", "Savory"],
+    "Dressed Salad": ["Fresh", "Oily", "Healthy"],
+    "Peppered Steak": ["Spicy", "Savory", "Protein"],
+    "Ice Cream": ["Cold", "Sweet", "Creamy"],
+    "Chocolate Shake": ["Cold", "Sweet", "Rich"],
+    "Sweet Latte": ["Sweet", "Creamy", "Warm"],
+    "Salted Fries": ["Crispy", "Salty", "Greasy"],
+    "Egg Fried Rice": ["Savory", "Filling", "Protein"],
+    "Spicy Sushi": ["Spicy", "Fishy", "Fresh"],
+    "Deluxe Beef Bowl": ["Salty", "Filling", "Rich"],
+    
+    // Mutations
+    "Ghost Pepper": ["Painful", "Spicy", "Extreme"],
+    "Mystery Meat": ["Radioactive", "Chewy", "Glowing"],
+    "Three-Eyed Fish": ["Radioactive", "Fishy", "Mutated"],
+    "Radioactive Slime": ["Radioactive", "Slimy", "Toxic"],
+    "Glowing Egg": ["Radioactive", "Eerie", "Bright"],
+    "Mutant Potato": ["Radioactive", "Writhing", "Strange"],
+    "Sentient Cheese": ["Alive", "Creamy", "Thinking"],
+    "Charred Steak": ["Burnt", "Crispy", "Overcooked"],
+    "Inferno Meat": ["Burning", "Spicy", "Extreme"],
+    "Absolute Zero": ["Freezing", "Painful", "Extreme"],
+    "Salt Crystal": ["Salty", "Hard", "Pure"],
+    "Pure Sugar": ["Sweet", "Intense", "Crystalline"],
+    "Espresso Shot": ["Bitter", "Energizing", "Intense"],
+    "Depression": ["Soul-Crushing", "Dark", "Heavy"],
+    "Terror": ["Paralyzing", "Horrifying", "Intense"],
+    
+    // Void & Fire
+    "The Abyss": ["Infinite", "Terrifying", "Empty"],
+    "Charred Bread": ["Burnt", "Crispy", "Bitter"],
+    "Charred Meat": ["Burnt", "Smoky", "Overcooked"],
+    "Burnt Rice": ["Burnt", "Crispy", "Inedible"],
+    "Grease Fire": ["Burning", "Dangerous", "Uncontrollable"],
+};
+
+// EXPANDED Customer Pool - Now with 30+ unique customers
+const CUSTOMER_TYPES = [
+    // Human Customers (Basic)
+    { name: "Tired Salaryman", want: "Beef Bowl", hint: "Something filling and salty.", avatar: "   O \n  /|\\ \n  / \\" },
+    { name: "Gym Bro", want: "Steak", hint: "Pure protein. Cook it.", avatar: "  _O_ \n \\/|\\/ \n  / \\" },
+    { name: "Sad Student", want: "Toast", hint: "Just some warm bread...", avatar: "   O \n  /|\\ \n  / \\" },
+    { name: "Construction Worker", want: "Burger", hint: "Meat between buns.", avatar: "  =O= \n  /|\\ \n  / \\" },
+    { name: "Sushi Fanatic", want: "Sushi", hint: "Fresh fish and rice. No cooking.", avatar: "   O \n  <|\\ \n  / \\" },
+    { name: "Health Inspector", want: "Water", hint: "Just a glass of water. Inspection time.", avatar: "  [O] \n  /|\\ \n  / \\" },
+    
+    // Human Customers (Complex)
+    { name: "College Student", want: "Ramen", hint: "Cheap noodles in soup with egg.", avatar: "   o \n  /|\\ \n  / \\" },
+    { name: "Italian Chef", want: "Pasta", hint: "Noodles with tomato sauce!", avatar: "  @O@ \n  /|\\ \n  / \\" },
+    { name: "Cheese Lover", want: "Mac and Cheese", hint: "Pasta and cheese together.", avatar: "   O \n <|||> \n  / \\" },
+    { name: "Kid", want: "Grilled Cheese", hint: "I want cheese and bread!", avatar: "  ^o^ \n  /|\\ \n  / \\" },
+    { name: "American Tourist", want: "Cheeseburger", hint: "Burger with cheese on top!", avatar: "  $O$ \n  /|\\ \n  / \\" },
+    { name: "Breakfast Person", want: "Egg Toast", hint: "Egg on toast please.", avatar: "   O \n -/|\\ \n  / \\" },
+    { name: "Fast Food Fan", want: "Salted Fries", hint: "Fried potatoes with salt.", avatar: "   O \n >/|< \n  / \\" },
+    { name: "Asian Foodie", want: "Egg Fried Rice", hint: "Rice fried with egg.", avatar: "   O \n  /|\\~ \n  / \\" },
+    { name: "Spice Addict", want: "Spicy Sushi", hint: "Sushi but make it hurt.", avatar: "  ~O~ \n  /|\\ \n  / \\" },
+    { name: "Rich Businessman", want: "Deluxe Beef Bowl", hint: "Beef bowl with egg on top.", avatar: "  %O% \n  /|\\ \n  / \\" },
+    { name: "Coffee Addict", want: "Black Coffee", hint: "Pure coffee. No milk.", avatar: "  *O* \n  /|\\ \n  / \\" },
+    { name: "Cafe Regular", want: "Latte", hint: "Coffee with milk.", avatar: "   O \n ~/|\\ \n  / \\" },
+    { name: "Sweet Tooth", want: "Ice Cream", hint: "Cold sweet cream.", avatar: "  ^O^ \n  /|\\ \n  / \\" },
+    { name: "Shake Lover", want: "Chocolate Shake", hint: "Cold chocolate milk drink.", avatar: "   o \n  /|\\~ \n  / \\" },
+    { name: "Health Nut", want: "Salad", hint: "Lettuce and tomato together.", avatar: "  +O+ \n  /|\\ \n  / \\" },
+    { name: "Steak Expert", want: "Peppered Steak", hint: "Steak with pepper seasoning.", avatar: "  =O= \n  /|\\ \n  / \\" },
+    
+    // Weird/Dangerous Customers
+    { name: "Pyromaniac", want: "Fire", hint: "I want to eat pure HEAT.", avatar: "  ( ) \n  /|\\ \n  / \\" },
+    { name: "Chaos Enjoyer", want: "Mystery Meat", hint: "Microwave some meat. Surprise me.", avatar: "  ?O? \n  /|\\ \n  / \\" },
+    { name: "Alien Scout", want: "Three-Eyed Fish", hint: "Zognar wants radioactive swimmer.", avatar: "  oOo \n \\/|\\/ \n  / \\" },
+    { name: "Mad Scientist", want: "Glowing Egg", hint: "I need irradiated egg specimen.", avatar: "  (O) \n  /|\\ \n  / \\" },
+    { name: "Void Cultist", want: "Void", hint: "I seek the emptiness.", avatar: "  .O. \n  /|\\ \n  / \\" },
+    { name: "Demon", want: "Inferno Meat", hint: "MEAT. BURNING. NOW.", avatar: "  >O< \n /|||\\  \n  / \\" },
+    { name: "Ice Elemental", want: "Absolute Zero", hint: "Coldest thing possible.", avatar: "  *O* \n  \\|/ \n  / \\" },
+    { name: "Depression Spirit", want: "Depression", hint: "Amplify sadness for me.", avatar: "  _O_ \n  /|\\ \n  / \\" },
+    { name: "Eldritch Being", want: "The Abyss", hint: "Void combined with Void.", avatar: " {oOo} \n \\/|\\/ \n  / \\" },
+    { name: "Fire Demon", want: "Grease Fire", hint: "Oil and fire. Dangerous.", avatar: " \\|O|/ \n  /|\\ \n  / \\" },
+    { name: "Salt Miner", want: "Salt Crystal", hint: "Amplified pure salt.", avatar: "  #O# \n  /|\\ \n  / \\" },
+    { name: "Sugar Rush", want: "Pure Sugar", hint: "Sugar but amplified!", avatar: "  @O@ \n  /|\\ \n  / \\" },
+    { name: "Insomniac", want: "Espresso Shot", hint: "Amplified coffee. Strongest.", avatar: "  !O! \n  /|\\ \n  / \\" },
+];
+
+class Game {
+    constructor() {
+        this.money = 50;
+        this.sanity = 100;
+        this.day = 1;
+        this.rent = 20;
+        
+        this.customersPerDay = 3;
+        this.customersServedCount = 0;
+        this.isDayActive = true;
+        
+        this.countertop = [];
+        this.selectedIndices = [];
+        
+        this.log("DAY 1 INITIALIZED.");
+        this.log("RENT DUE END OF SHIFT: $" + this.rent);
+        
+        this.customer = null;
+        this.nextCustomer();
+    }
+
+    log(msg, type="neutral") {
+        const panel = document.getElementById('log-panel');
+        const div = document.createElement('div');
+        div.textContent = "> " + msg;
+        if(type === "error") div.style.color = "#ff3333";
+        if(type === "design") div.className = "design-alert";
+        if(type === "system") div.style.color = "#ffff00";
+        panel.appendChild(div);
+        panel.scrollTop = panel.scrollHeight;
+    }
+
+    nextCustomer() {
+        if (!this.isDayActive) return;
+        
+        const template = CUSTOMER_TYPES[Math.floor(Math.random() * CUSTOMER_TYPES.length)];
+        this.customer = { ...template };
+        
+        document.getElementById('customer-name').textContent = this.customer.name;
+        document.getElementById('customer-quote').textContent = this.customer.hint;
+        document.getElementById('customer-avatar').textContent = this.customer.avatar;
+        document.getElementById('customer-order').textContent = "???";
+        
+        this.log(`CUSTOMER ARRIVED: ${this.customer.name}`);
+        this.render();
+    }
+
+    // --- Actions ---
+
+    useFridge() {
+        if (!this.isDayActive) return;
+        const modal = document.getElementById('fridge-modal');
+        const list = document.getElementById('fridge-items');
+        list.innerHTML = ""; 
+
+        ATOMS.forEach(atom => {
+            const btn = document.createElement('button');
+            btn.className = "btn";
+            btn.textContent = atom;
+            btn.onclick = () => {
+                this.withdrawItem(atom);
+            };
+            list.appendChild(btn);
+        });
+
+        modal.classList.remove('hidden');
+    }
+
+    closeFridge() {
+        document.getElementById('fridge-modal').classList.add('hidden');
+    }
+
+    withdrawItem(atom) {
+        if (this.countertop.length >= 8) {
+            this.log("Countertop is full!", "error");
+            this.closeFridge();
+            return;
+        }
+        this.countertop.push(atom);
+        this.log(`Withdrew ${atom} from Fridge.`);
+        this.render();
+        this.closeFridge();
+    }
+
+    usePan() {
+        if (!this.isDayActive) return;
+        if (this.selectedIndices.length !== 2) {
+            this.log("PAN requires exactly 2 items selected.", "error");
+            return;
+        }
+
+        const item1 = this.countertop[this.selectedIndices[0]];
+        const item2 = this.countertop[this.selectedIndices[1]];
+        const key = item1 + "+" + item2;
+        
+        let result = RECIPES[key];
+        
+        if (!result) {
+            result = "Burnt Slop";
+            this.log(`Failed Combo: ${item1} + ${item2} = ${result}`, "error");
+        } else {
+            this.log(`Cooking: ${item1} + ${item2} -> ${result}`);
+        }
+
+        this.selectedIndices.sort((a,b) => b-a);
+        this.countertop.splice(this.selectedIndices[0], 1);
+        this.countertop.splice(this.selectedIndices[1], 1);
+        this.countertop.push(result);
+        this.clearSelection();
+        this.render();
+    }
+
+    useBoard() {
+        if (!this.isDayActive) return;
+        if (this.selectedIndices.length !== 1) {
+            this.log("CHOPPING BOARD requires 1 item selected.", "error");
+            return;
+        }
+
+        const item = this.countertop[this.selectedIndices[0]];
+        
+        let ingredients = null;
+        for (let [key, val] of Object.entries(RECIPES)) {
+            if (val === item && key.includes("+")) {
+                ingredients = key.split("+");
+                break;
+            }
+        }
+
+        if (ingredients) {
+            this.log(`Chopping: ${item} -> ${ingredients[0]} + ${ingredients[1]}`);
+            this.countertop.splice(this.selectedIndices[0], 1);
+            this.countertop.push(ingredients[0]);
+            this.countertop.push(ingredients[1]);
+        } else {
+            this.log(`Cannot split ${item}. It is atomic or generic.`, "error");
+        }
+        this.clearSelection();
+        this.render();
+    }
+
+    useAmp() {
+        if (!this.isDayActive) return;
+        if (this.selectedIndices.length !== 1) {
+            this.log("AMPLIFIER requires 1 item.", "error");
+            return;
+        }
+        const item = this.countertop[this.selectedIndices[0]];
+        
+        // Check if amplification recipe exists
+        if (RECIPES[item] && !item.includes("+")) {
+            this.countertop[this.selectedIndices[0]] = RECIPES[item];
+            this.log(`Amplified ${item} into ${RECIPES[item]}!`);
+        } else {
+            this.log("Nothing happened. Item cannot be amplified.", "error");
+        }
+        
+        this.clearSelection();
+        this.render();
+    }
+
+    useMicrowave() {
+        if (!this.isDayActive) return;
+        if (this.selectedIndices.length !== 1) {
+            this.log("MICROWAVE requires 1 item.", "error");
+            return;
+        }
+        const item = this.countertop[this.selectedIndices[0]];
+        const chance = Math.random();
+        
+        this.countertop.splice(this.selectedIndices[0], 1);
+
+        // Check if specific mutation exists
+        if (RECIPES[item] && (item === "Meat" || item === "Fish" || item === "Egg" || item === "Potato" || item === "Cheese")) {
+            const result = RECIPES[item];
+            this.log(`Microwave mutated ${item} into ${result}!`);
+            this.countertop.push(result);
+        } else if (chance > 0.7) {
+            this.log("Microwave mutated item into: RADIOACTIVE SLIME", "error");
+            this.countertop.push("Radioactive Slime");
+        } else {
+            this.log(`Microwave just made ${item} really hot...`);
+            this.countertop.push("Hot " + item);
+        }
+        this.clearSelection();
+        this.render();
+    }
+
+    useTrash() {
+        if (!this.isDayActive) return;
+        if (this.selectedIndices.length === 0) return;
+        this.selectedIndices.sort((a,b) => b-a);
+        this.selectedIndices.forEach(idx => {
+            this.log(`Trashed ${this.countertop[idx]}`);
+            this.countertop.splice(idx, 1);
+        });
+        this.clearSelection();
+        this.render();
+    }
+
+    tasteTest() {
+        if (!this.isDayActive) return;
+        if (this.selectedIndices.length !== 1) {
+            this.log("Select 1 item to taste.", "error");
+            return;
+        }
+        const item = this.countertop[this.selectedIndices[0]];
+        this.sanity -= 10;
+        
+        let traits = ATTRIBUTES[item] || ["Unknown"];
+        this.log(`TASTED ${item}. Traits: ${traits.join(", ")}`);
+        
+        if (this.sanity <= 0) {
+            this.gameOver("SANITY DEPLETED");
+            return;
+        }
+        
+        if (this.sanity <= 30) {
+            this.log("Reality distorting... (Sanity Critical!)", "design");
+        } else if (this.sanity <= 50) {
+            this.log("Vision blurring... (Sanity Low)", "design");
+        }
+        
+        this.render();
+    }
+
+    serveCustomer() {
+        if (!this.isDayActive) return;
+        if (this.selectedIndices.length !== 1) {
+            this.log("Select 1 dish to serve.", "error");
+            return;
+        }
+        const item = this.countertop[this.selectedIndices[0]];
+        
+        this.log(`SERVING ${item} to ${this.customer.name}...`);
+        
+        if (item === this.customer.want) {
+            this.log("CUSTOMER: 'Delicious! Exactly what I wanted.'");
+            this.money += 15;
+            this.log("Received $15.");
+        } else {
+            this.log("CUSTOMER: 'This... is not what I asked for.'");
+            this.log("Customer left angry. No tip.", "error");
+        }
+        
+        this.countertop.splice(this.selectedIndices[0], 1);
+        this.clearSelection();
+        
+        this.customersServedCount++;
+        this.render();
+
+        if (this.customersServedCount >= this.customersPerDay) {
+            this.endDay();
+        } else {
+            setTimeout(() => {
+                this.nextCustomer();
+            }, 1500);
+        }
+    }
+
+    endDay() {
+        this.isDayActive = false;
+        this.log("=== SHIFT ENDED ===", "system");
+        
+        if (this.countertop.length > 0) {
+            this.log(`Discarded ${this.countertop.length} items from countertop.`);
+            this.countertop = [];
+        }
+
+        // Sanity Restoration (50% additive, capped at 100)
+        const sanityRestore = 50;
+        this.sanity = Math.min(100, this.sanity + sanityRestore);
+        this.log(`Sanity restored by ${sanityRestore}%. Current: ${this.sanity}%`, "system");
+
+        // Rent Deduction
+        this.log(`Deducting Rent: -$${this.rent}`);
+        this.money -= this.rent;
+        this.render();
+
+        if (this.money < 0) {
+            this.gameOver("BANKRUPT");
+            return;
+        }
+
+        setTimeout(() => {
+            this.startNextDay();
+        }, 3000);
+    }
+
+    startNextDay() {
+        this.day++;
+        this.customersServedCount = 0;
+        
+        // Exponential rent increase (50% per day)
+        this.rent = Math.floor(this.rent * 1.5);
+        
+        // Difficulty Ramp - more customers
+        this.customersPerDay = 3 + Math.floor(this.day / 2);
+        
+        this.log(`=== STARTING DAY ${this.day} ===`, "system");
+        this.log(`Rent increased to $${this.rent}. Customer Quota: ${this.customersPerDay}`);
+        
+        this.isDayActive = true;
+        this.render();
+        this.nextCustomer();
+    }
+
+    gameOver(reason) {
+        this.isDayActive = false;
+        this.log(`GAME OVER: ${reason}`, "error");
+        
+        const panel = document.getElementById('log-panel');
+        const gameOverDiv = document.createElement('div');
+        gameOverDiv.className = "game-over";
+        gameOverDiv.innerHTML = `
+            <br>
+            =============================<br>
+            GAME OVER: ${reason}<br>
+            DAYS SURVIVED: ${this.day}<br>
+            CUSTOMERS SERVED: ${this.customersServedCount + (this.day - 1) * 3}<br>
+            =============================<br>
+            <button class="btn" onclick="location.reload()">RESTART</button>
+        `;
+        panel.appendChild(gameOverDiv);
+    }
+
+    // --- UI Helpers ---
+
+    toggleSelection(index) {
+        if (this.selectedIndices.includes(index)) {
+            this.selectedIndices = this.selectedIndices.filter(i => i !== index);
+        } else {
+            this.selectedIndices.push(index);
+        }
+        this.render();
+    }
+
+    clearSelection() {
+        this.selectedIndices = [];
+        this.render();
+    }
+
+    render() {
+        document.getElementById('money').textContent = this.money;
+        
+        const sanityDisplay = document.getElementById('sanity');
+        sanityDisplay.textContent = this.sanity;
+        if (this.sanity <= 30) {
+            sanityDisplay.className = "sanity-critical";
+        } else {
+            sanityDisplay.className = "";
+        }
+        
+        document.getElementById('day-display').textContent = this.day;
+        document.getElementById('rent-display').textContent = this.rent;
+
+        const percentage = (this.customersServedCount / this.customersPerDay) * 100;
+        document.getElementById('progress-bar').style.width = percentage + "%";
+        document.getElementById('progress-text').textContent = 
+            `SHIFT PROGRESS: ${this.customersServedCount} / ${this.customersPerDay}`;
+
+        const list = document.getElementById('countertop-list');
+        list.innerHTML = "";
+        this.countertop.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = "item-slot" + (this.selectedIndices.includes(index) ? " selected" : "");
+            div.textContent = `[${index + 1}] ${item}`;
+            div.onclick = () => this.toggleSelection(index);
+            list.appendChild(div);
+        });
+
+        // Visual effects based on sanity
+        if (this.sanity < 20) {
+            document.body.style.filter = "sepia(100%) hue-rotate(300deg) blur(2px) saturate(200%)";
+        } else if (this.sanity < 50) {
+            document.body.style.filter = "sepia(50%) hue-rotate(300deg) blur(1px)";
+        } else {
+            document.body.style.filter = "none";
+        }
+    }
+}
+
+// Start
+const game = new Game();
+
+</script>
+</body>
+</html>
