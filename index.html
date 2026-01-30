@@ -390,149 +390,1028 @@ const ATOMS = [
     "Void", "Sadness", "Fear"
 ];
 
-const ATTRIBUTES = {
-    // Basic Items
-    "Rice": ["Bland", "Filling"], 
-    "Meat": ["Raw", "Protein"], 
-    "Water": ["Wet", "Pure"], 
-    "Heat": ["Hot", "Burning"],
-    "Bread": ["Bland", "Carbs"], 
-    "Pepper": ["Spicy", "Sharp"], 
-    "Fish": ["Raw", "Fishy", "Protein"],
-    "Noodles": ["Bland", "Chewy"],
-    "Cheese": ["Creamy", "Salty"],
-    "Tomato": ["Tangy", "Juicy"],
-    "Egg": ["Rich", "Protein"],
-    "Potato": ["Starchy", "Filling"],
-    "Oil": ["Greasy", "Slippery"],
-    "Milk": ["Creamy", "Rich"],
-    "Ice": ["Cold", "Refreshing"],
-    "Chocolate": ["Sweet", "Rich"],
-    "Coffee": ["Bitter", "Energizing"],
-    "Tea": ["Calming", "Herbal"],
-    "Sugar": ["Sweet", "Crystalline"],
-    "Salt": ["Salty", "Mineral"],
-    "Lettuce": ["Crunchy", "Fresh"],
-    "Void": ["Empty", "Terrifying"],
-    "Sadness": ["Depressing", "Blue"],
-    "Fear": ["Scary", "Unsettling"],
-    
-    // Cooked Items
-    "Beef Bowl": ["Salty", "Filling", "Savory"],
-    "Steak": ["Salty", "Savory", "Protein"],
-    "Burger": ["Filling", "Salty", "Savory"],
-    "Toast": ["Dry", "Crunchy", "Warm"],
-    "Soggy Bread": ["Wet", "Sad", "Mushy"],
-    "Sushi": ["Fishy", "Cold", "Fresh"],
-    "Spicy Meat": ["Spicy", "Savory", "Hot"],
-    "Steam": ["Hot", "Wet", "Pure"],
-    "Fire": ["Burning", "Dangerous", "Bright"],
-    "Ramen Base": ["Soupy", "Warm", "Mild"],
-    "Ramen": ["Soupy", "Filling", "Savory"],
-    "Fried Noodles": ["Oily", "Savory", "Hot"],
-    "Grilled Cheese": ["Cheesy", "Warm", "Comforting"],
-    "Melted Cheese": ["Gooey", "Hot", "Savory"],
-    "Tomato Sauce": ["Tangy", "Savory", "Warm"],
-    "Fried Egg": ["Protein", "Savory", "Rich"],
-    "Poached Egg": ["Soft", "Delicate", "Rich"],
-    "Egg Rice": ["Filling", "Savory", "Simple"],
-    "Baked Potato": ["Starchy", "Warm", "Fluffy"],
-    "French Fries": ["Crispy", "Salty", "Greasy"],
-    "Hot Milk": ["Warm", "Comforting", "Creamy"],
-    "Ice Cream Base": ["Cold", "Creamy", "Sweet"],
-    "Chocolate Milk": ["Sweet", "Rich", "Creamy"],
-    "Black Coffee": ["Bitter", "Energizing", "Strong"],
-    "Latte": ["Creamy", "Mild", "Warm"],
-    "Tea": ["Calming", "Warm", "Herbal"],
-    "Sugar Water": ["Sweet", "Liquid"],
-    "Salt Water": ["Salty", "Undrinkable"],
-    "Salad": ["Fresh", "Crunchy", "Healthy"],
-    "Salted Meat": ["Salty", "Preserved", "Savory"],
-    "Salted Fish": ["Salty", "Fishy", "Preserved"],
-    "Hot Oil": ["Burning", "Dangerous", "Oily"],
-    "Fried Meat": ["Crispy", "Greasy", "Savory"],
-    "Fried Fish": ["Crispy", "Fishy", "Greasy"],
-    "Pasta": ["Tangy", "Filling", "Savory"],
-    "Mac and Cheese": ["Cheesy", "Creamy", "Comforting"],
-    "Cheeseburger": ["Filling", "Cheesy", "Savory"],
-    "Egg Toast": ["Protein", "Crunchy", "Savory"],
-    "Dressed Salad": ["Fresh", "Oily", "Healthy"],
-    "Peppered Steak": ["Spicy", "Savory", "Protein"],
-    "Ice Cream": ["Cold", "Sweet", "Creamy"],
-    "Chocolate Shake": ["Cold", "Sweet", "Rich"],
-    "Sweet Latte": ["Sweet", "Creamy", "Warm"],
-    "Salted Fries": ["Crispy", "Salty", "Greasy"],
-    "Egg Fried Rice": ["Savory", "Filling", "Protein"],
-    "Spicy Sushi": ["Spicy", "Fishy", "Fresh"],
-    "Deluxe Beef Bowl": ["Salty", "Filling", "Rich"],
-    
-    // Mutations
-    "Ghost Pepper": ["Painful", "Spicy", "Extreme"],
-    "Mystery Meat": ["Radioactive", "Chewy", "Glowing"],
-    "Three-Eyed Fish": ["Radioactive", "Fishy", "Mutated"],
-    "Radioactive Slime": ["Radioactive", "Slimy", "Toxic"],
-    "Glowing Egg": ["Radioactive", "Eerie", "Bright"],
-    "Mutant Potato": ["Radioactive", "Writhing", "Strange"],
-    "Sentient Cheese": ["Alive", "Creamy", "Thinking"],
-    "Charred Steak": ["Burnt", "Crispy", "Overcooked"],
-    "Inferno Meat": ["Burning", "Spicy", "Extreme"],
-    "Absolute Zero": ["Freezing", "Painful", "Extreme"],
-    "Salt Crystal": ["Salty", "Hard", "Pure"],
-    "Pure Sugar": ["Sweet", "Intense", "Crystalline"],
-    "Espresso Shot": ["Bitter", "Energizing", "Intense"],
-    "Depression": ["Soul-Crushing", "Dark", "Heavy"],
-    "Terror": ["Paralyzing", "Horrifying", "Intense"],
-    
-    // Void & Fire
-    "The Abyss": ["Infinite", "Terrifying", "Empty"],
-    "Charred Bread": ["Burnt", "Crispy", "Bitter"],
-    "Charred Meat": ["Burnt", "Smoky", "Overcooked"],
-    "Burnt Rice": ["Burnt", "Crispy", "Inedible"],
-    "Grease Fire": ["Burning", "Dangerous", "Uncontrollable"],
+// Legacy string attributes (kept for reference)
+const ATTRIBUTES_LEGACY = {
+    "Rice": ["Bland", "Filling"], "Meat": ["Raw", "Protein"], "Water": ["Wet", "Pure"],
+    "Heat": ["Hot", "Burning"], "Bread": ["Bland", "Carbs"], "Pepper": ["Spicy", "Sharp"],
 };
 
-// EXPANDED Customer Pool - Now with 30+ unique customers
+// ============================================================================
+// NUMERICAL FOOD ATTRIBUTES SYSTEM
+// Each food has weighted values across multiple dimensions for geometry matching
+// ============================================================================
+
+// Default attribute template (all zeros)
+const DEFAULT_ATTRIBUTES = {
+    // Core Palette (Flavor & Sensation) - 0-10 scale
+    savory: 0,      // Umami richness
+    sweet: 0,       // Sugary notes
+    salty: 0,       // Mineral intensity
+    sour: 0,        // Acidity/tartness
+    bitter: 0,      // Sharp harsh notes
+    spicy: 0,       // Heat/burning sensation
+
+    // Physics (Texture & State)
+    temperature: 5, // 0=Absolute Zero, 5=Room Temp, 10=Hot, 15+=Inferno
+    moisture: 5,    // 0=Bone Dry, 5=Normal, 10=Liquid
+    grease: 0,      // Oil/fat content 0-10
+    crunch: 0,      // Crispy texture 0-10
+    chew: 5,        // Chewy texture 0-10
+    soft: 5,        // Soft/creamy 0-10
+
+    // Functional Stats
+    filling: 0,     // How satiating 0-10
+    energizing: 0,  // Caffeine/sugar rush 0-10
+    calming: 0,     // Stress reduction 0-10
+    health: 5,      // Safety to eat, negative=toxic, 0-10 normal
+
+    // Cosmic Layer (Eldritch)
+    sanity: 0,      // Positive=restore, negative=induce madness
+    sadness: 0,     // Gloom/melancholy induction
+    fear: 0,        // Terror induction
+    sentience: 0,   // Does the food think?
+    radioactivity: 0, // Mutation potential
+    voidLevel: 0,   // Existence erasure
+
+    // Boolean-ish flags (0 or 1, but can be fractional)
+    isVegetarian: 0,
+    isVegan: 0,
+    isRaw: 0,
+    isBurnt: 0,
+    containsBone: 0,
+    containsGluten: 0,
+};
+
+// Helper to create food attributes with defaults
+function createFoodAttr(overrides) {
+    return { ...DEFAULT_ATTRIBUTES, ...overrides };
+}
+
+const FOOD_ATTRIBUTES = {
+    // ==================== BASE ATOMS ====================
+    "Rice": createFoodAttr({
+        filling: 6, chew: 3, soft: 6, moisture: 4,
+        isVegetarian: 1, isVegan: 1, containsGluten: 0,
+    }),
+    "Meat": createFoodAttr({
+        savory: 6, filling: 7, chew: 7, health: 3,
+        isRaw: 1, containsBone: 0.3,
+    }),
+    "Water": createFoodAttr({
+        moisture: 10, health: 8, calming: 2,
+        isVegetarian: 1, isVegan: 1, soft: 10, chew: 0, filling: 0,
+    }),
+    "Heat": createFoodAttr({
+        temperature: 12, spicy: 2, health: -2,
+    }),
+    "Bread": createFoodAttr({
+        filling: 5, chew: 5, soft: 6, crunch: 2,
+        isVegetarian: 1, containsGluten: 1,
+    }),
+    "Pepper": createFoodAttr({
+        spicy: 6, bitter: 2, crunch: 3,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Fish": createFoodAttr({
+        savory: 5, salty: 2, filling: 5, chew: 5, health: 3,
+        isRaw: 1, containsBone: 0.5,
+    }),
+    "Noodles": createFoodAttr({
+        filling: 5, chew: 7, soft: 4,
+        isVegetarian: 1, containsGluten: 1,
+    }),
+    "Cheese": createFoodAttr({
+        savory: 6, salty: 5, filling: 4, soft: 7, grease: 4,
+        isVegetarian: 1, calming: 2,
+    }),
+    "Tomato": createFoodAttr({
+        sour: 5, sweet: 3, moisture: 7, soft: 6, health: 6,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Egg": createFoodAttr({
+        savory: 4, filling: 4, soft: 6, health: 5,
+        isVegetarian: 1, isRaw: 1,
+    }),
+    "Potato": createFoodAttr({
+        filling: 7, chew: 4, soft: 5, health: 5,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Oil": createFoodAttr({
+        grease: 10, moisture: 8, health: 2,
+        isVegetarian: 1, isVegan: 1, soft: 10,
+    }),
+    "Milk": createFoodAttr({
+        sweet: 2, soft: 10, moisture: 9, calming: 4, health: 6,
+        isVegetarian: 1,
+    }),
+    "Ice": createFoodAttr({
+        temperature: 0, moisture: 8, crunch: 6, health: 3,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Chocolate": createFoodAttr({
+        sweet: 8, bitter: 3, savory: 2, soft: 6, filling: 3,
+        isVegetarian: 1, calming: 3, energizing: 2,
+    }),
+    "Coffee": createFoodAttr({
+        bitter: 7, energizing: 8, health: 4, moisture: 2,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Tea": createFoodAttr({
+        bitter: 3, calming: 7, health: 6, moisture: 2,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Sugar": createFoodAttr({
+        sweet: 10, energizing: 5, crunch: 4, health: 2,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Salt": createFoodAttr({
+        salty: 10, crunch: 3, health: 1,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Lettuce": createFoodAttr({
+        crunch: 8, moisture: 6, health: 8, filling: 2,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Void": createFoodAttr({
+        voidLevel: 8, sanity: -5, fear: 3, health: -3,
+        temperature: 0, moisture: 0, filling: -2,
+    }),
+    "Sadness": createFoodAttr({
+        sadness: 8, sanity: -3, calming: -3, health: -1,
+        temperature: 3, moisture: 5,
+    }),
+    "Fear": createFoodAttr({
+        fear: 8, sanity: -4, energizing: 3, health: -2,
+    }),
+
+    // ==================== COOKED DISHES ====================
+    "Beef Bowl": createFoodAttr({
+        savory: 8, salty: 6, filling: 9, chew: 6, soft: 5,
+        temperature: 8, health: 6, calming: 3,
+    }),
+    "Steak": createFoodAttr({
+        savory: 9, salty: 4, filling: 8, chew: 8,
+        temperature: 8, health: 7, grease: 3,
+    }),
+    "Burger": createFoodAttr({
+        savory: 7, salty: 5, filling: 8, chew: 6, soft: 5,
+        temperature: 7, grease: 4, containsGluten: 1,
+    }),
+    "Toast": createFoodAttr({
+        crunch: 8, filling: 3, temperature: 7,
+        isVegetarian: 1, containsGluten: 1, moisture: 1,
+    }),
+    "Soggy Bread": createFoodAttr({
+        moisture: 9, soft: 9, sadness: 3, health: 2,
+        isVegetarian: 1, containsGluten: 1, filling: 3,
+    }),
+    "Sushi": createFoodAttr({
+        savory: 6, salty: 3, filling: 5, soft: 6, moisture: 4,
+        temperature: 4, health: 7, isRaw: 1, containsBone: 0.2,
+    }),
+    "Spicy Meat": createFoodAttr({
+        savory: 7, spicy: 6, filling: 7, chew: 7,
+        temperature: 8, health: 5,
+    }),
+    "Steam": createFoodAttr({
+        temperature: 10, moisture: 10, health: 3,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Fire": createFoodAttr({
+        temperature: 15, spicy: 3, health: -5, fear: 2,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Ramen Base": createFoodAttr({
+        savory: 4, salty: 4, moisture: 9, temperature: 8, filling: 4,
+        isVegetarian: 1, containsGluten: 1,
+    }),
+    "Ramen": createFoodAttr({
+        savory: 7, salty: 5, filling: 8, moisture: 8, chew: 6,
+        temperature: 8, calming: 4, containsGluten: 1,
+    }),
+    "Fried Noodles": createFoodAttr({
+        savory: 6, salty: 4, grease: 6, filling: 6, chew: 6,
+        temperature: 8, containsGluten: 1,
+    }),
+    "Grilled Cheese": createFoodAttr({
+        savory: 6, salty: 5, soft: 7, grease: 5, filling: 5,
+        temperature: 8, calming: 5, isVegetarian: 1, containsGluten: 1,
+    }),
+    "Melted Cheese": createFoodAttr({
+        savory: 6, salty: 5, soft: 9, grease: 5,
+        temperature: 9, isVegetarian: 1,
+    }),
+    "Tomato Sauce": createFoodAttr({
+        savory: 5, sour: 5, sweet: 3, moisture: 8, soft: 9,
+        temperature: 8, isVegetarian: 1, isVegan: 1, health: 6,
+    }),
+    "Fried Egg": createFoodAttr({
+        savory: 5, filling: 5, soft: 6, grease: 4,
+        temperature: 8, health: 7, isVegetarian: 1,
+    }),
+    "Poached Egg": createFoodAttr({
+        savory: 4, soft: 8, moisture: 6, filling: 4,
+        temperature: 7, health: 7, isVegetarian: 1,
+    }),
+    "Egg Rice": createFoodAttr({
+        savory: 5, filling: 7, soft: 6, chew: 4,
+        temperature: 7, isVegetarian: 1, calming: 2,
+    }),
+    "Baked Potato": createFoodAttr({
+        filling: 8, soft: 7, temperature: 8,
+        isVegetarian: 1, isVegan: 1, health: 6, calming: 3,
+    }),
+    "French Fries": createFoodAttr({
+        salty: 4, crunch: 8, grease: 7, filling: 5,
+        temperature: 8, isVegetarian: 1, isVegan: 1,
+    }),
+    "Hot Milk": createFoodAttr({
+        sweet: 2, soft: 10, moisture: 9, calming: 6,
+        temperature: 8, isVegetarian: 1, health: 6,
+    }),
+    "Ice Cream Base": createFoodAttr({
+        sweet: 5, soft: 9, moisture: 6, temperature: 1,
+        isVegetarian: 1, calming: 3,
+    }),
+    "Chocolate Milk": createFoodAttr({
+        sweet: 7, soft: 10, moisture: 8, calming: 4,
+        isVegetarian: 1, energizing: 2,
+    }),
+    "Black Coffee": createFoodAttr({
+        bitter: 8, energizing: 9, moisture: 8, temperature: 8,
+        isVegetarian: 1, isVegan: 1, health: 4,
+    }),
+    "Latte": createFoodAttr({
+        bitter: 4, sweet: 2, soft: 8, moisture: 8, energizing: 6,
+        temperature: 7, isVegetarian: 1, calming: 2,
+    }),
+    "Tea": createFoodAttr({
+        bitter: 3, calming: 8, moisture: 9, temperature: 8,
+        isVegetarian: 1, isVegan: 1, health: 7,
+    }),
+    "Sugar Water": createFoodAttr({
+        sweet: 8, moisture: 10, energizing: 4,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Salt Water": createFoodAttr({
+        salty: 9, moisture: 10, health: -2,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Salad": createFoodAttr({
+        crunch: 7, sour: 3, moisture: 5, health: 9, filling: 3,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Salted Meat": createFoodAttr({
+        savory: 7, salty: 8, filling: 6, chew: 7,
+        health: 4,
+    }),
+    "Salted Fish": createFoodAttr({
+        savory: 6, salty: 8, filling: 5, chew: 5,
+        health: 4, containsBone: 0.4,
+    }),
+    "Hot Oil": createFoodAttr({
+        temperature: 12, grease: 10, health: -4, fear: 1,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Fried Meat": createFoodAttr({
+        savory: 7, crunch: 6, grease: 7, filling: 7, chew: 5,
+        temperature: 8,
+    }),
+    "Fried Fish": createFoodAttr({
+        savory: 6, crunch: 7, grease: 6, filling: 5,
+        temperature: 8, containsBone: 0.3,
+    }),
+    "Pasta": createFoodAttr({
+        savory: 6, sour: 4, filling: 7, chew: 6, soft: 5,
+        temperature: 8, containsGluten: 1, isVegetarian: 1,
+    }),
+    "Mac and Cheese": createFoodAttr({
+        savory: 7, salty: 5, soft: 8, grease: 5, filling: 8,
+        temperature: 8, calming: 5, isVegetarian: 1, containsGluten: 1,
+    }),
+    "Cheeseburger": createFoodAttr({
+        savory: 8, salty: 6, filling: 9, chew: 6, soft: 5, grease: 5,
+        temperature: 7, containsGluten: 1,
+    }),
+    "Egg Toast": createFoodAttr({
+        savory: 5, crunch: 6, filling: 5, soft: 4,
+        temperature: 7, isVegetarian: 1, containsGluten: 1,
+    }),
+    "Dressed Salad": createFoodAttr({
+        crunch: 6, sour: 4, grease: 4, health: 8, filling: 4,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Peppered Steak": createFoodAttr({
+        savory: 9, salty: 4, spicy: 5, filling: 8, chew: 8,
+        temperature: 8, health: 7, grease: 3,
+    }),
+    "Ice Cream": createFoodAttr({
+        sweet: 9, soft: 10, temperature: 1, calming: 5, filling: 4,
+        isVegetarian: 1,
+    }),
+    "Chocolate Shake": createFoodAttr({
+        sweet: 9, soft: 10, moisture: 8, temperature: 1,
+        calming: 4, energizing: 3, isVegetarian: 1,
+    }),
+    "Sweet Latte": createFoodAttr({
+        sweet: 6, bitter: 3, soft: 8, moisture: 8, energizing: 5,
+        temperature: 7, isVegetarian: 1, calming: 3,
+    }),
+    "Salted Fries": createFoodAttr({
+        salty: 7, crunch: 8, grease: 7, filling: 5,
+        temperature: 7, isVegetarian: 1, isVegan: 1,
+    }),
+    "Egg Fried Rice": createFoodAttr({
+        savory: 7, salty: 4, filling: 8, grease: 4, chew: 4,
+        temperature: 8, isVegetarian: 1,
+    }),
+    "Spicy Sushi": createFoodAttr({
+        savory: 6, salty: 3, spicy: 5, filling: 5, soft: 5,
+        temperature: 4, isRaw: 1, containsBone: 0.2,
+    }),
+    "Deluxe Beef Bowl": createFoodAttr({
+        savory: 9, salty: 6, filling: 10, chew: 5, soft: 6,
+        temperature: 8, health: 7, calming: 4,
+    }),
+
+    // ==================== MUTATIONS & EXTREMES ====================
+    "Ghost Pepper": createFoodAttr({
+        spicy: 15, health: -3, fear: 2, crunch: 3,
+        isVegetarian: 1, isVegan: 1, sanity: -2,
+    }),
+    "Mystery Meat": createFoodAttr({
+        savory: 5, radioactivity: 8, filling: 6, chew: 6,
+        health: -4, sanity: -2, sentience: 1,
+    }),
+    "Three-Eyed Fish": createFoodAttr({
+        savory: 4, radioactivity: 9, filling: 5,
+        health: -5, sanity: -3, fear: 2, sentience: 2,
+    }),
+    "Radioactive Slime": createFoodAttr({
+        radioactivity: 10, soft: 10, moisture: 8,
+        health: -8, sanity: -4, sentience: 1,
+    }),
+    "Glowing Egg": createFoodAttr({
+        radioactivity: 7, soft: 6, filling: 4,
+        health: -3, sanity: -2, fear: 1, energizing: 3,
+    }),
+    "Mutant Potato": createFoodAttr({
+        radioactivity: 7, filling: 8, chew: 5,
+        health: -4, sanity: -3, sentience: 3, fear: 2,
+    }),
+    "Sentient Cheese": createFoodAttr({
+        savory: 6, salty: 5, soft: 7, sentience: 8,
+        health: 2, sanity: -4, fear: 3, calming: -2,
+    }),
+    "Charred Steak": createFoodAttr({
+        savory: 6, bitter: 6, crunch: 7, chew: 6, filling: 7,
+        temperature: 9, isBurnt: 1, health: 3,
+    }),
+    "Inferno Meat": createFoodAttr({
+        savory: 6, spicy: 12, filling: 7, chew: 6,
+        temperature: 14, health: -3, fear: 3,
+    }),
+    "Absolute Zero": createFoodAttr({
+        temperature: -5, crunch: 9, health: -6, fear: 4,
+        isVegetarian: 1, isVegan: 1, sanity: -3,
+    }),
+    "Salt Crystal": createFoodAttr({
+        salty: 15, crunch: 10, health: -2,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Pure Sugar": createFoodAttr({
+        sweet: 15, energizing: 10, crunch: 6, health: -1,
+        isVegetarian: 1, isVegan: 1, sanity: 1,
+    }),
+    "Espresso Shot": createFoodAttr({
+        bitter: 10, energizing: 15, moisture: 6, temperature: 8,
+        isVegetarian: 1, isVegan: 1, sanity: -1, health: 3,
+    }),
+    "Depression": createFoodAttr({
+        sadness: 15, sanity: -8, calming: -5, health: -5,
+        temperature: 2, moisture: 6, fear: 2, energizing: -5,
+    }),
+    "Terror": createFoodAttr({
+        fear: 15, sanity: -10, energizing: 8, health: -6,
+        sadness: 3, calming: -8,
+    }),
+    "The Abyss": createFoodAttr({
+        voidLevel: 15, sanity: -15, fear: 10, health: -10,
+        temperature: 0, filling: -5, sentience: 5,
+    }),
+    "Charred Bread": createFoodAttr({
+        bitter: 7, crunch: 9, isBurnt: 1, health: 1,
+        isVegetarian: 1, containsGluten: 1, temperature: 8,
+    }),
+    "Charred Meat": createFoodAttr({
+        savory: 5, bitter: 6, crunch: 6, isBurnt: 1,
+        health: 2, temperature: 9, filling: 6,
+    }),
+    "Burnt Rice": createFoodAttr({
+        bitter: 8, crunch: 7, isBurnt: 1, health: 0,
+        isVegetarian: 1, isVegan: 1, filling: 4, temperature: 8,
+    }),
+    "Grease Fire": createFoodAttr({
+        temperature: 15, grease: 10, health: -8, fear: 6,
+        isVegetarian: 1, isVegan: 1, sanity: -3,
+    }),
+    "Burnt Slop": createFoodAttr({
+        bitter: 8, isBurnt: 1, health: -3, sadness: 3,
+        filling: 2, temperature: 7, sanity: -1,
+    }),
+
+    // Hot variants from microwave
+    "Hot Rice": createFoodAttr({
+        filling: 6, chew: 3, soft: 6, moisture: 4, temperature: 8,
+        isVegetarian: 1, isVegan: 1,
+    }),
+    "Hot Bread": createFoodAttr({
+        filling: 5, chew: 5, soft: 7, temperature: 8,
+        isVegetarian: 1, containsGluten: 1,
+    }),
+};
+
+// Get attributes for any food item (with fallback for unknown items)
+function getFoodAttributes(itemName) {
+    if (FOOD_ATTRIBUTES[itemName]) {
+        return FOOD_ATTRIBUTES[itemName];
+    }
+    // Fallback for dynamically created items (like "Hot X")
+    if (itemName.startsWith("Hot ")) {
+        const baseItem = itemName.substring(4);
+        if (FOOD_ATTRIBUTES[baseItem]) {
+            return { ...FOOD_ATTRIBUTES[baseItem], temperature: 8 };
+        }
+    }
+    // Ultimate fallback - mysterious unknown food
+    return createFoodAttr({
+        sanity: -1, health: 2, filling: 3,
+    });
+}
+
+// ============================================================================
+// TASTE FEEDBACK SYSTEM
+// Hardcoded messages for each attribute based on value ranges
+// ============================================================================
+
+const TASTE_FEEDBACK = {
+    savory: [
+        { min: 0, max: 0, msg: null },
+        { min: 1, max: 3, msg: "A subtle hint of umami." },
+        { min: 4, max: 6, msg: "Rich and savory." },
+        { min: 7, max: 9, msg: "Deep, meaty richness fills your mouth." },
+        { min: 10, max: Infinity, msg: "OVERWHELMING UMAMI BOMB." },
+    ],
+    sweet: [
+        { min: 0, max: 0, msg: null },
+        { min: 1, max: 3, msg: "A gentle sweetness." },
+        { min: 4, max: 6, msg: "Pleasantly sweet." },
+        { min: 7, max: 9, msg: "Very sweet, almost cloying." },
+        { min: 10, max: Infinity, msg: "SUGAR OVERLOAD. Your teeth ache." },
+    ],
+    salty: [
+        { min: 0, max: 0, msg: null },
+        { min: 1, max: 3, msg: "Lightly salted." },
+        { min: 4, max: 6, msg: "Well-seasoned with salt." },
+        { min: 7, max: 9, msg: "Very salty. Your lips pucker." },
+        { min: 10, max: Infinity, msg: "SALT CRYSTAL ASSAULT. Ocean incarnate." },
+    ],
+    sour: [
+        { min: 0, max: 0, msg: null },
+        { min: 1, max: 3, msg: "A slight tang." },
+        { min: 4, max: 6, msg: "Pleasantly acidic." },
+        { min: 7, max: 9, msg: "Sharp and tart. Face puckering." },
+        { min: 10, max: Infinity, msg: "ACID ATTACK. Your enamel screams." },
+    ],
+    bitter: [
+        { min: 0, max: 0, msg: null },
+        { min: 1, max: 3, msg: "Slightly bitter undertones." },
+        { min: 4, max: 6, msg: "Notable bitterness." },
+        { min: 7, max: 9, msg: "Harsh and bitter. Coffee-like intensity." },
+        { min: 10, max: Infinity, msg: "BITTER BEYOND REASON. Tastes like regret." },
+    ],
+    spicy: [
+        { min: 0, max: 0, msg: null },
+        { min: 1, max: 3, msg: "Mild warmth on the tongue." },
+        { min: 4, max: 6, msg: "Decent kick of heat." },
+        { min: 7, max: 9, msg: "SPICY! Your mouth is on fire." },
+        { min: 10, max: 12, msg: "EXTREME HEAT. Pain and pleasure merge." },
+        { min: 13, max: Infinity, msg: "VOLCANIC INFERNO. You see through time." },
+    ],
+    temperature: [
+        { min: -Infinity, max: -1, msg: "ABSOLUTE ZERO. Reality freezes around it." },
+        { min: 0, max: 1, msg: "Frozen solid. Ice cold." },
+        { min: 2, max: 3, msg: "Chilled and refreshing." },
+        { min: 4, max: 6, msg: null }, // Room temp, no comment
+        { min: 7, max: 8, msg: "Warm and comforting." },
+        { min: 9, max: 10, msg: "Hot! Steam rises from it." },
+        { min: 11, max: 13, msg: "SCORCHING. Handle with extreme caution." },
+        { min: 14, max: Infinity, msg: "INFERNAL TEMPERATURE. It burns just looking at it." },
+    ],
+    moisture: [
+        { min: 0, max: 1, msg: "Bone dry. Dessicated." },
+        { min: 2, max: 3, msg: "Quite dry." },
+        { min: 4, max: 6, msg: null }, // Normal, no comment
+        { min: 7, max: 8, msg: "Moist and juicy." },
+        { min: 9, max: 10, msg: "Liquid. Dripping wet." },
+    ],
+    grease: [
+        { min: 0, max: 1, msg: null },
+        { min: 2, max: 4, msg: "Slightly oily." },
+        { min: 5, max: 7, msg: "Greasy. Leaves residue on fingers." },
+        { min: 8, max: 10, msg: "DRIPPING WITH GREASE. Cardiovascular nightmare." },
+    ],
+    crunch: [
+        { min: 0, max: 2, msg: null },
+        { min: 3, max: 5, msg: "Slight crunch." },
+        { min: 6, max: 8, msg: "Satisfyingly crispy." },
+        { min: 9, max: Infinity, msg: "MAXIMUM CRUNCH. Like biting into glass (safely)." },
+    ],
+    chew: [
+        { min: 0, max: 2, msg: null },
+        { min: 3, max: 5, msg: "Some chewiness." },
+        { min: 6, max: 8, msg: "Chewy. Good jaw workout." },
+        { min: 9, max: Infinity, msg: "EXTREMELY CHEWY. Endless mastication." },
+    ],
+    soft: [
+        { min: 0, max: 3, msg: null },
+        { min: 4, max: 6, msg: null },
+        { min: 7, max: 8, msg: "Soft and pillowy." },
+        { min: 9, max: 10, msg: "Melt-in-your-mouth smooth." },
+    ],
+    filling: [
+        { min: -Infinity, max: 0, msg: "Somehow makes you MORE hungry." },
+        { min: 1, max: 3, msg: "Light snack." },
+        { min: 4, max: 6, msg: "Moderately filling." },
+        { min: 7, max: 8, msg: "Very filling. Substantial meal." },
+        { min: 9, max: Infinity, msg: "FOOD COMA IMMINENT. Maximum satiation." },
+    ],
+    energizing: [
+        { min: 0, max: 2, msg: null },
+        { min: 3, max: 5, msg: "Gives you a little boost." },
+        { min: 6, max: 8, msg: "Energizing! You feel alert." },
+        { min: 9, max: 12, msg: "WIRED. Sleep is for the weak." },
+        { min: 13, max: Infinity, msg: "TRANSCENDENT ENERGY. You vibrate at the atomic level." },
+    ],
+    calming: [
+        { min: -Infinity, max: -3, msg: "Actively stressful. Your cortisol spikes." },
+        { min: -2, max: 0, msg: null },
+        { min: 1, max: 3, msg: "Slightly soothing." },
+        { min: 4, max: 6, msg: "Calming. Tension melts away." },
+        { min: 7, max: Infinity, msg: "PROFOUND PEACE. Om." },
+    ],
+    health: [
+        { min: -Infinity, max: -6, msg: "HIGHLY TOXIC. This will kill you." },
+        { min: -5, max: -3, msg: "TOXIC. Definitely not safe to eat." },
+        { min: -2, max: -1, msg: "Questionable safety. Proceed with caution." },
+        { min: 0, max: 3, msg: "Not particularly healthy." },
+        { min: 4, max: 6, msg: null }, // Normal, no comment
+        { min: 7, max: 8, msg: "Nutritious and wholesome." },
+        { min: 9, max: Infinity, msg: "SUPERFOOD. Your cells rejoice." },
+    ],
+    sanity: [
+        { min: -Infinity, max: -10, msg: "ELDRITCH HORROR. Your mind shatters into fragments." },
+        { min: -9, max: -5, msg: "SANITY DRAIN. The void whispers back." },
+        { min: -4, max: -2, msg: "Unsettling. Something feels deeply wrong." },
+        { min: -1, max: 1, msg: null },
+        { min: 2, max: 4, msg: "Mentally refreshing." },
+        { min: 5, max: Infinity, msg: "SANITY RESTORATION. Reality snaps back into focus." },
+    ],
+    sadness: [
+        { min: 0, max: 2, msg: null },
+        { min: 3, max: 5, msg: "Melancholy seeps in." },
+        { min: 6, max: 9, msg: "Profound sadness. Tears well up." },
+        { min: 10, max: Infinity, msg: "EXISTENTIAL DESPAIR. The weight of existence crushes you." },
+    ],
+    fear: [
+        { min: 0, max: 1, msg: null },
+        { min: 2, max: 4, msg: "Slightly unnerving." },
+        { min: 5, max: 7, msg: "Fear grips your heart." },
+        { min: 8, max: 10, msg: "TERROR. Fight or flight activates." },
+        { min: 11, max: Infinity, msg: "PRIMAL HORROR. Every instinct screams RUN." },
+    ],
+    sentience: [
+        { min: 0, max: 0, msg: null },
+        { min: 1, max: 2, msg: "...did it just twitch?" },
+        { min: 3, max: 5, msg: "It's looking at you. IT KNOWS." },
+        { min: 6, max: 8, msg: "The food is ALIVE and AWARE." },
+        { min: 9, max: Infinity, msg: "FULLY SENTIENT. It begs for mercy." },
+    ],
+    radioactivity: [
+        { min: 0, max: 1, msg: null },
+        { min: 2, max: 4, msg: "Faint glow. Slightly radioactive." },
+        { min: 5, max: 7, msg: "RADIOACTIVE. Geiger counter clicking." },
+        { min: 8, max: 10, msg: "HIGHLY IRRADIATED. Mutagen levels critical." },
+        { min: 11, max: Infinity, msg: "NUCLEAR. You can taste the isotopes." },
+    ],
+    voidLevel: [
+        { min: 0, max: 1, msg: null },
+        { min: 2, max: 4, msg: "Touched by the void. Emptiness lingers." },
+        { min: 5, max: 8, msg: "VOID-TOUCHED. Reality bends around it." },
+        { min: 9, max: 12, msg: "VOID INCARNATE. Existence itself recoils." },
+        { min: 13, max: Infinity, msg: "THE ABYSS STARES BACK. You are unmade." },
+    ],
+    isBurnt: [
+        { min: 0, max: 0, msg: null },
+        { min: 1, max: Infinity, msg: "BURNT. Charred and blackened." },
+    ],
+    isRaw: [
+        { min: 0, max: 0, msg: null },
+        { min: 1, max: Infinity, msg: "RAW. Uncooked." },
+    ],
+    isVegetarian: [
+        { min: 0, max: 0, msg: null },
+        { min: 1, max: Infinity, msg: "Vegetarian-friendly." },
+    ],
+    isVegan: [
+        { min: 0, max: 0, msg: null },
+        { min: 1, max: Infinity, msg: "Vegan-friendly." },
+    ],
+    containsGluten: [
+        { min: 0, max: 0, msg: null },
+        { min: 1, max: Infinity, msg: "Contains gluten." },
+    ],
+    containsBone: [
+        { min: 0, max: 0.2, msg: null },
+        { min: 0.21, max: 0.5, msg: "May contain small bones." },
+        { min: 0.51, max: Infinity, msg: "Contains bones. Chew carefully." },
+    ],
+};
+
+// Get feedback message for an attribute value
+function getTasteFeedback(attribute, value) {
+    const ranges = TASTE_FEEDBACK[attribute];
+    if (!ranges) return null;
+
+    for (const range of ranges) {
+        if (value >= range.min && value <= range.max) {
+            return range.msg;
+        }
+    }
+    return null;
+}
+
+// ============================================================================
+// DISTANCE CALCULATION & PAYMENT SYSTEM
+// ============================================================================
+
+// Attributes used for distance calculation (subset of all attributes)
+const DISTANCE_ATTRIBUTES = [
+    'savory', 'sweet', 'salty', 'sour', 'bitter', 'spicy',
+    'temperature', 'moisture', 'grease', 'crunch', 'chew', 'soft',
+    'filling', 'energizing', 'calming', 'health',
+    'sanity', 'sadness', 'fear', 'sentience', 'radioactivity', 'voidLevel'
+];
+
+// Calculate Euclidean distance between food attributes and customer demand
+function calculateDistance(foodAttrs, demandVector) {
+    let sumSquares = 0;
+
+    for (const attr of DISTANCE_ATTRIBUTES) {
+        const foodVal = foodAttrs[attr] || 0;
+        const demandVal = demandVector[attr];
+
+        // Skip attributes not specified in demand (undefined = don't care)
+        if (demandVal === undefined) continue;
+
+        const diff = foodVal - demandVal;
+        sumSquares += diff * diff;
+    }
+
+    return Math.sqrt(sumSquares);
+}
+
+// Calculate payment based on distance: 20 * 1.1^(-sqrt(distance))
+// Close match = more money, far match = less money
+function calculatePayment(distance) {
+    // Formula: 20 * 1.1^(-sqrt(distance))
+    // Distance 0 = $20, Distance 1 = ~$18, Distance 10 = ~$10, Distance 100 = ~$0.4
+    const payment = 20 * Math.pow(1.1, -Math.sqrt(distance));
+    return Math.max(0, Math.round(payment * 100) / 100); // Round to cents, min $0
+}
+
+// Get satisfaction rating based on distance
+function getSatisfactionRating(distance) {
+    if (distance <= 2) return { rating: "PERFECT", emoji: "★★★★★", color: "#ffff00" };
+    if (distance <= 5) return { rating: "EXCELLENT", emoji: "★★★★☆", color: "#33ff33" };
+    if (distance <= 10) return { rating: "GOOD", emoji: "★★★☆☆", color: "#33ff33" };
+    if (distance <= 20) return { rating: "OKAY", emoji: "★★☆☆☆", color: "#aaffaa" };
+    if (distance <= 35) return { rating: "POOR", emoji: "★☆☆☆☆", color: "#ffaa00" };
+    return { rating: "TERRIBLE", emoji: "☆☆☆☆☆", color: "#ff3333" };
+}
+
+// ============================================================================
+// CUSTOMER DEMAND SYSTEM
+// Each customer specifies desired attribute ranges (geometry matching)
+// ============================================================================
+
 const CUSTOMER_TYPES = [
-    // Human Customers (Basic)
-    { name: "Tired Salaryman", want: "Beef Bowl", hint: "Something filling and salty.", avatar: "   O \n  /|\\ \n  / \\" },
-    { name: "Gym Bro", want: "Steak", hint: "Pure protein. Cook it.", avatar: "  _O_ \n \\/|\\/ \n  / \\" },
-    { name: "Sad Student", want: "Toast", hint: "Just some warm bread...", avatar: "   O \n  /|\\ \n  / \\" },
-    { name: "Construction Worker", want: "Burger", hint: "Meat between buns.", avatar: "  =O= \n  /|\\ \n  / \\" },
-    { name: "Sushi Fanatic", want: "Sushi", hint: "Fresh fish and rice. No cooking.", avatar: "   O \n  <|\\ \n  / \\" },
-    { name: "Health Inspector", want: "Water", hint: "Just a glass of water. Inspection time.", avatar: "  [O] \n  /|\\ \n  / \\" },
-    
-    // Human Customers (Complex)
-    { name: "College Student", want: "Ramen", hint: "Cheap noodles in soup with egg.", avatar: "   o \n  /|\\ \n  / \\" },
-    { name: "Italian Chef", want: "Pasta", hint: "Noodles with tomato sauce!", avatar: "  @O@ \n  /|\\ \n  / \\" },
-    { name: "Cheese Lover", want: "Mac and Cheese", hint: "Pasta and cheese together.", avatar: "   O \n <|||> \n  / \\" },
-    { name: "Kid", want: "Grilled Cheese", hint: "I want cheese and bread!", avatar: "  ^o^ \n  /|\\ \n  / \\" },
-    { name: "American Tourist", want: "Cheeseburger", hint: "Burger with cheese on top!", avatar: "  $O$ \n  /|\\ \n  / \\" },
-    { name: "Breakfast Person", want: "Egg Toast", hint: "Egg on toast please.", avatar: "   O \n -/|\\ \n  / \\" },
-    { name: "Fast Food Fan", want: "Salted Fries", hint: "Fried potatoes with salt.", avatar: "   O \n >/|< \n  / \\" },
-    { name: "Asian Foodie", want: "Egg Fried Rice", hint: "Rice fried with egg.", avatar: "   O \n  /|\\~ \n  / \\" },
-    { name: "Spice Addict", want: "Spicy Sushi", hint: "Sushi but make it hurt.", avatar: "  ~O~ \n  /|\\ \n  / \\" },
-    { name: "Coffee Addict", want: "Black Coffee", hint: "Pure coffee. No milk.", avatar: "  *O* \n  /|\\ \n  / \\" },
-    { name: "Cafe Regular", want: "Latte", hint: "Coffee with milk.", avatar: "   O \n ~/|\\ \n  / \\" },
-    { name: "Sweet Tooth", want: "Ice Cream", hint: "Cold sweet cream.", avatar: "  ^O^ \n  /|\\ \n  / \\" },
-    { name: "Health Nut", want: "Salad", hint: "Lettuce and tomato together.", avatar: "  +O+ \n  /|\\ \n  / \\" },
-    { name: "Steak Expert", want: "Peppered Steak", hint: "Steak with pepper seasoning.", avatar: "  =O= \n  /|\\ \n  / \\" },
-    { name: "Tea Drinker", want: "Tea", hint: "Hot tea, simple and calming.", avatar: "   O \n  /|\\. \n  / \\" },
-    { name: "Potato Lover", want: "Baked Potato", hint: "Just a cooked potato.", avatar: "   O \n  /|\\ \n  / \\" },
-    
-    // Weird/Dangerous Customers
-    { name: "Pyromaniac", want: "Fire", hint: "I want to eat pure HEAT.", avatar: "  ( ) \n  /|\\ \n  / \\" },
-    { name: "Chaos Enjoyer", want: "Mystery Meat", hint: "Microwave some meat. Surprise me.", avatar: "  ?O? \n  /|\\ \n  / \\" },
-    { name: "Alien Scout", want: "Three-Eyed Fish", hint: "Zognar wants radioactive swimmer.", avatar: "  oOo \n \\/|\\/ \n  / \\" },
-    { name: "Mad Scientist", want: "Glowing Egg", hint: "I need irradiated egg specimen.", avatar: "  (O) \n  /|\\ \n  / \\" },
-    { name: "Void Cultist", want: "Void", hint: "I seek the emptiness.", avatar: "  .O. \n  /|\\ \n  / \\" },
-    { name: "Demon", want: "Inferno Meat", hint: "MEAT. BURNING. NOW.", avatar: "  >O< \n /|||\\  \n  / \\" },
-    { name: "Ice Elemental", want: "Absolute Zero", hint: "Coldest thing possible.", avatar: "  *O* \n  \\|/ \n  / \\" },
-    { name: "Depression Spirit", want: "Depression", hint: "Amplify sadness for me.", avatar: "  _O_ \n  /|\\ \n  / \\" },
-    { name: "Eldritch Being", want: "The Abyss", hint: "Void combined with Void.", avatar: " {oOo} \n \\/|\\/ \n  / \\" },
-    { name: "Fire Demon", want: "Grease Fire", hint: "Oil and fire. Dangerous.", avatar: " \\|O|/ \n  /|\\ \n  / \\" },
-    { name: "Salt Miner", want: "Salt Crystal", hint: "Amplified pure salt.", avatar: "  #O# \n  /|\\ \n  / \\" },
-    { name: "Sugar Rush", want: "Pure Sugar", hint: "Sugar but amplified!", avatar: "  @O@ \n  /|\\ \n  / \\" },
-    { name: "Insomniac", want: "Espresso Shot", hint: "Amplified coffee. Strongest.", avatar: "  !O! \n  /|\\ \n  / \\" },
+    // ==================== HUMAN CUSTOMERS (Basic) ====================
+    {
+        name: "Tired Salaryman",
+        hint: "Something filling and salty... I need the energy.",
+        avatar: "   O \n  /|\\ \n  / \\",
+        demand: { filling: 8, salty: 6, savory: 7, temperature: 7 },
+        idealItem: "Beef Bowl", // For reference/hint system
+    },
+    {
+        name: "Gym Bro",
+        hint: "Pure protein. Cook it. No carbs!",
+        avatar: "  _O_ \n \\/|\\/ \n  / \\",
+        demand: { savory: 8, filling: 7, chew: 7, temperature: 8, health: 6 },
+        idealItem: "Steak",
+    },
+    {
+        name: "Sad Student",
+        hint: "Just some warm bread... cheap and simple.",
+        avatar: "   O \n  /|\\ \n  / \\",
+        demand: { temperature: 7, crunch: 6, filling: 3, containsGluten: 1 },
+        idealItem: "Toast",
+    },
+    {
+        name: "Construction Worker",
+        hint: "Meat! In bread! Filling!",
+        avatar: "  =O= \n  /|\\ \n  / \\",
+        demand: { savory: 7, filling: 8, chew: 6, containsGluten: 1 },
+        idealItem: "Burger",
+    },
+    {
+        name: "Sushi Fanatic",
+        hint: "Fresh fish and rice. Must be RAW. Cold.",
+        avatar: "   O \n  <|\\ \n  / \\",
+        demand: { savory: 6, temperature: 4, isRaw: 1, health: 7 },
+        idealItem: "Sushi",
+    },
+    {
+        name: "Health Inspector",
+        hint: "Just a glass of water. I'm... inspecting.",
+        avatar: "  [O] \n  /|\\ \n  / \\",
+        demand: { moisture: 10, health: 8, calming: 2 },
+        idealItem: "Water",
+    },
+
+    // ==================== HUMAN CUSTOMERS (Complex) ====================
+    {
+        name: "College Student",
+        hint: "Cheap noodles in hot soup with egg. Ramen vibes.",
+        avatar: "   o \n  /|\\ \n  / \\",
+        demand: { savory: 7, filling: 8, moisture: 8, temperature: 8, containsGluten: 1 },
+        idealItem: "Ramen",
+    },
+    {
+        name: "Italian Chef",
+        hint: "Noodles! Tomato sauce! It must be tangy and savory!",
+        avatar: "  @O@ \n  /|\\ \n  / \\",
+        demand: { savory: 6, sour: 4, filling: 7, temperature: 8, containsGluten: 1 },
+        idealItem: "Pasta",
+    },
+    {
+        name: "Cheese Lover",
+        hint: "Creamy. Cheesy. Comforting. Maximum cheese vibes.",
+        avatar: "   O \n <|||> \n  / \\",
+        demand: { savory: 7, soft: 8, calming: 5, grease: 5, salty: 5 },
+        idealItem: "Mac and Cheese",
+    },
+    {
+        name: "Kid",
+        hint: "Cheese and bread together! Warm and gooey!",
+        avatar: "  ^o^ \n  /|\\ \n  / \\",
+        demand: { savory: 6, soft: 7, temperature: 8, calming: 5, isVegetarian: 1 },
+        idealItem: "Grilled Cheese",
+    },
+    {
+        name: "American Tourist",
+        hint: "BURGER! WITH CHEESE! The American dream!",
+        avatar: "  $O$ \n  /|\\ \n  / \\",
+        demand: { savory: 8, filling: 9, grease: 5, salty: 6 },
+        idealItem: "Cheeseburger",
+    },
+    {
+        name: "Breakfast Person",
+        hint: "Egg on toast. Simple breakfast. Crunchy!",
+        avatar: "   O \n -/|\\ \n  / \\",
+        demand: { savory: 5, crunch: 6, filling: 5, temperature: 7, isVegetarian: 1 },
+        idealItem: "Egg Toast",
+    },
+    {
+        name: "Fast Food Fan",
+        hint: "Crispy! Salty! Greasy! Fried potato sticks!",
+        avatar: "   O \n >/|< \n  / \\",
+        demand: { salty: 7, crunch: 8, grease: 7, temperature: 7, isVegan: 1 },
+        idealItem: "Salted Fries",
+    },
+    {
+        name: "Asian Foodie",
+        hint: "Rice fried with egg. Savory and filling.",
+        avatar: "   O \n  /|\\~ \n  / \\",
+        demand: { savory: 7, filling: 8, grease: 4, temperature: 8, isVegetarian: 1 },
+        idealItem: "Egg Fried Rice",
+    },
+    {
+        name: "Spice Addict",
+        hint: "Sushi but make it HURT. I want SPICY fish!",
+        avatar: "  ~O~ \n  /|\\ \n  / \\",
+        demand: { spicy: 5, savory: 6, temperature: 4, isRaw: 1 },
+        idealItem: "Spicy Sushi",
+    },
+    {
+        name: "Coffee Addict",
+        hint: "Pure black coffee. BITTER. ENERGIZING. No milk!",
+        avatar: "  *O* \n  /|\\ \n  / \\",
+        demand: { bitter: 8, energizing: 9, temperature: 8, isVegan: 1 },
+        idealItem: "Black Coffee",
+    },
+    {
+        name: "Cafe Regular",
+        hint: "Coffee with milk. Creamy, mild, not too bitter.",
+        avatar: "   O \n ~/|\\ \n  / \\",
+        demand: { bitter: 4, energizing: 6, soft: 8, temperature: 7, calming: 2 },
+        idealItem: "Latte",
+    },
+    {
+        name: "Sweet Tooth",
+        hint: "COLD. SWEET. CREAMY. Frozen dessert!",
+        avatar: "  ^O^ \n  /|\\ \n  / \\",
+        demand: { sweet: 9, soft: 10, temperature: 1, calming: 5 },
+        idealItem: "Ice Cream",
+    },
+    {
+        name: "Health Nut",
+        hint: "Fresh vegetables. Crunchy. HEALTHY. No grease!",
+        avatar: "  +O+ \n  /|\\ \n  / \\",
+        demand: { crunch: 7, health: 9, isVegan: 1, grease: 0 },
+        idealItem: "Salad",
+    },
+    {
+        name: "Steak Expert",
+        hint: "A proper steak with pepper. Savory. Spicy kick.",
+        avatar: "  =O= \n  /|\\ \n  / \\",
+        demand: { savory: 9, spicy: 5, filling: 8, chew: 8, temperature: 8 },
+        idealItem: "Peppered Steak",
+    },
+    {
+        name: "Tea Drinker",
+        hint: "Hot tea. Calming. Herbal. Simple pleasure.",
+        avatar: "   O \n  /|\\. \n  / \\",
+        demand: { calming: 8, temperature: 8, moisture: 9, bitter: 3, isVegan: 1 },
+        idealItem: "Tea",
+    },
+    {
+        name: "Potato Lover",
+        hint: "A warm, fluffy baked potato. Comfort food.",
+        avatar: "   O \n  /|\\ \n  / \\",
+        demand: { filling: 8, soft: 7, temperature: 8, isVegan: 1, calming: 3 },
+        idealItem: "Baked Potato",
+    },
+    {
+        name: "Vegetarian",
+        hint: "No meat! Something filling and vegetarian!",
+        avatar: "   O \n  /|\\ \n  / \\",
+        demand: { filling: 6, isVegetarian: 1, health: 6, savory: 5 },
+        idealItem: "Egg Rice",
+    },
+    {
+        name: "Night Shift Worker",
+        hint: "I need ENERGY. Something that will keep me AWAKE.",
+        avatar: "  zOz \n  /|\\ \n  / \\",
+        demand: { energizing: 8, temperature: 7, bitter: 5 },
+        idealItem: "Black Coffee",
+    },
+    {
+        name: "Stressed Manager",
+        hint: "I need something CALMING. Soothing. Please.",
+        avatar: "  @O@ \n  /|\\ \n  / \\",
+        demand: { calming: 7, temperature: 8, soft: 7, health: 5 },
+        idealItem: "Hot Milk",
+    },
+
+    // ==================== WEIRD/DANGEROUS CUSTOMERS ====================
+    {
+        name: "Pyromaniac",
+        hint: "I want to eat pure HEAT. BURNING. DANGEROUS.",
+        avatar: "  ( ) \n  /|\\ \n  / \\",
+        demand: { temperature: 15, spicy: 3, fear: 2, health: -5 },
+        idealItem: "Fire",
+    },
+    {
+        name: "Chaos Enjoyer",
+        hint: "Microwave something! Give me MUTATION! RADIOACTIVE!",
+        avatar: "  ?O? \n  /|\\ \n  / \\",
+        demand: { radioactivity: 8, savory: 5, sentience: 1 },
+        idealItem: "Mystery Meat",
+    },
+    {
+        name: "Alien Scout",
+        hint: "Zognar requires radioactive swimmer. Many eyes preferred.",
+        avatar: "  oOo \n \\/|\\/ \n  / \\",
+        demand: { radioactivity: 9, sanity: -3, sentience: 2 },
+        idealItem: "Three-Eyed Fish",
+    },
+    {
+        name: "Mad Scientist",
+        hint: "Irradiated protein! For my experiments!",
+        avatar: "  (O) \n  /|\\ \n  / \\",
+        demand: { radioactivity: 7, energizing: 3, fear: 1 },
+        idealItem: "Glowing Egg",
+    },
+    {
+        name: "Void Cultist",
+        hint: "I seek the emptiness. The void calls.",
+        avatar: "  .O. \n  /|\\ \n  / \\",
+        demand: { voidLevel: 8, sanity: -5, fear: 3 },
+        idealItem: "Void",
+    },
+    {
+        name: "Demon",
+        hint: "MEAT. BURNING. SPICY. INFERNAL.",
+        avatar: "  >O< \n /|||\\  \n  / \\",
+        demand: { spicy: 12, temperature: 14, savory: 6, fear: 3 },
+        idealItem: "Inferno Meat",
+    },
+    {
+        name: "Ice Elemental",
+        hint: "COLDEST. Absolute zero. Freezing pain.",
+        avatar: "  *O* \n  \\|/ \n  / \\",
+        demand: { temperature: -5, fear: 4, sanity: -3 },
+        idealItem: "Absolute Zero",
+    },
+    {
+        name: "Depression Spirit",
+        hint: "Feed me sadness. Amplified despair.",
+        avatar: "  _O_ \n  /|\\ \n  / \\",
+        demand: { sadness: 15, sanity: -8, calming: -5 },
+        idealItem: "Depression",
+    },
+    {
+        name: "Eldritch Being",
+        hint: "THE ABYSS. INFINITE VOID. EXISTENCE ERASED.",
+        avatar: " {oOo} \n \\/|\\/ \n  / \\",
+        demand: { voidLevel: 15, sanity: -15, fear: 10 },
+        idealItem: "The Abyss",
+    },
+    {
+        name: "Fire Demon",
+        hint: "Burning grease! Uncontrollable flames!",
+        avatar: " \\|O|/ \n  /|\\ \n  / \\",
+        demand: { temperature: 15, grease: 10, fear: 6 },
+        idealItem: "Grease Fire",
+    },
+    {
+        name: "Salt Miner",
+        hint: "PURE SALT. CRYSTALLIZED. MAXIMUM MINERAL.",
+        avatar: "  #O# \n  /|\\ \n  / \\",
+        demand: { salty: 15, crunch: 10 },
+        idealItem: "Salt Crystal",
+    },
+    {
+        name: "Sugar Rush",
+        hint: "PURE SUGAR! AMPLIFIED! MAXIMUM SWEETNESS!",
+        avatar: "  @O@ \n  /|\\ \n  / \\",
+        demand: { sweet: 15, energizing: 10, crunch: 6 },
+        idealItem: "Pure Sugar",
+    },
+    {
+        name: "Insomniac",
+        hint: "MAXIMUM CAFFEINE. I must NEVER sleep again.",
+        avatar: "  !O! \n  /|\\ \n  / \\",
+        demand: { energizing: 15, bitter: 10, temperature: 8 },
+        idealItem: "Espresso Shot",
+    },
+    {
+        name: "Fear Eater",
+        hint: "I consume terror. Pure, paralyzing fear.",
+        avatar: "  XOX \n  /|\\ \n  / \\",
+        demand: { fear: 15, sanity: -10, energizing: 8 },
+        idealItem: "Terror",
+    },
+    {
+        name: "Crispy Connoisseur",
+        hint: "CRUNCH! Maximum crispy! I want it loud!",
+        avatar: "  CCC \n  /|\\ \n  / \\",
+        demand: { crunch: 9, salty: 5, temperature: 7 },
+        idealItem: "Salted Fries",
+    },
+    {
+        name: "Greasy Gus",
+        hint: "Oil! Grease! The more the better!",
+        avatar: "  OOO \n  /|\\ \n  / \\",
+        demand: { grease: 8, savory: 6, filling: 6, temperature: 8 },
+        idealItem: "Fried Meat",
+    },
+    {
+        name: "The Bitter One",
+        hint: "Bitter. Everything must be BITTER.",
+        avatar: "  >:( \n  /|\\ \n  / \\",
+        demand: { bitter: 9, sweet: 0, energizing: 6 },
+        idealItem: "Black Coffee",
+    },
+    {
+        name: "Sentient Seeker",
+        hint: "I want food that THINKS. That KNOWS.",
+        avatar: "  ??? \n  /|\\ \n  / \\",
+        demand: { sentience: 8, sanity: -4, fear: 3 },
+        idealItem: "Sentient Cheese",
+    },
 ];
 
 class Game {
@@ -569,23 +1448,77 @@ class Game {
 
     nextCustomer() {
         if (!this.isDayActive) return;
-        
+
         // Check if this is the final customer of Day 5 (Gordon G boss fight)
         if (this.day === 5 && this.customersServedCount === this.customersPerDay - 1) {
             this.spawnGordonG();
             return;
         }
-        
+
         const template = CUSTOMER_TYPES[Math.floor(Math.random() * CUSTOMER_TYPES.length)];
         this.customer = { ...template };
-        
+
         document.getElementById('customer-name').textContent = this.customer.name;
         document.getElementById('customer-quote').textContent = this.customer.hint;
         document.getElementById('customer-avatar').textContent = this.customer.avatar;
-        document.getElementById('customer-order').textContent = "???";
-        
+
+        // Show key demanded attributes as hints
+        const demandHints = this.getDemandHints(this.customer.demand);
+        document.getElementById('customer-order').textContent = demandHints;
+
         this.log(`CUSTOMER ARRIVED: ${this.customer.name}`);
+        this.log(`They want: ${demandHints}`);
         this.render();
+    }
+
+    // Generate readable hints from demand vector
+    getDemandHints(demand) {
+        const hints = [];
+        const attrDescriptions = {
+            savory: "savory",
+            sweet: "sweet",
+            salty: "salty",
+            sour: "sour",
+            bitter: "bitter",
+            spicy: "spicy",
+            temperature: val => val <= 2 ? "FROZEN" : val <= 4 ? "cold" : val >= 12 ? "INFERNAL" : val >= 9 ? "hot" : val >= 7 ? "warm" : null,
+            moisture: val => val >= 9 ? "liquid" : val <= 2 ? "dry" : null,
+            grease: val => val >= 6 ? "greasy" : val === 0 ? "no grease" : null,
+            crunch: val => val >= 6 ? "crunchy" : null,
+            chew: val => val >= 7 ? "chewy" : null,
+            soft: val => val >= 8 ? "soft" : null,
+            filling: val => val >= 7 ? "filling" : val <= 3 ? "light" : null,
+            energizing: val => val >= 6 ? "energizing" : null,
+            calming: val => val >= 5 ? "calming" : val < 0 ? "stressful" : null,
+            health: val => val >= 7 ? "healthy" : val <= 0 ? "toxic" : null,
+            sanity: val => val <= -5 ? "SANITY-DRAINING" : val >= 3 ? "sanity-restoring" : null,
+            sadness: val => val >= 5 ? "depressing" : null,
+            fear: val => val >= 5 ? "terrifying" : null,
+            sentience: val => val >= 3 ? "SENTIENT" : null,
+            radioactivity: val => val >= 5 ? "RADIOACTIVE" : null,
+            voidLevel: val => val >= 5 ? "VOID-TOUCHED" : null,
+            isVegetarian: val => val >= 1 ? "vegetarian" : null,
+            isVegan: val => val >= 1 ? "vegan" : null,
+            isRaw: val => val >= 1 ? "RAW" : null,
+            isBurnt: val => val >= 1 ? "burnt" : null,
+            containsGluten: val => val >= 1 ? "with gluten" : null,
+        };
+
+        for (const [attr, val] of Object.entries(demand)) {
+            const desc = attrDescriptions[attr];
+            if (desc) {
+                if (typeof desc === 'function') {
+                    const result = desc(val);
+                    if (result) hints.push(result);
+                } else if (val >= 5) {
+                    hints.push(desc.toUpperCase());
+                } else if (val >= 3) {
+                    hints.push(desc);
+                }
+            }
+        }
+
+        return hints.length > 0 ? hints.join(", ") : "???";
     }
 
     spawnGordonG() {
@@ -595,9 +1528,27 @@ class Game {
             coursesRequired: 3,
             coursesServed: 0,
             orders: [
-                { name: "Appetizer", want: "Dressed Salad", hint: "A salad with oil dressing. Fresh greens are not enough!" },
-                { name: "Main Course", want: "Deluxe Beef Bowl", hint: "The ultimate beef bowl. Rice, meat, AND egg combined!" },
-                { name: "Dessert", want: "Chocolate Shake", hint: "Cold chocolate milk. Not just chocolate milk - it must be ICE COLD!" }
+                {
+                    name: "Appetizer",
+                    hint: "A PROPER salad! Fresh, crunchy, with oil dressing. HEALTHY!",
+                    demand: { crunch: 6, sour: 4, grease: 4, health: 8, isVegan: 1 },
+                    idealItem: "Dressed Salad",
+                    maxDistance: 8, // Boss has stricter requirements
+                },
+                {
+                    name: "Main Course",
+                    hint: "The ULTIMATE beef bowl! Savory, filling, with EGG! PERFECTION!",
+                    demand: { savory: 9, salty: 6, filling: 10, temperature: 8, calming: 4 },
+                    idealItem: "Deluxe Beef Bowl",
+                    maxDistance: 8,
+                },
+                {
+                    name: "Dessert",
+                    hint: "A chocolate shake! COLD. SWEET. CREAMY. ICE COLD!",
+                    demand: { sweet: 9, soft: 10, moisture: 8, temperature: 1, calming: 4 },
+                    idealItem: "Chocolate Shake",
+                    maxDistance: 8,
+                }
             ],
             currentCourse: 0,
             avatar: `  [G]
@@ -605,14 +1556,15 @@ class Game {
   /|\\
   / \\`
         };
-        
+
         this.log("======================", "system");
         this.log("BOSS CUSTOMER ARRIVED!", "system");
         this.log("GORDON G. SCOWLING - FOOD CRITIC", "system");
         this.log("======================", "system");
         this.log("He demands a 3-COURSE MEAL!", "design");
-        this.log("These are COMPLEX dishes - prepare carefully!", "design");
-        
+        this.log("His standards are IMPOSSIBLY HIGH!", "design");
+        this.log("Match his demands closely or face his WRATH!", "design");
+
         this.updateGordonDisplay();
     }
 
@@ -788,21 +1740,73 @@ class Game {
         }
         const item = this.countertop[this.selectedIndices[0]];
         this.sanity -= 10;
-        
-        let traits = ATTRIBUTES[item] || ["Unknown"];
-        this.log(`TASTED ${item}. Traits: ${traits.join(", ")}`);
-        
+
+        // Get food attributes
+        const attrs = getFoodAttributes(item);
+
+        this.log(`═══ TASTING '${item.toUpperCase()}' ═══`, "system");
+
+        // Collect all feedback messages
+        const feedbackCategories = {
+            "FLAVOR": ['savory', 'sweet', 'salty', 'sour', 'bitter', 'spicy'],
+            "TEXTURE": ['temperature', 'moisture', 'grease', 'crunch', 'chew', 'soft'],
+            "EFFECT": ['filling', 'energizing', 'calming', 'health'],
+            "COSMIC": ['sanity', 'sadness', 'fear', 'sentience', 'radioactivity', 'voidLevel'],
+            "FLAGS": ['isBurnt', 'isRaw', 'isVegetarian', 'isVegan', 'containsGluten', 'containsBone'],
+        };
+
+        let hasOutput = false;
+
+        for (const [category, attributes] of Object.entries(feedbackCategories)) {
+            const messages = [];
+
+            for (const attr of attributes) {
+                const value = attrs[attr];
+                if (value !== undefined) {
+                    const feedback = getTasteFeedback(attr, value);
+                    if (feedback) {
+                        messages.push(feedback);
+                    }
+                }
+            }
+
+            if (messages.length > 0) {
+                // Determine log type based on category
+                let logType = "neutral";
+                if (category === "COSMIC") logType = "design";
+                if (category === "EFFECT" && messages.some(m => m.includes("TOXIC") || m.includes("SANITY"))) {
+                    logType = "error";
+                }
+
+                this.log(`${category}: ${messages.join(" ")}`, logType);
+                hasOutput = true;
+            }
+        }
+
+        if (!hasOutput) {
+            this.log("ANALYSIS: Unremarkable. No distinctive traits detected.");
+        }
+
+        this.log("═══════════════════════════════════", "system");
+
+        // Apply sanity damage from the food itself if it has negative sanity
+        if (attrs.sanity < 0) {
+            const sanityDamage = Math.abs(Math.floor(attrs.sanity));
+            this.sanity -= sanityDamage;
+            this.log(`The taste damages your sanity! (-${sanityDamage} additional)`, "error");
+        }
+
         if (this.sanity <= 0) {
             this.gameOver("SANITY DEPLETED");
             return;
         }
-        
+
         if (this.sanity <= 30) {
             this.log("Reality distorting... (Sanity Critical!)", "design");
         } else if (this.sanity <= 50) {
             this.log("Vision blurring... (Sanity Low)", "design");
         }
-        
+
         this.render();
     }
 
@@ -813,27 +1817,61 @@ class Game {
             return;
         }
         const item = this.countertop[this.selectedIndices[0]];
-        
+
         // Special handling for Gordon G boss battle
         if (this.customer.isBoss) {
             this.serveGordonG(item);
             return;
         }
-        
-        this.log(`SERVING ${item} to ${this.customer.name}...`);
-        
-        if (item === this.customer.want) {
-            this.log("CUSTOMER: 'Delicious! Exactly what I wanted.'");
-            this.money += 15;
-            this.log("Received $15.");
+
+        this.log(`═══ SERVING ${item.toUpperCase()} ═══`, "system");
+
+        // Get food attributes and customer demand
+        const foodAttrs = getFoodAttributes(item);
+        const demandVector = this.customer.demand;
+
+        // Calculate Euclidean distance
+        const distance = calculateDistance(foodAttrs, demandVector);
+        const payment = calculatePayment(distance);
+        const satisfaction = getSatisfactionRating(distance);
+
+        this.log(`${this.customer.name} examines the ${item}...`);
+
+        // Show detailed comparison for interesting attributes
+        this.showAttributeComparison(foodAttrs, demandVector);
+
+        // Customer reaction based on satisfaction
+        if (satisfaction.rating === "PERFECT") {
+            this.log(`CUSTOMER: "PERFECT! This is EXACTLY what I wanted!"`, "system");
+        } else if (satisfaction.rating === "EXCELLENT") {
+            this.log(`CUSTOMER: "Wonderful! This is great!"`);
+        } else if (satisfaction.rating === "GOOD") {
+            this.log(`CUSTOMER: "This is pretty good, thanks!"`);
+        } else if (satisfaction.rating === "OKAY") {
+            this.log(`CUSTOMER: "Hmm... not quite what I imagined, but okay."`);
+        } else if (satisfaction.rating === "POOR") {
+            this.log(`CUSTOMER: "This isn't really what I asked for..."`, "error");
         } else {
-            this.log("CUSTOMER: 'This... is not what I asked for.'");
-            this.log("Customer left angry. No tip.", "error");
+            this.log(`CUSTOMER: "What IS this?! This is NOTHING like what I wanted!"`, "error");
         }
-        
+
+        this.log(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`);
+        this.log(`Match Distance: ${distance.toFixed(2)}`);
+
+        if (payment >= 1) {
+            this.money += Math.floor(payment);
+            this.log(`Received $${Math.floor(payment)}.`, "system");
+        } else if (payment > 0) {
+            this.log(`Customer left a few cents. ($${payment.toFixed(2)})`);
+        } else {
+            this.log("Customer refused to pay.", "error");
+        }
+
+        this.log("═══════════════════════════════════", "system");
+
         this.countertop.splice(this.selectedIndices[0], 1);
         this.clearSelection();
-        
+
         this.customersServedCount++;
         this.render();
 
@@ -846,24 +1884,91 @@ class Game {
         }
     }
 
+    // Show comparison between food attributes and customer demand
+    showAttributeComparison(foodAttrs, demandVector) {
+        const comparisons = [];
+
+        for (const [attr, demandVal] of Object.entries(demandVector)) {
+            const foodVal = foodAttrs[attr] || 0;
+            const diff = foodVal - demandVal;
+
+            // Create readable attribute name
+            const attrName = attr.replace(/([A-Z])/g, ' $1').toLowerCase();
+
+            if (Math.abs(diff) <= 1) {
+                comparisons.push({ attr: attrName, status: "match", diff });
+            } else if (diff > 0) {
+                comparisons.push({ attr: attrName, status: "high", diff });
+            } else {
+                comparisons.push({ attr: attrName, status: "low", diff });
+            }
+        }
+
+        // Show a summary of matches and mismatches
+        const matches = comparisons.filter(c => c.status === "match");
+        const highs = comparisons.filter(c => c.status === "high");
+        const lows = comparisons.filter(c => c.status === "low");
+
+        if (matches.length > 0) {
+            this.log(`  [OK] ${matches.map(c => c.attr).join(", ")}`);
+        }
+        if (highs.length > 0) {
+            const highMsgs = highs.map(c => `${c.attr} (+${c.diff.toFixed(0)})`);
+            this.log(`  [HIGH] ${highMsgs.join(", ")}`, "design");
+        }
+        if (lows.length > 0) {
+            const lowMsgs = lows.map(c => `${c.attr} (${c.diff.toFixed(0)})`);
+            this.log(`  [LOW] ${lowMsgs.join(", ")}`, "error");
+        }
+    }
+
     serveGordonG(item) {
         const currentOrder = this.customer.orders[this.customer.currentCourse];
-        
-        this.log(`SERVING ${item} as ${currentOrder.name}...`);
-        
-        if (item === currentOrder.want) {
-            this.log(`GORDON G: "Acceptable. This ${currentOrder.name} meets my standards."`, "system");
-            this.money += 25;
-            this.log("Received $25 (Boss Bonus).");
-            
+
+        this.log(`═══ SERVING ${item.toUpperCase()} AS ${currentOrder.name.toUpperCase()} ═══`, "system");
+
+        // Get food attributes and boss demand
+        const foodAttrs = getFoodAttributes(item);
+        const demandVector = currentOrder.demand;
+
+        // Calculate Euclidean distance
+        const distance = calculateDistance(foodAttrs, demandVector);
+        const satisfaction = getSatisfactionRating(distance);
+
+        this.log(`Gordon G. scrutinizes the ${item} intensely...`);
+
+        // Show detailed comparison
+        this.showAttributeComparison(foodAttrs, demandVector);
+
+        this.log(`Match Distance: ${distance.toFixed(2)} (Max allowed: ${currentOrder.maxDistance})`);
+
+        // Boss has strict requirements - must be within maxDistance
+        if (distance <= currentOrder.maxDistance) {
+            // Calculate bonus based on how close the match was
+            const baseBonus = 25;
+            const perfectBonus = distance <= 3 ? 15 : (distance <= 5 ? 10 : 5);
+            const totalBonus = baseBonus + perfectBonus;
+
+            if (distance <= 3) {
+                this.log(`GORDON G: "MAGNIFICENT! This ${currentOrder.name} is PERFECT!"`, "system");
+            } else if (distance <= 5) {
+                this.log(`GORDON G: "Excellent work. This ${currentOrder.name} meets my high standards."`, "system");
+            } else {
+                this.log(`GORDON G: "Acceptable. This ${currentOrder.name} will do."`, "system");
+            }
+
+            this.log(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`);
+            this.money += totalBonus;
+            this.log(`Received $${totalBonus} (Boss Bonus + Precision: $${perfectBonus}).`, "system");
+
             this.customer.currentCourse++;
             this.customer.coursesServed++;
-            
+
             // Remove served item
             this.countertop.splice(this.selectedIndices[0], 1);
             this.clearSelection();
             this.render();
-            
+
             // Check if all courses completed
             if (this.customer.coursesServed >= this.customer.coursesRequired) {
                 setTimeout(() => {
@@ -872,21 +1977,24 @@ class Game {
             } else {
                 // Move to next course
                 setTimeout(() => {
+                    this.log(`═══════════════════════════════════`, "system");
                     this.log(`Next course: ${this.customer.orders[this.customer.currentCourse].name}`, "system");
                     this.updateGordonDisplay();
                 }, 1500);
             }
         } else {
-            // INSTANT GAME OVER on boss failure
-            this.log(`GORDON G: "DISGRACEFUL! This is NOT a proper ${currentOrder.name}!"`, "error");
+            // Distance too high - GAME OVER
+            this.log(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`, "error");
+            this.log(`GORDON G: "DISGRACEFUL! This is NOTHING like a proper ${currentOrder.name}!"`, "error");
+            this.log(`Distance ${distance.toFixed(2)} exceeds maximum tolerance of ${currentOrder.maxDistance}!`, "error");
             this.log("Gordon G smashes his clipboard on the table!", "error");
             this.log("CRITICAL FAILURE - BOSS BATTLE LOST!", "error");
-            
+
             // Remove item
             this.countertop.splice(this.selectedIndices[0], 1);
             this.clearSelection();
             this.render();
-            
+
             setTimeout(() => {
                 this.gameOver("GORDON G DEFEATED YOU");
             }, 2000);
