@@ -1430,6 +1430,7 @@ class Game {
 
         // Initialize the ingredient deck with 6 random basic ingredients
         this.availableIngredients = [];
+        this.ingredientCosts = {};  // Track cost of each ingredient
         this.initializeIngredientDeck();
 
         this.log("DAY 1 INITIALIZED.");
@@ -1443,14 +1444,31 @@ class Game {
     initializeIngredientDeck() {
         const shuffled = [...ATOMS].sort(() => Math.random() - 0.5);
         this.availableIngredients = shuffled.slice(0, 6);
-        this.log("FRIDGE STOCKED WITH: " + this.availableIngredients.join(", "), "system");
+        // Set $1 cost for each basic atom ingredient
+        this.availableIngredients.forEach(atom => {
+            this.ingredientCosts[atom] = 1;
+        });
+        const stockList = this.availableIngredients.map(a => `${a} ($1)`).join(", ");
+        this.log("FRIDGE STOCKED WITH: " + stockList, "system");
     }
 
-    // Add a newly crafted item to available ingredients if not already present
-    unlockIngredient(item) {
+    // Get the cost of an ingredient (returns 1 for unknown items)
+    getIngredientCost(item) {
+        return this.ingredientCosts[item] || 1;
+    }
+
+    // Add a newly crafted item to available ingredients with cost tracking
+    unlockIngredient(item, cost) {
         if (!this.availableIngredients.includes(item)) {
+            // New item - add it with its cost
             this.availableIngredients.push(item);
-            this.log(`NEW RECIPE UNLOCKED: ${item} now available in Fridge!`, "system");
+            this.ingredientCosts[item] = cost;
+            this.log(`NEW RECIPE UNLOCKED: ${item} ($${cost}) now available in Fridge!`, "system");
+        } else if (cost < this.ingredientCosts[item]) {
+            // Cheaper recipe found!
+            const oldCost = this.ingredientCosts[item];
+            this.ingredientCosts[item] = cost;
+            this.log(`CHEAPER RECIPE FOR ${item.toUpperCase()} UNLOCKED! $${oldCost} -> $${cost}`, "system");
         }
     }
 
@@ -1606,11 +1624,17 @@ class Game {
         const list = document.getElementById('fridge-items');
         list.innerHTML = "";
 
-        // Show only available ingredients (6 random starting + unlocked recipes)
+        // Show only available ingredients (6 random starting + unlocked recipes) with costs
         this.availableIngredients.forEach(item => {
+            const cost = this.getIngredientCost(item);
             const btn = document.createElement('button');
             btn.className = "btn";
-            btn.textContent = item;
+            btn.textContent = `${item} ($${cost})`;
+            // Grey out if player can't afford
+            if (this.money < cost) {
+                btn.style.opacity = "0.5";
+                btn.style.cursor = "not-allowed";
+            }
             btn.onclick = () => {
                 this.withdrawItem(item);
             };
@@ -1624,14 +1648,26 @@ class Game {
         document.getElementById('fridge-modal').classList.add('hidden');
     }
 
-    withdrawItem(atom) {
+    withdrawItem(item) {
         if (this.countertop.length >= 8) {
             this.log("Countertop is full!", "error");
             this.closeFridge();
             return;
         }
-        this.countertop.push(atom);
-        this.log(`Withdrew ${atom} from Fridge.`);
+
+        const cost = this.getIngredientCost(item);
+
+        // Check if player can afford it
+        if (this.money < cost) {
+            this.log(`Cannot afford ${item} ($${cost})! You have $${this.money}.`, "error");
+            this.closeFridge();
+            return;
+        }
+
+        // Deduct cost and add to countertop
+        this.money -= cost;
+        this.countertop.push(item);
+        this.log(`Withdrew ${item} from Fridge. -$${cost}`);
         this.render();
         this.closeFridge();
     }
@@ -1647,15 +1683,20 @@ class Game {
         const item2 = this.countertop[this.selectedIndices[1]];
         const key = item1 + "+" + item2;
 
+        // Calculate crafting cost as sum of ingredient costs
+        const cost1 = this.getIngredientCost(item1);
+        const cost2 = this.getIngredientCost(item2);
+        const totalCost = cost1 + cost2;
+
         let result = RECIPES[key];
 
         if (!result) {
             result = "Burnt Slop";
             this.log(`Failed Combo: ${item1} + ${item2} = ${result}`, "error");
         } else {
-            this.log(`Cooking: ${item1} + ${item2} -> ${result}`);
-            // Unlock the newly crafted food for this run
-            this.unlockIngredient(result);
+            this.log(`Cooking: ${item1} ($${cost1}) + ${item2} ($${cost2}) -> ${result} ($${totalCost})`);
+            // Unlock the newly crafted food for this run with its cost
+            this.unlockIngredient(result, totalCost);
         }
 
         this.selectedIndices.sort((a,b) => b-a);
@@ -1702,14 +1743,15 @@ class Game {
             return;
         }
         const item = this.countertop[this.selectedIndices[0]];
+        const itemCost = this.getIngredientCost(item);
 
         // Check if amplification recipe exists
         if (RECIPES[item] && !item.includes("+")) {
             const result = RECIPES[item];
             this.countertop[this.selectedIndices[0]] = result;
-            this.log(`Amplified ${item} into ${result}!`);
-            // Unlock the amplified item for this run
-            this.unlockIngredient(result);
+            this.log(`Amplified ${item} ($${itemCost}) into ${result} ($${itemCost})!`);
+            // Unlock the amplified item for this run (same cost as input)
+            this.unlockIngredient(result, itemCost);
         } else {
             this.log("Nothing happened. Item cannot be amplified.", "error");
         }
@@ -1725,6 +1767,7 @@ class Game {
             return;
         }
         const item = this.countertop[this.selectedIndices[0]];
+        const itemCost = this.getIngredientCost(item);
         const chance = Math.random();
 
         this.countertop.splice(this.selectedIndices[0], 1);
@@ -1733,22 +1776,22 @@ class Game {
         // Check if specific mutation exists
         if (RECIPES[item] && (item === "Meat" || item === "Fish" || item === "Egg" || item === "Potato" || item === "Cheese")) {
             result = RECIPES[item];
-            this.log(`Microwave mutated ${item} into ${result}!`);
+            this.log(`Microwave mutated ${item} ($${itemCost}) into ${result} ($${itemCost})!`);
             this.countertop.push(result);
-            // Unlock the mutated item for this run
-            this.unlockIngredient(result);
+            // Unlock the mutated item for this run (same cost as input)
+            this.unlockIngredient(result, itemCost);
         } else if (chance > 0.7) {
             result = "Radioactive Slime";
-            this.log("Microwave mutated item into: RADIOACTIVE SLIME", "error");
+            this.log(`Microwave mutated ${item} ($${itemCost}) into: RADIOACTIVE SLIME ($${itemCost})`, "error");
             this.countertop.push(result);
             // Unlock radioactive slime for this run
-            this.unlockIngredient(result);
+            this.unlockIngredient(result, itemCost);
         } else {
             result = "Hot " + item;
-            this.log(`Microwave just made ${item} really hot...`);
+            this.log(`Microwave made ${item} ($${itemCost}) really hot -> ${result} ($${itemCost})`);
             this.countertop.push(result);
             // Unlock the hot variant for this run
-            this.unlockIngredient(result);
+            this.unlockIngredient(result, itemCost);
         }
         this.clearSelection();
         this.render();
