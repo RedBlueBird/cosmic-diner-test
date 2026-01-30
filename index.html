@@ -1420,19 +1420,38 @@ class Game {
         this.sanity = 100;
         this.day = 1;
         this.rent = 20;
-        
+
         this.customersPerDay = 3;
         this.customersServedCount = 0;
         this.isDayActive = true;
-        
+
         this.countertop = [];
         this.selectedIndices = [];
-        
+
+        // Initialize the ingredient deck with 6 random basic ingredients
+        this.availableIngredients = [];
+        this.initializeIngredientDeck();
+
         this.log("DAY 1 INITIALIZED.");
         this.log("RENT DUE END OF SHIFT: $" + this.rent);
-        
+
         this.customer = null;
         this.nextCustomer();
+    }
+
+    // Randomly select 6 ingredients from the 24 basic ATOMS for this run
+    initializeIngredientDeck() {
+        const shuffled = [...ATOMS].sort(() => Math.random() - 0.5);
+        this.availableIngredients = shuffled.slice(0, 6);
+        this.log("FRIDGE STOCKED WITH: " + this.availableIngredients.join(", "), "system");
+    }
+
+    // Add a newly crafted item to available ingredients if not already present
+    unlockIngredient(item) {
+        if (!this.availableIngredients.includes(item)) {
+            this.availableIngredients.push(item);
+            this.log(`NEW RECIPE UNLOCKED: ${item} now available in Fridge!`, "system");
+        }
     }
 
     log(msg, type="neutral") {
@@ -1585,14 +1604,15 @@ class Game {
         if (!this.isDayActive) return;
         const modal = document.getElementById('fridge-modal');
         const list = document.getElementById('fridge-items');
-        list.innerHTML = ""; 
+        list.innerHTML = "";
 
-        ATOMS.forEach(atom => {
+        // Show only available ingredients (6 random starting + unlocked recipes)
+        this.availableIngredients.forEach(item => {
             const btn = document.createElement('button');
             btn.className = "btn";
-            btn.textContent = atom;
+            btn.textContent = item;
             btn.onclick = () => {
-                this.withdrawItem(atom);
+                this.withdrawItem(item);
             };
             list.appendChild(btn);
         });
@@ -1626,14 +1646,16 @@ class Game {
         const item1 = this.countertop[this.selectedIndices[0]];
         const item2 = this.countertop[this.selectedIndices[1]];
         const key = item1 + "+" + item2;
-        
+
         let result = RECIPES[key];
-        
+
         if (!result) {
             result = "Burnt Slop";
             this.log(`Failed Combo: ${item1} + ${item2} = ${result}`, "error");
         } else {
             this.log(`Cooking: ${item1} + ${item2} -> ${result}`);
+            // Unlock the newly crafted food for this run
+            this.unlockIngredient(result);
         }
 
         this.selectedIndices.sort((a,b) => b-a);
@@ -1680,15 +1702,18 @@ class Game {
             return;
         }
         const item = this.countertop[this.selectedIndices[0]];
-        
+
         // Check if amplification recipe exists
         if (RECIPES[item] && !item.includes("+")) {
-            this.countertop[this.selectedIndices[0]] = RECIPES[item];
-            this.log(`Amplified ${item} into ${RECIPES[item]}!`);
+            const result = RECIPES[item];
+            this.countertop[this.selectedIndices[0]] = result;
+            this.log(`Amplified ${item} into ${result}!`);
+            // Unlock the amplified item for this run
+            this.unlockIngredient(result);
         } else {
             this.log("Nothing happened. Item cannot be amplified.", "error");
         }
-        
+
         this.clearSelection();
         this.render();
     }
@@ -1701,20 +1726,29 @@ class Game {
         }
         const item = this.countertop[this.selectedIndices[0]];
         const chance = Math.random();
-        
+
         this.countertop.splice(this.selectedIndices[0], 1);
 
+        let result;
         // Check if specific mutation exists
         if (RECIPES[item] && (item === "Meat" || item === "Fish" || item === "Egg" || item === "Potato" || item === "Cheese")) {
-            const result = RECIPES[item];
+            result = RECIPES[item];
             this.log(`Microwave mutated ${item} into ${result}!`);
             this.countertop.push(result);
+            // Unlock the mutated item for this run
+            this.unlockIngredient(result);
         } else if (chance > 0.7) {
+            result = "Radioactive Slime";
             this.log("Microwave mutated item into: RADIOACTIVE SLIME", "error");
-            this.countertop.push("Radioactive Slime");
+            this.countertop.push(result);
+            // Unlock radioactive slime for this run
+            this.unlockIngredient(result);
         } else {
+            result = "Hot " + item;
             this.log(`Microwave just made ${item} really hot...`);
-            this.countertop.push("Hot " + item);
+            this.countertop.push(result);
+            // Unlock the hot variant for this run
+            this.unlockIngredient(result);
         }
         this.clearSelection();
         this.render();
