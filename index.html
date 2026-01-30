@@ -511,13 +511,13 @@ const CUSTOMER_TYPES = [
     { name: "Fast Food Fan", want: "Salted Fries", hint: "Fried potatoes with salt.", avatar: "   O \n >/|< \n  / \\" },
     { name: "Asian Foodie", want: "Egg Fried Rice", hint: "Rice fried with egg.", avatar: "   O \n  /|\\~ \n  / \\" },
     { name: "Spice Addict", want: "Spicy Sushi", hint: "Sushi but make it hurt.", avatar: "  ~O~ \n  /|\\ \n  / \\" },
-    { name: "Rich Businessman", want: "Deluxe Beef Bowl", hint: "Beef bowl with egg on top.", avatar: "  %O% \n  /|\\ \n  / \\" },
     { name: "Coffee Addict", want: "Black Coffee", hint: "Pure coffee. No milk.", avatar: "  *O* \n  /|\\ \n  / \\" },
     { name: "Cafe Regular", want: "Latte", hint: "Coffee with milk.", avatar: "   O \n ~/|\\ \n  / \\" },
     { name: "Sweet Tooth", want: "Ice Cream", hint: "Cold sweet cream.", avatar: "  ^O^ \n  /|\\ \n  / \\" },
-    { name: "Shake Lover", want: "Chocolate Shake", hint: "Cold chocolate milk drink.", avatar: "   o \n  /|\\~ \n  / \\" },
     { name: "Health Nut", want: "Salad", hint: "Lettuce and tomato together.", avatar: "  +O+ \n  /|\\ \n  / \\" },
     { name: "Steak Expert", want: "Peppered Steak", hint: "Steak with pepper seasoning.", avatar: "  =O= \n  /|\\ \n  / \\" },
+    { name: "Tea Drinker", want: "Tea", hint: "Hot tea, simple and calming.", avatar: "   O \n  /|\\. \n  / \\" },
+    { name: "Potato Lover", want: "Baked Potato", hint: "Just a cooked potato.", avatar: "   O \n  /|\\ \n  / \\" },
     
     // Weird/Dangerous Customers
     { name: "Pyromaniac", want: "Fire", hint: "I want to eat pure HEAT.", avatar: "  ( ) \n  /|\\ \n  / \\" },
@@ -570,6 +570,12 @@ class Game {
     nextCustomer() {
         if (!this.isDayActive) return;
         
+        // Check if this is the final customer of Day 5 (Gordon G boss fight)
+        if (this.day === 5 && this.customersServedCount === this.customersPerDay - 1) {
+            this.spawnGordonG();
+            return;
+        }
+        
         const template = CUSTOMER_TYPES[Math.floor(Math.random() * CUSTOMER_TYPES.length)];
         this.customer = { ...template };
         
@@ -579,6 +585,45 @@ class Game {
         document.getElementById('customer-order').textContent = "???";
         
         this.log(`CUSTOMER ARRIVED: ${this.customer.name}`);
+        this.render();
+    }
+
+    spawnGordonG() {
+        this.customer = {
+            name: "Gordon G. Scowling",
+            isBoss: true,
+            coursesRequired: 3,
+            coursesServed: 0,
+            orders: [
+                { name: "Appetizer", want: "Dressed Salad", hint: "A salad with oil dressing. Fresh greens are not enough!" },
+                { name: "Main Course", want: "Deluxe Beef Bowl", hint: "The ultimate beef bowl. Rice, meat, AND egg combined!" },
+                { name: "Dessert", want: "Chocolate Shake", hint: "Cold chocolate milk. Not just chocolate milk - it must be ICE COLD!" }
+            ],
+            currentCourse: 0,
+            avatar: `  [G]
+ <|||>
+  /|\\
+  / \\`
+        };
+        
+        this.log("======================", "system");
+        this.log("BOSS CUSTOMER ARRIVED!", "system");
+        this.log("GORDON G. SCOWLING - FOOD CRITIC", "system");
+        this.log("======================", "system");
+        this.log("He demands a 3-COURSE MEAL!", "design");
+        this.log("These are COMPLEX dishes - prepare carefully!", "design");
+        
+        this.updateGordonDisplay();
+    }
+
+    updateGordonDisplay() {
+        document.getElementById('customer-name').textContent = this.customer.name + " [BOSS]";
+        document.getElementById('customer-avatar').textContent = this.customer.avatar;
+        
+        const currentOrder = this.customer.orders[this.customer.currentCourse];
+        document.getElementById('customer-quote').textContent = currentOrder.hint;
+        document.getElementById('customer-order').textContent = `Course ${this.customer.currentCourse + 1}/3: ???`;
+        
         this.render();
     }
 
@@ -769,6 +814,12 @@ class Game {
         }
         const item = this.countertop[this.selectedIndices[0]];
         
+        // Special handling for Gordon G boss battle
+        if (this.customer.isBoss) {
+            this.serveGordonG(item);
+            return;
+        }
+        
         this.log(`SERVING ${item} to ${this.customer.name}...`);
         
         if (item === this.customer.want) {
@@ -793,6 +844,103 @@ class Game {
                 this.nextCustomer();
             }, 1500);
         }
+    }
+
+    serveGordonG(item) {
+        const currentOrder = this.customer.orders[this.customer.currentCourse];
+        
+        this.log(`SERVING ${item} as ${currentOrder.name}...`);
+        
+        if (item === currentOrder.want) {
+            this.log(`GORDON G: "Acceptable. This ${currentOrder.name} meets my standards."`, "system");
+            this.money += 25;
+            this.log("Received $25 (Boss Bonus).");
+            
+            this.customer.currentCourse++;
+            this.customer.coursesServed++;
+            
+            // Remove served item
+            this.countertop.splice(this.selectedIndices[0], 1);
+            this.clearSelection();
+            this.render();
+            
+            // Check if all courses completed
+            if (this.customer.coursesServed >= this.customer.coursesRequired) {
+                setTimeout(() => {
+                    this.defeatGordonG();
+                }, 1500);
+            } else {
+                // Move to next course
+                setTimeout(() => {
+                    this.log(`Next course: ${this.customer.orders[this.customer.currentCourse].name}`, "system");
+                    this.updateGordonDisplay();
+                }, 1500);
+            }
+        } else {
+            // INSTANT GAME OVER on boss failure
+            this.log(`GORDON G: "DISGRACEFUL! This is NOT a proper ${currentOrder.name}!"`, "error");
+            this.log("Gordon G smashes his clipboard on the table!", "error");
+            this.log("CRITICAL FAILURE - BOSS BATTLE LOST!", "error");
+            
+            // Remove item
+            this.countertop.splice(this.selectedIndices[0], 1);
+            this.clearSelection();
+            this.render();
+            
+            setTimeout(() => {
+                this.gameOver("GORDON G DEFEATED YOU");
+            }, 2000);
+        }
+    }
+
+    defeatGordonG() {
+        this.log("======================", "system");
+        this.log("GORDON G: 'Magnificent! A perfect 3-course meal!'", "system");
+        this.log("GORDON G: 'Your cooking... it's RAW TALENT!'", "system");
+        this.log("======================", "system");
+        this.log("BOSS DEFEATED!", "system");
+        
+        this.money += 50; // Boss completion bonus
+        this.log("Received $50 BOSS BONUS!");
+        
+        this.customersServedCount++;
+        this.render();
+        
+        // Show victory screen
+        setTimeout(() => {
+            this.showVictory();
+        }, 2000);
+    }
+
+    showVictory() {
+        this.isDayActive = false;
+        this.log("=== YOU DEFEATED GORDON G! ===", "system");
+        
+        const panel = document.getElementById('log-panel');
+        const victoryDiv = document.createElement('div');
+        victoryDiv.className = "game-over";
+        victoryDiv.innerHTML = `
+            <br>
+            =============================<br>
+            🌟 VICTORY! 🌟<br>
+            =============================<br>
+            YOU DEFEATED GORDON G!<br>
+            THE FOOD CRITIC HAS BEEN SATISFIED!<br>
+            <br>
+            FINAL STATS:<br>
+            Days Survived: ${this.day}<br>
+            Total Money Earned: $${this.money}<br>
+            Final Sanity: ${this.sanity}%<br>
+            <br>
+            =============================<br>
+            STAY TUNED FOR THE FULL VERSION<br>
+            WITH MORE BOSSES, ALIEN ARCS,<br>
+            AND ELDRITCH HORRORS!<br>
+            =============================<br>
+            <br>
+            <button class="btn" onclick="location.reload()">RESTART GAME</button>
+        `;
+        panel.appendChild(victoryDiv);
     }
 
     endDay() {
