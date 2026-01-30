@@ -1081,10 +1081,10 @@ function calculateDistance(foodAttrs, demandVector) {
     return Math.sqrt(sumSquares);
 }
 
-// Calculate payment based on distance: 20 * 1.5^(-sqrt(distance))
+// Calculate payment based on distance: 20 * 1.3^(-sqrt(distance))
 // Close match = more money, far match = less money
 function calculatePayment(distance) {
-    const payment = 20 * Math.pow(1.5, -Math.sqrt(distance));
+    const payment = 20 * Math.pow(1.3, -Math.sqrt(distance));
     return Math.max(0, Math.round(payment * 100) / 100); // Round to cents, min $0
 }
 
