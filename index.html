@@ -1869,28 +1869,30 @@ class Game {
         const payment = calculatePayment(distance);
         const satisfaction = getSatisfactionRating(distance);
 
+        // Show what the customer wanted
+        const orderHints = this.getDemandHints(demandVector);
+        this.log(`Order: ${orderHints}`);
+
         this.log(`${this.customer.name} examines the ${item}...`);
 
-        // Show detailed comparison for interesting attributes
-        this.showAttributeComparison(foodAttrs, demandVector);
-
         // Customer reaction based on satisfaction
+        let comment;
         if (satisfaction.rating === "PERFECT") {
-            this.log(`CUSTOMER: "PERFECT! This is EXACTLY what I wanted!"`, "system");
+            comment = "PERFECT! This is EXACTLY what I wanted!";
         } else if (satisfaction.rating === "EXCELLENT") {
-            this.log(`CUSTOMER: "Wonderful! This is great!"`);
+            comment = "Wonderful! This is great!";
         } else if (satisfaction.rating === "GOOD") {
-            this.log(`CUSTOMER: "This is pretty good, thanks!"`);
+            comment = "This is pretty good, thanks!";
         } else if (satisfaction.rating === "OKAY") {
-            this.log(`CUSTOMER: "Hmm... not quite what I imagined, but okay."`);
+            comment = "Hmm... not quite what I imagined, but okay.";
         } else if (satisfaction.rating === "POOR") {
-            this.log(`CUSTOMER: "This isn't really what I asked for..."`, "error");
+            comment = "This isn't really what I asked for...";
         } else {
-            this.log(`CUSTOMER: "What IS this?! This is NOTHING like what I wanted!"`, "error");
+            comment = "What IS this?! This is NOTHING like what I wanted!";
         }
+        this.log(`Comment: "${comment}"`);
 
         this.log(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`);
-        this.log(`Match Distance: ${distance.toFixed(2)}`);
 
         if (payment >= 1) {
             this.money += Math.floor(payment);
@@ -1969,12 +1971,11 @@ class Game {
         const distance = calculateDistance(foodAttrs, demandVector);
         const satisfaction = getSatisfactionRating(distance);
 
+        // Show what the boss wanted
+        const orderHints = this.getDemandHints(demandVector);
+        this.log(`Order: ${orderHints}`);
+
         this.log(`Gordon G. scrutinizes the ${item} intensely...`);
-
-        // Show detailed comparison
-        this.showAttributeComparison(foodAttrs, demandVector);
-
-        this.log(`Match Distance: ${distance.toFixed(2)} (Max allowed: ${currentOrder.maxDistance})`);
 
         // Boss has strict requirements - must be within maxDistance
         if (distance <= currentOrder.maxDistance) {
@@ -1983,17 +1984,19 @@ class Game {
             const perfectBonus = distance <= 3 ? 15 : (distance <= 5 ? 10 : 5);
             const totalBonus = baseBonus + perfectBonus;
 
+            let comment;
             if (distance <= 3) {
-                this.log(`GORDON G: "MAGNIFICENT! This ${currentOrder.name} is PERFECT!"`, "system");
+                comment = `MAGNIFICENT! This ${currentOrder.name} is PERFECT!`;
             } else if (distance <= 5) {
-                this.log(`GORDON G: "Excellent work. This ${currentOrder.name} meets my high standards."`, "system");
+                comment = `Excellent work. This ${currentOrder.name} meets my high standards.`;
             } else {
-                this.log(`GORDON G: "Acceptable. This ${currentOrder.name} will do."`, "system");
+                comment = `Acceptable. This ${currentOrder.name} will do.`;
             }
+            this.log(`Comment: "${comment}"`, "system");
 
             this.log(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`);
             this.money += totalBonus;
-            this.log(`Received $${totalBonus} (Boss Bonus + Precision: $${perfectBonus}).`, "system");
+            this.log(`Received $${totalBonus}.`, "system");
 
             this.customer.currentCourse++;
             this.customer.coursesServed++;
@@ -2018,9 +2021,8 @@ class Game {
             }
         } else {
             // Distance too high - GAME OVER
+            this.log(`Comment: "DISGRACEFUL! This is NOTHING like a proper ${currentOrder.name}!"`, "error");
             this.log(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`, "error");
-            this.log(`GORDON G: "DISGRACEFUL! This is NOTHING like a proper ${currentOrder.name}!"`, "error");
-            this.log(`Distance ${distance.toFixed(2)} exceeds maximum tolerance of ${currentOrder.maxDistance}!`, "error");
             this.log("Gordon G smashes his clipboard on the table!", "error");
             this.log("CRITICAL FAILURE - BOSS BATTLE LOST!", "error");
 
