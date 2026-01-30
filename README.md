@@ -1,6 +1,7 @@
 # Cosmic Diner 
 
 Link: https://redbluebird.github.io/cosmic-diner-test/
+
 (quick prototype made in few hours, browser-based)
 
 **Genre:** Cooking Simulation / Knowledge Roguelike / Eldritch Horror
