@@ -9,6 +9,7 @@ let DEFAULT_ATTRIBUTES = {};
 let FOOD_ATTRIBUTES = {};
 let TASTE_FEEDBACK = {};
 let CUSTOMER_TYPES = [];
+let ARTIFACTS = [];
 
 // Helper to create food attributes with defaults
 export function createFoodAttr(overrides) {
@@ -72,10 +73,27 @@ export async function loadCustomers() {
     }
 }
 
+// Load artifacts from JSON
+export async function loadArtifacts() {
+    try {
+        const response = await fetch('data/artifacts.json');
+        ARTIFACTS = await response.json();
+        console.log('Artifact data loaded successfully');
+        return true;
+    } catch (error) {
+        console.error('Failed to load artifact data:', error);
+        return false;
+    }
+}
+
 // Getters for loaded data
 export function getRecipes() { return RECIPES; }
 export function getAtoms() { return ATOMS; }
 export function getCustomerTypes() { return CUSTOMER_TYPES; }
+export function getArtifacts() { return ARTIFACTS; }
+export function getArtifactById(id) {
+    return ARTIFACTS.find(artifact => artifact.id === id);
+}
 
 // Get attributes for any food item (with fallback for unknown items)
 export function getFoodAttributes(itemName) {
@@ -162,4 +180,22 @@ export function getDemandHints(demand) {
     }
 
     return hints.length > 0 ? hints.join(", ") : "???";
+}
+
+// Check if a dish is a simple dish (made from only 2 atoms)
+export function isSimpleDish(itemName) {
+    const recipes = getRecipes();
+
+    // Check all possible 2-atom combinations
+    for (const [combo, result] of Object.entries(recipes)) {
+        if (result === itemName) {
+            const parts = combo.split('+');
+            // A simple dish is made from exactly 2 atoms (base ingredients)
+            if (parts.length === 2 && ATOMS.includes(parts[0]) && ATOMS.includes(parts[1])) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

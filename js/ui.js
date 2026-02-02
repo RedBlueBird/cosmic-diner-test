@@ -118,6 +118,38 @@ export function hideFridgeModal() {
     document.getElementById('fridge-modal').classList.add('hidden');
 }
 
+// Show artifact selection modal
+export function showArtifactModal(artifactIds, onSelect) {
+    const modal = document.getElementById('artifact-modal');
+    const optionsDiv = document.getElementById('artifact-options');
+    optionsDiv.innerHTML = "";
+
+    // Import getArtifactById dynamically (we need it for display)
+    import('./utils.js').then(({ getArtifactById }) => {
+        artifactIds.forEach(artifactId => {
+            const artifact = getArtifactById(artifactId);
+            if (!artifact) return;
+
+            const card = document.createElement('div');
+            card.className = 'artifact-card';
+            card.innerHTML = `
+                <div class="artifact-name">${artifact.name}</div>
+                <div class="artifact-description">${artifact.description}</div>
+                <div class="artifact-category">[${artifact.category}]</div>
+            `;
+            card.onclick = () => onSelect(artifactId);
+            optionsDiv.appendChild(card);
+        });
+    });
+
+    modal.classList.remove('hidden');
+}
+
+// Hide artifact modal
+export function hideArtifactModal() {
+    document.getElementById('artifact-modal').classList.add('hidden');
+}
+
 // Show game over screen
 export function showGameOver(reason, day, customersServed) {
     const panel = document.getElementById('log-panel');

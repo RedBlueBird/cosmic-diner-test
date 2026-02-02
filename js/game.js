@@ -1,8 +1,8 @@
 import { APPLIANCE_UNLOCK_DAYS, FEEDBACK_CATEGORIES, GORDON_G_CONFIG } from './config.js';
 import {
-    getRecipes, getAtoms, getCustomerTypes,
+    getRecipes, getAtoms, getCustomerTypes, getArtifacts, getArtifactById,
     getFoodAttributes, getTasteFeedback,
-    calculateDistance, calculatePayment, getSatisfactionRating, getDemandHints
+    calculateDistance, calculatePayment, getSatisfactionRating, getDemandHints, isSimpleDish
 } from './utils.js';
 import * as UI from './ui.js';
 
@@ -24,6 +24,12 @@ export class Game {
         this.availableIngredients = [];
         this.ingredientCosts = {};
         this.initializeIngredientDeck();
+
+        // Artifact system
+        this.activeArtifacts = [];      // Array of collected artifact IDs
+        this.artifactPool = [];          // Available artifact IDs for selection
+        this.purchaseHistory = {};       // For Bulk Buyer: {itemName: count}
+        this.rentFrozenUntilDay = 0;     // For Rent Negotiator tracking
 
         this.log("DAY 1 INITIALIZED.");
         this.log("RENT DUE END OF SHIFT: $" + this.rent);
@@ -70,6 +76,59 @@ export class Game {
 
     log(msg, type = "neutral") {
         UI.log(msg, type);
+    }
+
+    // --- Artifact Helper Methods ---
+
+    initializeArtifactPool() {
+        const artifacts = getArtifacts();
+        this.artifactPool = artifacts.map(a => a.id);
+    }
+
+    hasArtifact(artifactId) {
+        return this.activeArtifacts.includes(artifactId);
+    }
+
+    getMaxSanity() {
+        return this.hasArtifact('stoics_resolve') ? 150 : 100;
+    }
+
+    getCountertopCapacity() {
+        return this.hasArtifact('expanded_countertop') ? 12 : 8;
+    }
+
+    getAtomCostWithArtifacts(item, baseCost) {
+        // Penny Pincher: All atoms cost $0.50
+        if (this.hasArtifact('penny_pincher')) {
+            return 0.5;
+        }
+
+        // Price Gouger: Atoms cost +$1
+        if (this.hasArtifact('price_gouger')) {
+            return baseCost + 1;
+        }
+
+        return baseCost;
+    }
+
+    applyBulkDiscount(item, cost) {
+        if (!this.hasArtifact('bulk_buyer')) {
+            return cost;
+        }
+
+        // Track purchase history
+        if (!this.purchaseHistory[item]) {
+            this.purchaseHistory[item] = 0;
+        }
+        this.purchaseHistory[item]++;
+
+        // Every 3rd purchase is free
+        if (this.purchaseHistory[item] % 3 === 0) {
+            this.log(`BULK BUYER: ${item} is FREE! (3rd purchase)`, "system");
+            return 0;
+        }
+
+        return cost;
     }
 
     nextCustomer() {
@@ -137,13 +196,16 @@ export class Game {
     }
 
     withdrawItem(item) {
-        if (this.countertop.length >= 8) {
+        const capacity = this.getCountertopCapacity();
+        if (this.countertop.length >= capacity) {
             this.log("Countertop is full!", "error");
             this.closeFridge();
             return;
         }
 
-        const cost = this.getIngredientCost(item);
+        const baseCost = this.getIngredientCost(item);
+        let cost = this.getAtomCostWithArtifacts(item, baseCost);
+        cost = this.applyBulkDiscount(item, cost);
 
         if (this.money < cost) {
             this.log(`Cannot afford ${item} ($${cost})! You have $${this.money}.`, "error");
@@ -170,8 +232,16 @@ export class Game {
         const item2 = this.countertop[this.selectedIndices[1]];
         const key = item1 + "+" + item2;
 
-        const cost1 = this.getIngredientCost(item1);
-        const cost2 = this.getIngredientCost(item2);
+        let cost1 = this.getIngredientCost(item1);
+        let cost2 = this.getIngredientCost(item2);
+
+        // Pan Perfectionist: Reduce ingredient costs by 50% (min $1)
+        if (this.hasArtifact('pan_perfectionist')) {
+            cost1 = Math.max(1, Math.ceil(cost1 * 0.5));
+            cost2 = Math.max(1, Math.ceil(cost2 * 0.5));
+            this.log("PAN PERFECTIONIST: Ingredient costs halved!", "system");
+        }
+
         const totalCost = cost1 + cost2;
 
         let result = RECIPES[key];
@@ -179,6 +249,11 @@ export class Game {
         if (!result) {
             result = "Burnt Slop";
             this.log(`Failed Combo: ${item1} + ${item2} = ${result}`, "error");
+
+            // Chef's Intuition: Show hint for unknown combos
+            if (this.hasArtifact('chefs_intuition')) {
+                this.log("CHEF'S INTUITION: This combination doesn't exist in your recipe book.", "system");
+            }
         } else {
             this.log(`Cooking: ${item1} ($${cost1}) + ${item2} ($${cost2}) -> ${result} ($${totalCost})`);
             this.unlockIngredient(result, totalCost);
@@ -284,11 +359,29 @@ export class Game {
     useTrash() {
         if (!this.isDayActive) return;
         if (this.selectedIndices.length === 0) return;
+
+        let totalRefund = 0;
+
         this.selectedIndices.sort((a, b) => b - a);
         this.selectedIndices.forEach(idx => {
-            this.log(`Trashed ${this.countertop[idx]}`);
+            const item = this.countertop[idx];
+            this.log(`Trashed ${item}`);
+
+            // The Recycler: Refund 50% of item cost
+            if (this.hasArtifact('the_recycler')) {
+                const itemCost = this.getIngredientCost(item);
+                const refund = Math.ceil(itemCost * 0.5);
+                totalRefund += refund;
+            }
+
             this.countertop.splice(idx, 1);
         });
+
+        if (totalRefund > 0) {
+            this.money += totalRefund;
+            this.log(`THE RECYCLER: Refunded $${totalRefund}!`, "system");
+        }
+
         this.clearSelection();
         this.render();
     }
@@ -300,7 +393,14 @@ export class Game {
             return;
         }
         const item = this.countertop[this.selectedIndices[0]];
-        this.sanity -= 10;
+
+        // Adrenaline Rush: Cap taste cost at 10 sanity when below 40 sanity
+        let sanityCost = 10;
+        if (this.hasArtifact('adrenaline_rush') && this.sanity < 40) {
+            sanityCost = Math.min(10, sanityCost);
+        }
+
+        this.sanity -= sanityCost;
 
         const attrs = getFoodAttributes(item);
 
@@ -345,6 +445,13 @@ export class Game {
             this.log(`The taste damages your sanity! (-${sanityDamage} additional)`, "error");
         }
 
+        // Caffeine Addiction: Coffee restores sanity instead of costing it
+        if (this.hasArtifact('caffeine_addiction') && item.toLowerCase().includes('coffee')) {
+            const maxSanity = this.getMaxSanity();
+            this.sanity = Math.min(maxSanity, this.sanity + 15);
+            this.log("CAFFEINE ADDICTION: Coffee restores 15 sanity!", "system");
+        }
+
         if (this.sanity <= 0) {
             this.gameOver("SANITY DEPLETED");
             return;
@@ -378,7 +485,7 @@ export class Game {
         const demandVector = this.customer.demand;
 
         const distance = calculateDistance(foodAttrs, demandVector);
-        const payment = calculatePayment(distance);
+        let payment = calculatePayment(distance);
         const satisfaction = getSatisfactionRating(distance);
 
         const orderHints = getDemandHints(demandVector);
@@ -406,6 +513,41 @@ export class Game {
 
         this.log(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`);
 
+        // Apply payment bonus artifacts (multiplicative stacking)
+        let paymentMultiplier = 1;
+        const bonusReasons = [];
+
+        const isExcellentOrPerfect = satisfaction.rating === "EXCELLENT" || satisfaction.rating === "PERFECT";
+
+        // Tip Jar: Excellent/Perfect pays 50% extra
+        if (this.hasArtifact('tip_jar') && isExcellentOrPerfect) {
+            paymentMultiplier *= 1.5;
+            bonusReasons.push("Tip Jar");
+        }
+
+        // Generous Portions: Filling >= 4 pays 50% extra
+        if (this.hasArtifact('generous_portions') && foodAttrs.filling >= 4) {
+            paymentMultiplier *= 1.5;
+            bonusReasons.push("Generous Portions");
+        }
+
+        // Fast Food Service: Simple dishes pay 50% extra
+        if (this.hasArtifact('fast_food_service') && isSimpleDish(item)) {
+            paymentMultiplier *= 1.5;
+            bonusReasons.push("Fast Food Service");
+        }
+
+        // Price Gouger: Always 50% extra
+        if (this.hasArtifact('price_gouger')) {
+            paymentMultiplier *= 1.5;
+            bonusReasons.push("Price Gouger");
+        }
+
+        if (paymentMultiplier > 1) {
+            payment *= paymentMultiplier;
+            this.log(`BONUS (${bonusReasons.join(" + ")}): ${paymentMultiplier}x payment!`, "system");
+        }
+
         if (payment >= 1) {
             this.money += Math.floor(payment);
             this.log(`Received $${Math.floor(payment)}.`, "system");
@@ -413,6 +555,13 @@ export class Game {
             this.log(`Customer left a few cents. ($${payment.toFixed(2)})`);
         } else {
             this.log("Customer refused to pay.", "error");
+        }
+
+        // Meditation Master: Excellent/Perfect gives +5 sanity
+        if (this.hasArtifact('meditation_master') && isExcellentOrPerfect) {
+            const maxSanity = this.getMaxSanity();
+            this.sanity = Math.min(maxSanity, this.sanity + 5);
+            this.log("MEDITATION MASTER: +5 sanity from excellent service!", "system");
         }
 
         this.log("═══════════════════════════════════", "system");
@@ -526,6 +675,49 @@ export class Game {
         UI.showVictory(this.day, this.money, this.sanity);
     }
 
+    // --- Artifact Selection System ---
+
+    showArtifactSelection() {
+        // Check if there are any artifacts left in the pool
+        if (this.artifactPool.length === 0) {
+            this.log("No more artifacts available.", "system");
+            setTimeout(() => this.startNextDay(), 2000);
+            return;
+        }
+
+        // Randomly select up to 3 artifacts from the pool
+        const numToOffer = Math.min(3, this.artifactPool.length);
+        const shuffled = [...this.artifactPool].sort(() => Math.random() - 0.5);
+        const selectedArtifactIds = shuffled.slice(0, numToOffer);
+
+        this.log("Choose an artifact to enhance your abilities!", "system");
+
+        UI.showArtifactModal(selectedArtifactIds, (artifactId) => this.selectArtifact(artifactId));
+    }
+
+    selectArtifact(artifactId) {
+        const artifact = getArtifactById(artifactId);
+        if (!artifact) return;
+
+        // Add to active artifacts and remove from pool
+        this.activeArtifacts.push(artifactId);
+        this.artifactPool = this.artifactPool.filter(id => id !== artifactId);
+
+        this.log(`ARTIFACT ACQUIRED: ${artifact.name}!`, "system");
+        this.log(`${artifact.description}`, "design");
+
+        // Special handling for Rent Negotiator
+        if (artifactId === 'rent_negotiator') {
+            this.rentFrozenUntilDay = this.day + 1;
+            this.log("Rent increase frozen for the next day!", "system");
+        }
+
+        UI.hideArtifactModal();
+
+        // Start next day after a delay
+        setTimeout(() => this.startNextDay(), 2000);
+    }
+
     endDay() {
         this.isDayActive = false;
         this.log("=== SHIFT ENDED ===", "system");
@@ -535,9 +727,26 @@ export class Game {
             this.countertop = [];
         }
 
+        const maxSanity = this.getMaxSanity();
         const sanityRestore = 50;
-        this.sanity = Math.min(100, this.sanity + sanityRestore);
+        this.sanity = Math.min(maxSanity, this.sanity + sanityRestore);
         this.log(`Sanity restored by ${sanityRestore}%. Current: ${this.sanity}%`, "system");
+
+        // End-of-day artifact effects
+        // Night Owl: +10 sanity if money >= $50
+        if (this.hasArtifact('night_owl') && this.money >= 50) {
+            this.sanity = Math.min(maxSanity, this.sanity + 10);
+            this.log("NIGHT OWL: +10 sanity for having $50+!", "system");
+        }
+
+        // Investment Portfolio: +$1 per $10 saved (max $10)
+        if (this.hasArtifact('investment_portfolio')) {
+            const interest = Math.min(10, Math.floor(this.money / 10));
+            if (interest > 0) {
+                this.money += interest;
+                this.log(`INVESTMENT PORTFOLIO: Earned $${interest} interest!`, "system");
+            }
+        }
 
         this.log(`Deducting Rent: -$${this.rent}`);
         this.money -= this.rent;
@@ -548,25 +757,50 @@ export class Game {
             return;
         }
 
-        setTimeout(() => {
-            this.startNextDay();
-        }, 3000);
+        // Show artifact selection if before day 5 and pool has artifacts
+        if (this.day < 5 && this.artifactPool.length > 0) {
+            setTimeout(() => this.showArtifactSelection(), 2000);
+        } else {
+            setTimeout(() => this.startNextDay(), 3000);
+        }
     }
 
     startNextDay() {
         this.day++;
         this.customersServedCount = 0;
 
-        this.rent = Math.floor(this.rent * 1.5);
+        // Rent Negotiator: Freeze rent increase if artifact is active and within freeze period
+        if (this.day <= this.rentFrozenUntilDay) {
+            this.log(`RENT NEGOTIATOR: Rent increase frozen this day!`, "system");
+        } else {
+            this.rent = Math.floor(this.rent * 1.5);
+        }
+
         this.customersPerDay = 3 + Math.floor(this.day / 2);
 
         this.log(`=== STARTING DAY ${this.day} ===`, "system");
-        this.log(`Rent increased to $${this.rent}. Customer Quota: ${this.customersPerDay}`);
+        this.log(`Rent due at end of shift: $${this.rent}. Customer Quota: ${this.customersPerDay}`);
 
         const applianceNames = { board: 'BOARD', amp: 'AMPLIFIER', micro: 'MICROWAVE' };
         for (const [appliance, unlockDay] of Object.entries(APPLIANCE_UNLOCK_DAYS)) {
             if (unlockDay === this.day && applianceNames[appliance]) {
                 this.log(`NEW APPLIANCE UNLOCKED: [${applianceNames[appliance]}]!`, "system");
+            }
+        }
+
+        // Morning Prep: Add 2 random items to countertop
+        if (this.hasArtifact('morning_prep')) {
+            const capacity = this.getCountertopCapacity();
+            const spaceAvailable = capacity - this.countertop.length;
+            const itemsToAdd = Math.min(2, spaceAvailable, this.availableIngredients.length);
+
+            for (let i = 0; i < itemsToAdd; i++) {
+                const randomItem = this.availableIngredients[Math.floor(Math.random() * this.availableIngredients.length)];
+                this.countertop.push(randomItem);
+            }
+
+            if (itemsToAdd > 0) {
+                this.log(`MORNING PREP: Added ${itemsToAdd} random ingredient(s) to countertop!`, "system");
             }
         }
 

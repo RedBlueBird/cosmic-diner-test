@@ -204,3 +204,43 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     0%, 100% { color: #ff3333; }
     50% { color: #ff9999; }
 }
+
+/* Artifact Selection Modal */
+.artifact-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.artifact-card {
+    border: 2px solid #33ff33;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.artifact-card:hover {
+    background: rgba(0, 255, 0, 0.15);
+    border-color: #ffff00;
+    transform: translateX(5px);
+}
+
+.artifact-name {
+    color: #ffff00;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.artifact-description {
+    color: #aaffaa;
+    margin-bottom: 8px;
+}
+
+.artifact-category {
+    color: #888888;
+    font-size: 0.85em;
+    text-transform: uppercase;
+}

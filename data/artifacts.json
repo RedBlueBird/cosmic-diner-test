@@ -1,0 +1,128 @@
+[
+  {
+    "id": "the_recycler",
+    "name": "The Recycler",
+    "description": "Trashing items refunds 50% of their cost",
+    "category": "economic",
+    "effect": { "type": "trash_refund", "value": 0.5 }
+  },
+  {
+    "id": "tip_jar",
+    "name": "Tip Jar",
+    "description": "Excellent/Perfect ratings pay 50% extra",
+    "category": "economic",
+    "effect": { "type": "payment_multiplier", "value": 1.5, "condition": "excellent_or_perfect" }
+  },
+  {
+    "id": "stoics_resolve",
+    "name": "Stoic's Resolve",
+    "description": "Maximum sanity increased to 150",
+    "category": "sanity",
+    "effect": { "type": "max_sanity", "value": 150 }
+  },
+  {
+    "id": "expanded_countertop",
+    "name": "Expanded Countertop",
+    "description": "Countertop can hold 12 items instead of 8",
+    "category": "inventory",
+    "effect": { "type": "countertop_capacity", "value": 12 }
+  },
+  {
+    "id": "chefs_intuition",
+    "name": "Chef's Intuition",
+    "description": "Pan shows hints for unknown ingredient combinations",
+    "category": "recipe",
+    "effect": { "type": "recipe_hints", "value": true }
+  },
+  {
+    "id": "pan_perfectionist",
+    "name": "Pan Perfectionist",
+    "description": "Pan combinations cost 50% less in ingredients",
+    "category": "appliance",
+    "effect": { "type": "pan_cost_reduction", "value": 0.5 }
+  },
+  {
+    "id": "generous_portions",
+    "name": "Generous Portions",
+    "description": "Dishes with filling >= 4 pay 50% extra",
+    "category": "customer",
+    "effect": { "type": "payment_multiplier", "value": 1.5, "condition": "filling_gte_4" }
+  },
+  {
+    "id": "fast_food_service",
+    "name": "Fast Food Service",
+    "description": "Simple dishes (2 atoms) pay 50% extra",
+    "category": "customer",
+    "effect": { "type": "payment_multiplier", "value": 1.5, "condition": "simple_dish" }
+  },
+  {
+    "id": "rent_negotiator",
+    "name": "Rent Negotiator",
+    "description": "Freeze rent increase for one day cycle",
+    "category": "progression",
+    "effect": { "type": "freeze_rent", "value": 1 }
+  },
+  {
+    "id": "morning_prep",
+    "name": "Morning Prep",
+    "description": "Start each day with 2 random ingredients",
+    "category": "progression",
+    "effect": { "type": "daily_items", "value": 2 }
+  },
+  {
+    "id": "night_owl",
+    "name": "Night Owl",
+    "description": "Ending the day with $50+ restores 10 sanity",
+    "category": "progression",
+    "effect": { "type": "end_day_sanity", "value": 10, "condition": "money_gte_50" }
+  },
+  {
+    "id": "price_gouger",
+    "name": "Price Gouger",
+    "description": "All payments 50% higher, but atoms cost +$1",
+    "category": "economic",
+    "effect": { "type": "payment_and_cost", "paymentMultiplier": 1.5, "costIncrease": 1 }
+  },
+  {
+    "id": "bulk_buyer",
+    "name": "Bulk Buyer",
+    "description": "Every 3rd purchase of the same ingredient is free",
+    "category": "economic",
+    "effect": { "type": "bulk_discount", "value": 3 }
+  },
+  {
+    "id": "penny_pincher",
+    "name": "Penny Pincher",
+    "description": "All atoms cost $0.50",
+    "category": "economic",
+    "effect": { "type": "atom_cost_fixed", "value": 0.5 }
+  },
+  {
+    "id": "investment_portfolio",
+    "name": "Investment Portfolio",
+    "description": "Earn $1 per $10 saved at day end (max $10)",
+    "category": "economic",
+    "effect": { "type": "end_day_interest", "rate": 0.1, "max": 10 }
+  },
+  {
+    "id": "meditation_master",
+    "name": "Meditation Master",
+    "description": "Excellent/Perfect ratings restore 5 sanity",
+    "category": "sanity",
+    "effect": { "type": "serve_sanity_bonus", "value": 5, "condition": "excellent_or_perfect" }
+  },
+  {
+    "id": "caffeine_addiction",
+    "name": "Caffeine Addiction",
+    "description": "Tasting coffee items restores 15 sanity instead of costing 10",
+    "category": "sanity",
+    "effect": { "type": "taste_sanity_bonus", "value": 15, "condition": "contains_coffee" }
+  },
+  {
+    "id": "adrenaline_rush",
+    "name": "Adrenaline Rush",
+    "description": "Below 40 sanity, taste tests only cost 10 sanity",
+    "category": "sanity",
+    "effect": { "type": "taste_cost_cap", "value": 10, "condition": "sanity_lt_40" }
+  }
+]
