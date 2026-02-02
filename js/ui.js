@@ -66,12 +66,12 @@ export function updateApplianceButtons(day) {
 
 // Render the main game UI
 export function render(gameState) {
-    const { money, sanity, day, rent, customersServedCount, customersPerDay, countertop, selectedIndices, activeArtifacts } = gameState;
+    const { money, sanity, day, rent, customersServedCount, customersPerDay, countertop, selectedIndices, activeArtifacts, maxSanity } = gameState;
 
     document.getElementById('money').textContent = money;
 
     const sanityDisplay = document.getElementById('sanity');
-    sanityDisplay.textContent = sanity;
+    sanityDisplay.textContent = `${sanity} / ${maxSanity}`;
     if (sanity <= 30) {
         sanityDisplay.className = "sanity-critical";
     } else {
@@ -116,7 +116,7 @@ export function render(gameState) {
 export function initApplianceTooltips() {
     const buttons = [
         // Appliance buttons
-        { id: 'btn-fridge', text: 'Withdraw an ingredient from your stock' },
+        { id: 'btn-fridge', text: 'Withdraw an ingredient from your stock to Countertop' },
         { id: 'btn-pan', text: 'Combine two ingredients into a new dish' },
         { id: 'btn-board', text: 'Break down a dish into its base ingredients' },
         { id: 'btn-amp', text: 'Amplify an ingredient into a different variant' },

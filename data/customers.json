@@ -269,7 +269,7 @@
         "avatar": " {oOo} \n \\/|\\/ \n  / \\",
         "demand": { "voidLevel": 15, "sanity": -15, "fear": 10 },
         "idealItem": "The Abyss",
-        "spawnDay": 1
+        "spawnDay": 4
     },
     {
         "name": "Fire Demon",

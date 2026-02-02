@@ -100,9 +100,9 @@
   {
     "id": "investment_portfolio",
     "name": "Investment Portfolio",
-    "description": "Earn $1 per $10 saved at day end (max $10)",
+    "description": "Earn $1 per $10 saved at day end",
     "category": "economic",
-    "effect": { "type": "end_day_interest", "rate": 0.1, "max": 10 }
+    "effect": { "type": "end_day_interest", "rate": 0.1, "max": 10000 }
   },
   {
     "id": "meditation_master",

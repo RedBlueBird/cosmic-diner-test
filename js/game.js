@@ -94,22 +94,32 @@ export class Game {
     }
 
     getMaxSanity() {
-        return this.hasArtifact('stoics_resolve') ? 150 : 100;
+        if (this.hasArtifact('stoics_resolve')) {
+            const artifact = getArtifactById('stoics_resolve');
+            return artifact.effect.value;
+        }
+        return 100;
     }
 
     getCountertopCapacity() {
-        return this.hasArtifact('expanded_countertop') ? 12 : 8;
+        if (this.hasArtifact('expanded_countertop')) {
+            const artifact = getArtifactById('expanded_countertop');
+            return artifact.effect.value;
+        }
+        return 8;
     }
 
     getAtomCostWithArtifacts(item, baseCost) {
-        // Penny Pincher: All atoms cost $0.50
+        // Penny Pincher: All atoms cost fixed price
         if (this.hasArtifact('penny_pincher')) {
-            return 0.5;
+            const artifact = getArtifactById('penny_pincher');
+            return artifact.effect.value;
         }
 
-        // Price Gouger: Atoms cost +$1
+        // Price Gouger: Atoms cost extra
         if (this.hasArtifact('price_gouger')) {
-            return baseCost + 1;
+            const artifact = getArtifactById('price_gouger');
+            return baseCost + artifact.effect.costIncrease;
         }
 
         return baseCost;
@@ -120,19 +130,28 @@ export class Game {
             return cost;
         }
 
+        const artifact = getArtifactById('bulk_buyer');
+        const freeEveryNth = artifact.effect.value; // e.g., 3 for every 3rd
+
         // Track purchase history
         if (!this.purchaseHistory[item]) {
             this.purchaseHistory[item] = 0;
         }
         this.purchaseHistory[item]++;
 
-        // Every 3rd purchase is free
-        if (this.purchaseHistory[item] % 3 === 0) {
-            this.log(`BULK BUYER: ${item} is FREE! (3rd purchase)`, "system");
+        // Every Nth purchase is free
+        if (this.purchaseHistory[item] % freeEveryNth === 0) {
+            this.log(`BULK BUYER: ${item} is FREE! (${freeEveryNth}${this.getOrdinalSuffix(freeEveryNth)} purchase)`, "system");
             return 0;
         }
 
         return cost;
+    }
+
+    getOrdinalSuffix(n) {
+        const s = ["th", "st", "nd", "rd"];
+        const v = n % 100;
+        return s[(v - 20) % 10] || s[v] || s[0];
     }
 
     // Initialize Chef's Intuition hover behavior on PAN button
@@ -234,9 +253,17 @@ export class Game {
 
     useFridge() {
         if (!this.isDayActive) return;
+
+        // Calculate adjusted costs for display (with artifacts applied)
+        const displayCosts = {};
+        this.availableIngredients.forEach(item => {
+            const baseCost = this.ingredientCosts[item] || 1;
+            displayCosts[item] = this.getAtomCostWithArtifacts(item, baseCost);
+        });
+
         UI.showFridgeModal(
             this.availableIngredients,
-            this.ingredientCosts,
+            displayCosts,
             this.money,
             (item) => this.withdrawItem(item)
         );
@@ -286,11 +313,14 @@ export class Game {
         let cost1 = this.getIngredientCost(item1);
         let cost2 = this.getIngredientCost(item2);
 
-        // Pan Perfectionist: Reduce ingredient costs by 50% (min $1)
+        // Pan Perfectionist: Reduce ingredient costs (min $1)
         if (this.hasArtifact('pan_perfectionist')) {
-            cost1 = Math.max(1, Math.ceil(cost1 * 0.5));
-            cost2 = Math.max(1, Math.ceil(cost2 * 0.5));
-            this.log("PAN PERFECTIONIST: Ingredient costs halved!", "system");
+            const artifact = getArtifactById('pan_perfectionist');
+            const reduction = artifact.effect.value; // e.g., 0.5 for 50% reduction
+            cost1 = Math.max(1, Math.ceil(cost1 * reduction));
+            cost2 = Math.max(1, Math.ceil(cost2 * reduction));
+            const percent = Math.round((1 - reduction) * 100);
+            this.log(`PAN PERFECTIONIST: Ingredient costs reduced by ${percent}%!`, "system");
         }
 
         const totalCost = cost1 + cost2;
@@ -442,10 +472,12 @@ export class Game {
             const item = this.countertop[idx];
             this.log(`Trashed ${item}`);
 
-            // The Recycler: Refund 50% of item cost
+            // The Recycler: Refund percentage of item cost
             if (this.hasArtifact('the_recycler')) {
+                const artifact = getArtifactById('the_recycler');
+                const refundRate = artifact.effect.value; // e.g., 0.5 for 50%
                 const itemCost = this.getIngredientCost(item);
-                const refund = Math.ceil(itemCost * 0.5);
+                const refund = Math.ceil(itemCost * refundRate);
                 totalRefund += refund;
             }
 
@@ -469,10 +501,18 @@ export class Game {
         }
         const item = this.countertop[this.selectedIndices[0]];
 
-        // Adrenaline Rush: Cap taste cost at 10 sanity when below 40 sanity
+        // Base taste cost
         let sanityCost = 10;
-        if (this.hasArtifact('adrenaline_rush') && this.sanity < 40) {
-            sanityCost = Math.min(10, sanityCost);
+
+        // Adrenaline Rush: Cap taste cost when below threshold
+        if (this.hasArtifact('adrenaline_rush')) {
+            const artifact = getArtifactById('adrenaline_rush');
+            const costCap = artifact.effect.value; // e.g., 10
+            // Parse sanity threshold from condition (e.g., "sanity_lt_40" -> 40)
+            const sanityThreshold = parseInt(artifact.effect.condition.split('_')[2]) || 40;
+            if (this.sanity < sanityThreshold) {
+                sanityCost = Math.min(costCap, sanityCost);
+            }
         }
 
         this.sanity -= sanityCost;
@@ -522,9 +562,11 @@ export class Game {
 
         // Caffeine Addiction: Coffee restores sanity instead of costing it
         if (this.hasArtifact('caffeine_addiction') && item.toLowerCase().includes('coffee')) {
+            const artifact = getArtifactById('caffeine_addiction');
+            const sanityBonus = artifact.effect.value;
             const maxSanity = this.getMaxSanity();
-            this.sanity = Math.min(maxSanity, this.sanity + 15);
-            this.log("CAFFEINE ADDICTION: Coffee restores 15 sanity!", "system");
+            this.sanity = Math.min(maxSanity, this.sanity + sanityBonus);
+            this.log(`CAFFEINE ADDICTION: Coffee restores ${sanityBonus} sanity!`, "system");
         }
 
         if (this.sanity <= 0) {
@@ -594,27 +636,35 @@ export class Game {
 
         const isExcellentOrPerfect = satisfaction.rating === "EXCELLENT" || satisfaction.rating === "PERFECT";
 
-        // Tip Jar: Excellent/Perfect pays 50% extra
+        // Tip Jar: Excellent/Perfect pays extra
         if (this.hasArtifact('tip_jar') && isExcellentOrPerfect) {
-            paymentMultiplier *= 1.5;
+            const artifact = getArtifactById('tip_jar');
+            paymentMultiplier *= artifact.effect.value;
             bonusReasons.push("Tip Jar");
         }
 
-        // Generous Portions: Filling >= 4 pays 50% extra
-        if (this.hasArtifact('generous_portions') && foodAttrs.filling >= 4) {
-            paymentMultiplier *= 1.5;
-            bonusReasons.push("Generous Portions");
+        // Generous Portions: High filling pays extra
+        if (this.hasArtifact('generous_portions')) {
+            const artifact = getArtifactById('generous_portions');
+            // Parse filling threshold from condition (e.g., "filling_gte_4" -> 4)
+            const fillingThreshold = parseInt(artifact.effect.condition.split('_')[2]) || 4;
+            if (foodAttrs.filling >= fillingThreshold) {
+                paymentMultiplier *= artifact.effect.value;
+                bonusReasons.push("Generous Portions");
+            }
         }
 
-        // Fast Food Service: Simple dishes pay 50% extra
+        // Fast Food Service: Simple dishes pay extra
         if (this.hasArtifact('fast_food_service') && isSimpleDish(item)) {
-            paymentMultiplier *= 1.5;
+            const artifact = getArtifactById('fast_food_service');
+            paymentMultiplier *= artifact.effect.value;
             bonusReasons.push("Fast Food Service");
         }
 
-        // Price Gouger: Always 50% extra
+        // Price Gouger: Always pays extra
         if (this.hasArtifact('price_gouger')) {
-            paymentMultiplier *= 1.5;
+            const artifact = getArtifactById('price_gouger');
+            paymentMultiplier *= artifact.effect.paymentMultiplier;
             bonusReasons.push("Price Gouger");
         }
 
@@ -632,11 +682,13 @@ export class Game {
             this.log("Customer refused to pay.", "error");
         }
 
-        // Meditation Master: Excellent/Perfect gives +5 sanity
+        // Meditation Master: Excellent/Perfect gives sanity bonus
         if (this.hasArtifact('meditation_master') && isExcellentOrPerfect) {
+            const artifact = getArtifactById('meditation_master');
+            const sanityBonus = artifact.effect.value;
             const maxSanity = this.getMaxSanity();
-            this.sanity = Math.min(maxSanity, this.sanity + 5);
-            this.log("MEDITATION MASTER: +5 sanity from excellent service!", "system");
+            this.sanity = Math.min(maxSanity, this.sanity + sanityBonus);
+            this.log(`MEDITATION MASTER: +${sanityBonus} sanity from excellent service!`, "system");
         }
 
         this.log("═══════════════════════════════════", "system");
@@ -809,15 +861,24 @@ export class Game {
         this.log(`Sanity restored by ${sanityRestore}%. Current: ${this.sanity}%`, "system");
 
         // End-of-day artifact effects
-        // Night Owl: +10 sanity if money >= $50
-        if (this.hasArtifact('night_owl') && this.money >= 50) {
-            this.sanity = Math.min(maxSanity, this.sanity + 10);
-            this.log("NIGHT OWL: +10 sanity for having $50+!", "system");
+        // Night Owl: Restore sanity if money threshold met
+        if (this.hasArtifact('night_owl')) {
+            const artifact = getArtifactById('night_owl');
+            const sanityBonus = artifact.effect.value; // e.g., 10
+            // Parse money threshold from condition string (e.g., "money_gte_50" -> 50)
+            const moneyThreshold = parseInt(artifact.effect.condition.split('_')[2]) || 50;
+            if (this.money >= moneyThreshold) {
+                this.sanity = Math.min(maxSanity, this.sanity + sanityBonus);
+                this.log(`NIGHT OWL: +${sanityBonus} sanity for having $${moneyThreshold}+!`, "system");
+            }
         }
 
-        // Investment Portfolio: +$1 per $10 saved (max $10)
+        // Investment Portfolio: Earn interest based on artifact parameters
         if (this.hasArtifact('investment_portfolio')) {
-            const interest = Math.min(10, Math.floor(this.money / 10));
+            const artifact = getArtifactById('investment_portfolio');
+            const rate = artifact.effect.rate; // e.g., 0.1 for 10%
+            const maxInterest = artifact.effect.max; // e.g., 10
+            const interest = Math.min(maxInterest, Math.floor(this.money * rate));
             if (interest > 0) {
                 this.money += interest;
                 this.log(`INVESTMENT PORTFOLIO: Earned $${interest} interest!`, "system");
@@ -867,11 +928,13 @@ export class Game {
             }
         }
 
-        // Morning Prep: Add 2 random items from ANY food (even unlocked ones)
+        // Morning Prep: Add random items from ANY food (even unlocked ones)
         if (this.hasArtifact('morning_prep')) {
+            const artifact = getArtifactById('morning_prep');
+            const numItems = artifact.effect.value; // e.g., 2
             const capacity = this.getCountertopCapacity();
             const spaceAvailable = capacity - this.countertop.length;
-            const itemsToAdd = Math.min(2, spaceAvailable);
+            const itemsToAdd = Math.min(numItems, spaceAvailable);
 
             if (itemsToAdd > 0) {
                 // Get all possible food items (atoms + all recipe results)
@@ -922,6 +985,7 @@ export class Game {
         UI.render({
             money: this.money,
             sanity: this.sanity,
+            maxSanity: this.getMaxSanity(),
             day: this.day,
             rent: this.rent,
             customersServedCount: this.customersServedCount,
