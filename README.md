@@ -2,9 +2,13 @@
 
 Link: https://redbluebird.github.io/cosmic-diner-test/
 
+<br/>
+
 **Genre:** Cooking Simulation / Knowledge Roguelike / Eldritch Horror
 
 **Summary:** Manage a diner that transitions from serving mundane humans to eldritch beings over a 30-day cycle.
+
+<br/>
 
 **Description:** 
 
