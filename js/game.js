@@ -11,7 +11,7 @@ export class Game {
         this.money = 50;
         this.sanity = 100;
         this.day = 1;
-        this.rent = 20;
+        this.rent = 30;
 
         this.customersPerDay = 3;
         this.customersServedCount = 0;
@@ -385,6 +385,8 @@ export class Game {
         this.log(`Order: ${orderHints}`);
 
         this.log(`${this.customer.name} examines the ${item}...`);
+
+        // this.log(`Distance from demand: ${distance.toFixed(2)}`);
 
         let comment;
         if (satisfaction.rating === "PERFECT") {
