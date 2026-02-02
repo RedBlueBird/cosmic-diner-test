@@ -10,6 +10,7 @@ let FOOD_ATTRIBUTES = {};
 let TASTE_FEEDBACK = {};
 let CUSTOMER_TYPES = [];
 let ARTIFACTS = [];
+let CONSUMABLES = [];
 
 // Helper to create food attributes with defaults
 export function createFoodAttr(overrides) {
@@ -86,6 +87,20 @@ export async function loadArtifacts() {
     }
 }
 
+// Load consumables from JSON
+export async function loadConsumables() {
+    try {
+        const response = await fetch('data/consumables.json');
+        const data = await response.json();
+        CONSUMABLES = data.consumables;
+        console.log('Consumables loaded successfully');
+        return true;
+    } catch (error) {
+        console.error('Failed to load consumables:', error);
+        return false;
+    }
+}
+
 // Getters for loaded data
 export function getRecipes() { return RECIPES; }
 export function getAtoms() { return ATOMS; }
@@ -94,23 +109,65 @@ export function getArtifacts() { return ARTIFACTS; }
 export function getArtifactById(id) {
     return ARTIFACTS.find(artifact => artifact.id === id);
 }
+export function getConsumables() { return CONSUMABLES; }
+export function getConsumableById(id) {
+    return CONSUMABLES.find(c => c.id === id);
+}
+
+// --- Item Object Helper Functions ---
+
+// Create standardized item object
+export function createItemObject(name, modifiers = {}) {
+    return { name, modifiers: { ...modifiers } };
+}
+
+// Extract name (backward compatible with strings)
+export function getItemName(item) {
+    return typeof item === 'string' ? item : item.name;
+}
+
+// Extract modifiers
+export function getItemModifiers(item) {
+    return typeof item === 'string' ? {} : (item.modifiers || {});
+}
+
+// Merge parent modifiers for recipe inheritance
+export function mergeModifiers(mods1, mods2) {
+    const merged = { ...mods1 };
+    for (const [attr, value] of Object.entries(mods2)) {
+        merged[attr] = (merged[attr] || 0) + value;
+    }
+    return merged;
+}
 
 // Get attributes for any food item (with fallback for unknown items)
-export function getFoodAttributes(itemName) {
+export function getFoodAttributes(item) {
+    const itemName = getItemName(item);
+    const itemModifiers = getItemModifiers(item);
+
+    // Get base attributes (existing logic)
+    let baseAttrs;
     if (FOOD_ATTRIBUTES[itemName]) {
-        return FOOD_ATTRIBUTES[itemName];
-    }
-    // Fallback for dynamically created items (like "Hot X")
-    if (itemName.startsWith("Hot ")) {
+        baseAttrs = { ...FOOD_ATTRIBUTES[itemName] };
+    } else if (itemName.startsWith("Hot ")) {
+        // Fallback for dynamically created items (like "Hot X")
         const baseItem = itemName.substring(4);
         if (FOOD_ATTRIBUTES[baseItem]) {
-            return { ...FOOD_ATTRIBUTES[baseItem], temperature: 8 };
+            baseAttrs = { ...FOOD_ATTRIBUTES[baseItem], temperature: 8 };
+        } else {
+            baseAttrs = createFoodAttr({ sanity: -1, health: 2, filling: 3 });
         }
+    } else {
+        // Ultimate fallback - mysterious unknown food
+        baseAttrs = createFoodAttr({ sanity: -1, health: 2, filling: 3 });
     }
-    // Ultimate fallback - mysterious unknown food
-    return createFoodAttr({
-        sanity: -1, health: 2, filling: 3,
-    });
+
+    // Apply runtime modifiers
+    for (const [attr, modifier] of Object.entries(itemModifiers)) {
+        baseAttrs[attr] = (baseAttrs[attr] || 0) + modifier;
+    }
+
+    return baseAttrs;
 }
 
 // Get feedback message for an attribute value

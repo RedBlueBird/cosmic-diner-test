@@ -79,7 +79,7 @@
   {
     "id": "price_gouger",
     "name": "Price Gouger",
-    "description": "All payments 50% extra, but atoms cost +$1",
+    "description": "All payments 50% extra, but all existing recipes cost +$1",
     "category": "economic",
     "effect": { "type": "payment_and_cost", "paymentMultiplier": 1.5, "costIncrease": 1 }
   },

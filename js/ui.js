@@ -1,5 +1,5 @@
 import { APPLIANCE_UNLOCK_DAYS } from './config.js';
-import { getArtifactById } from './utils.js';
+import { getArtifactById, getItemName, getItemModifiers, getConsumableById } from './utils.js';
 
 // Reusable tooltip component
 export function createTooltip(element, title, description) {
@@ -66,7 +66,7 @@ export function updateApplianceButtons(day) {
 
 // Render the main game UI
 export function render(gameState) {
-    const { money, sanity, day, rent, customersServedCount, customersPerDay, countertop, selectedIndices, activeArtifacts, maxSanity } = gameState;
+    const { money, sanity, day, rent, customersServedCount, customersPerDay, countertop, selectedIndices, activeArtifacts, maxSanity, consumableInventory, selectedConsumable } = gameState;
 
     document.getElementById('money').textContent = money;
 
@@ -91,16 +91,29 @@ export function render(gameState) {
 
     const list = document.getElementById('countertop-list');
     list.innerHTML = "";
-    countertop.forEach((item, index) => {
+    countertop.forEach((itemObj, index) => {
+        const itemName = getItemName(itemObj);
+        const modifiers = getItemModifiers(itemObj);
+
         const div = document.createElement('div');
         div.className = "item-slot" + (selectedIndices.includes(index) ? " selected" : "");
-        div.textContent = `[${index + 1}] ${item}`;
+
+        // Show ✦ if item has modifiers
+        const indicator = Object.keys(modifiers).length > 0 ? " ✦" : "";
+        div.textContent = `[${index + 1}] ${itemName}${indicator}`;
+
         div.onclick = () => gameState.onToggleSelection(index);
         list.appendChild(div);
     });
 
     // Update artifacts display
     updateArtifactsDisplay(activeArtifacts || []);
+
+    // Update consumables display
+    updateConsumablesDisplay(
+        consumableInventory || {},
+        gameState
+    );
 
     // Visual effects based on sanity
     if (sanity < 20) {
@@ -286,4 +299,36 @@ export function showVictory(day, money, sanity) {
         <button class="btn" onclick="location.reload()">RESTART GAME</button>
     `;
     panel.appendChild(victoryDiv);
+}
+
+// Update consumables display
+export function updateConsumablesDisplay(inventory, gameState) {
+    const list = document.getElementById('consumables-list');
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    const consumableIds = Object.keys(inventory).filter(id => inventory[id] > 0);
+
+    if (consumableIds.length === 0) {
+        list.innerHTML = '<div style="color: #888; text-align: center;">No consumables available</div>';
+        return;
+    }
+
+    consumableIds.forEach(id => {
+        const consumable = getConsumableById(id);
+        if (!consumable) return;
+
+        const quantity = inventory[id];
+
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.textContent = `${consumable.name} (${quantity})`;
+        btn.onclick = () => gameState.onUseConsumable(id);
+
+        // Add tooltip with consumable description
+        createTooltip(btn, consumable.description);
+
+        list.appendChild(btn);
+    });
 }

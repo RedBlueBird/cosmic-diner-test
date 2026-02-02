@@ -2,7 +2,9 @@ import { APPLIANCE_UNLOCK_DAYS, FEEDBACK_CATEGORIES, GORDON_G_CONFIG } from './c
 import {
     getRecipes, getAtoms, getCustomerTypes, getArtifacts, getArtifactById,
     getFoodAttributes, getTasteFeedback,
-    calculateDistance, calculatePayment, getSatisfactionRating, getDemandHints, isSimpleDish
+    calculateDistance, calculatePayment, getSatisfactionRating, getDemandHints, isSimpleDish,
+    createItemObject, getItemName, getItemModifiers, mergeModifiers,
+    getConsumables, getConsumableById
 } from './utils.js';
 import * as UI from './ui.js';
 
@@ -31,6 +33,18 @@ export class Game {
         this.purchaseHistory = {};       // For Bulk Buyer: {itemName: count}
         this.rentFrozenUntilDay = 0;     // For Rent Negotiator tracking
         this.morningPrepItems = new Set(); // Track items from Morning Prep (cannot unlock recipes)
+
+        // Consumables system
+        this.consumableInventory = {};  // { consumable_id: quantity }
+        this.activeEffects = {
+            luckyCoins: 0,
+            goldenPlate: false,
+            freeWithdrawals: 0
+        };
+        this.selectedConsumable = null;
+
+        // Grant starting consumable for testing
+        this.grantRandomConsumable();
 
         this.log("DAY 1 INITIALIZED.");
         this.log("RENT DUE END OF SHIFT: $" + this.rent);
@@ -201,6 +215,274 @@ export class Game {
         });
     }
 
+    // --- Consumable Methods ---
+
+    grantRandomConsumable() {
+        const consumables = getConsumables();
+        const random = consumables[Math.floor(Math.random() * consumables.length)];
+        this.grantConsumable(random.id, 1);
+        this.log(`STARTING BONUS: Received ${random.name}!`, "system");
+    }
+
+    grantConsumable(consumableId, quantity = 1) {
+        if (!this.consumableInventory[consumableId]) {
+            this.consumableInventory[consumableId] = 0;
+        }
+        this.consumableInventory[consumableId] += quantity;
+        this.render();
+    }
+
+    selectConsumable(consumableId) {
+        if (this.selectedConsumable === consumableId) {
+            this.selectedConsumable = null;
+            this.log("Consumable deselected.");
+        } else {
+            const consumable = getConsumableById(consumableId);
+            this.selectedConsumable = consumableId;
+            this.log(`Selected: ${consumable.name}. ${consumable.description}`);
+        }
+        this.render();
+    }
+
+    useConsumable() {
+        if (!this.selectedConsumable) {
+            this.log("No consumable selected!", "error");
+            return;
+        }
+
+        const consumable = getConsumableById(this.selectedConsumable);
+        const qty = this.consumableInventory[this.selectedConsumable] || 0;
+
+        if (qty <= 0) {
+            this.log(`Out of ${consumable.name}!`, "error");
+            return;
+        }
+
+        const effectType = consumable.effect.type;
+
+        try {
+            // Route to appropriate handler based on effect type
+            if (effectType === 'attribute_modifier') {
+                this.applyAttributeModifier(consumable);
+            } else if (effectType === 'sanity_restore') {
+                this.applySanityRestore(consumable);
+            } else if (effectType === 'payment_multiplier') {
+                this.activeEffects.luckyCoins += consumable.effect.duration;
+                this.log(`${consumable.name}: Next customer pays ${consumable.effect.value}x!`, "system");
+            } else if (effectType === 'serve_emergency_food') {
+                this.serveEmergencyFood(consumable);
+            } else if (effectType === 'duplicate_item') {
+                this.duplicateSelectedItem();
+            } else if (effectType === 'unlock_random_ingredient') {
+                this.unlockRandomIngredient(consumable);
+            } else if (effectType === 'force_rating') {
+                this.activeEffects.goldenPlate = true;
+                this.log(`${consumable.name}: Next dish gets PERFECT rating!`, "system");
+            } else if (effectType === 'cursed_boost') {
+                this.applyCursedBoost(consumable);
+            } else if (effectType === 'grant_artifact') {
+                this.grantArtifactFromConsumable();
+            } else if (effectType === 'skip_customer') {
+                this.skipCurrentCustomer();
+            } else if (effectType === 'free_withdrawals') {
+                this.activeEffects.freeWithdrawals += consumable.effect.count;
+                this.log(`${consumable.name}: Next ${consumable.effect.count} fridge uses are free!`, "system");
+            }
+
+            // Consume the item
+            this.consumableInventory[this.selectedConsumable]--;
+            this.selectedConsumable = null;
+            this.clearSelection();
+            this.render();
+        } catch (error) {
+            // If there's an error (like not enough items selected), don't consume the consumable
+            this.render();
+        }
+    }
+
+    applyAttributeModifier(consumable) {
+        if (this.selectedIndices.length !== 1) {
+            const errorMsg = `${consumable.name.toUpperCase()} requires exactly 1 item selected.`;
+            this.log(errorMsg, "error");
+            throw new Error("Need item selection");
+        }
+
+        const itemIndex = this.selectedIndices[0];
+        const itemObj = this.countertop[itemIndex];
+        const modifiers = consumable.effect.modifiers;
+
+        // Apply modifiers to item
+        for (const [attr, value] of Object.entries(modifiers)) {
+            itemObj.modifiers[attr] = (itemObj.modifiers[attr] || 0) + value;
+        }
+
+        const modList = Object.entries(modifiers)
+            .map(([k, v]) => `${k} ${v > 0 ? '+' : ''}${v}`)
+            .join(', ');
+        this.log(`Applied ${consumable.name} to ${itemObj.name}! (${modList})`);
+    }
+
+    applySanityRestore(consumable) {
+        const maxSanity = this.getMaxSanity();
+        const restoreAmount = consumable.effect.value;
+        this.sanity = Math.min(maxSanity, this.sanity + restoreAmount);
+        this.log(`${consumable.name}: Restored ${restoreAmount} sanity!`, "system");
+    }
+
+    serveEmergencyFood(consumable) {
+        if (!this.customer) {
+            this.log("No customer to serve!", "error");
+            throw new Error("No customer");
+        }
+
+        if (this.customer.isBoss) {
+            this.log("Cannot serve emergency rations to GORDON G!", "error");
+            throw new Error("Cannot serve to boss");
+        }
+
+        const payment = consumable.effect.payment;
+        this.money += payment;
+        this.log(`${consumable.name}: Customer accepts emergency rations and pays $${payment}!`, "system");
+
+        this.customersServedCount++;
+
+        if (this.customersServedCount >= this.customersPerDay) {
+            this.endDay();
+        } else {
+            setTimeout(() => {
+                this.nextCustomer();
+            }, 1500);
+        }
+    }
+
+    duplicateSelectedItem() {
+        if (this.selectedIndices.length !== 1) {
+            this.log("MIRROR SHARD requires exactly 1 item selected.", "error");
+            throw new Error("Need item selection");
+        }
+
+        const capacity = this.getCountertopCapacity();
+        if (this.countertop.length >= capacity) {
+            this.log("Countertop is full! Cannot duplicate.", "error");
+            throw new Error("Countertop full");
+        }
+
+        const itemIndex = this.selectedIndices[0];
+        const itemObj = this.countertop[itemIndex];
+        const itemName = getItemName(itemObj);
+        const modifiers = getItemModifiers(itemObj);
+
+        // Create a duplicate with the same modifiers
+        const duplicate = createItemObject(itemName, modifiers);
+        this.countertop.push(duplicate);
+
+        this.log(`Mirror Shard: Duplicated ${itemName}${Object.keys(modifiers).length > 0 ? ' (with modifiers)' : ''}!`, "system");
+    }
+
+    unlockRandomIngredient(consumable) {
+        const RECIPES = getRecipes();
+        const atoms = getAtoms();
+        const recipeResults = [...new Set(Object.values(RECIPES))];
+        const allFoods = [...atoms, ...recipeResults];
+
+        // Filter out items already in fridge
+        const notInFridge = allFoods.filter(food => !this.availableIngredients.includes(food));
+
+        if (notInFridge.length === 0) {
+            this.log("All ingredients already unlocked!", "system");
+            return;
+        }
+
+        const randomFood = notInFridge[Math.floor(Math.random() * notInFridge.length)];
+        const cost = consumable.effect.cost;
+
+        this.availableIngredients.push(randomFood);
+        this.ingredientCosts[randomFood] = cost;
+
+        this.log(`${consumable.name}: Unlocked ${randomFood} ($${cost}) in your fridge!`, "system");
+    }
+
+    applyCursedBoost(consumable) {
+        if (this.selectedIndices.length !== 1) {
+            this.log("CURSED CUTLERY requires exactly 1 item selected.", "error");
+            throw new Error("Need item selection");
+        }
+
+        const itemIndex = this.selectedIndices[0];
+        const itemObj = this.countertop[itemIndex];
+        const boost = consumable.effect.all_attributes_boost;
+        const voidBoost = consumable.effect.void_boost;
+
+        // Get current attributes to know which ones to boost
+        const currentAttrs = getFoodAttributes(itemObj);
+
+        // Apply +10 to all existing attributes
+        for (const attr in currentAttrs) {
+            if (currentAttrs[attr] !== 0) {
+                itemObj.modifiers[attr] = (itemObj.modifiers[attr] || 0) + boost;
+            }
+        }
+
+        // Always add void boost
+        itemObj.modifiers.void = (itemObj.modifiers.void || 0) + voidBoost;
+
+        this.log(`${consumable.name}: ${itemObj.name} is now EXTREMELY POWERFUL (+${boost} all, +${voidBoost} void)!`, "error");
+    }
+
+    grantArtifactFromConsumable() {
+        if (this.artifactPool.length === 0) {
+            this.log("No more artifacts available!", "system");
+            this.money += 50; // Refund equivalent value
+            this.log("Received $50 refund instead.", "system");
+            return;
+        }
+
+        // Randomly select an artifact from the pool
+        const randomIndex = Math.floor(Math.random() * this.artifactPool.length);
+        const artifactId = this.artifactPool[randomIndex];
+        const artifact = getArtifactById(artifactId);
+
+        // Add to active artifacts and remove from pool
+        this.activeArtifacts.push(artifactId);
+        this.artifactPool = this.artifactPool.filter(id => id !== artifactId);
+
+        this.log("═══ WISHING WELL PENNY ═══", "system");
+        this.log(`ARTIFACT ACQUIRED: ${artifact.name}!`, "system");
+        this.log(`${artifact.description}`, "design");
+        this.log("═══════════════════════════", "system");
+
+        // Special handling for Rent Negotiator
+        if (artifactId === 'rent_negotiator') {
+            this.rentFrozenUntilDay = this.day + 1;
+            this.log("Rent increase frozen for the next day!", "system");
+        }
+
+        this.render();
+    }
+
+    skipCurrentCustomer() {
+        if (!this.customer) {
+            this.log("No customer to skip!", "error");
+            throw new Error("No customer");
+        }
+
+        if (this.customer.isBoss) {
+            this.log("Cannot skip GORDON G!", "error");
+            throw new Error("Cannot skip boss");
+        }
+
+        this.log(`Wishing Well Penny: Skipped ${this.customer.name}!`, "system");
+        this.customersServedCount++;
+
+        if (this.customersServedCount >= this.customersPerDay) {
+            this.endDay();
+        } else {
+            setTimeout(() => {
+                this.nextCustomer();
+            }, 1000);
+        }
+    }
+
     nextCustomer() {
         if (!this.isDayActive) return;
 
@@ -285,6 +567,13 @@ export class Game {
         let cost = this.getAtomCostWithArtifacts(item, baseCost);
         cost = this.applyBulkDiscount(item, cost);
 
+        // Apply free withdrawal effect
+        if (this.activeEffects.freeWithdrawals > 0) {
+            this.activeEffects.freeWithdrawals--;
+            this.log(`QUANTUM FRIDGE: ${item} is FREE! (${this.activeEffects.freeWithdrawals} left)`, "system");
+            cost = 0;
+        }
+
         if (this.money < cost) {
             this.log(`Cannot afford ${item} ($${cost})! You have $${this.money}.`, "error");
             this.closeFridge();
@@ -292,8 +581,12 @@ export class Game {
         }
 
         this.money -= cost;
-        this.countertop.push(item);
-        this.log(`Withdrew ${item} from Fridge. -$${cost}`);
+        this.countertop.push(createItemObject(item));
+        if (cost > 0) {
+            this.log(`Withdrew ${item} from Fridge. -$${cost}`);
+        } else {
+            this.log(`Withdrew ${item} from Fridge.`);
+        }
         this.render();
         this.closeFridge();
     }
@@ -306,12 +599,20 @@ export class Game {
         }
 
         const RECIPES = getRecipes();
-        const item1 = this.countertop[this.selectedIndices[0]];
-        const item2 = this.countertop[this.selectedIndices[1]];
+        const item1Obj = this.countertop[this.selectedIndices[0]];
+        const item2Obj = this.countertop[this.selectedIndices[1]];
+        const item1 = getItemName(item1Obj);
+        const item2 = getItemName(item2Obj);
         const key = item1 + "+" + item2;
 
-        let cost1 = this.getIngredientCost(item1);
-        let cost2 = this.getIngredientCost(item2);
+        // Merge modifiers from both items
+        const mods = mergeModifiers(getItemModifiers(item1Obj), getItemModifiers(item2Obj));
+
+        // Get base costs and apply artifact modifiers (Price Gouger, Penny Pincher)
+        const baseCost1 = this.getIngredientCost(item1);
+        const baseCost2 = this.getIngredientCost(item2);
+        let cost1 = this.getAtomCostWithArtifacts(item1, baseCost1);
+        let cost2 = this.getAtomCostWithArtifacts(item2, baseCost2);
 
         // Pan Perfectionist: Reduce ingredient costs (min $1)
         if (this.hasArtifact('pan_perfectionist')) {
@@ -345,7 +646,7 @@ export class Game {
         this.selectedIndices.sort((a, b) => b - a);
         this.countertop.splice(this.selectedIndices[0], 1);
         this.countertop.splice(this.selectedIndices[1], 1);
-        this.countertop.push(result);
+        this.countertop.push(createItemObject(result, mods));
         this.clearSelection();
         this.render();
     }
@@ -358,7 +659,9 @@ export class Game {
         }
 
         const RECIPES = getRecipes();
-        const item = this.countertop[this.selectedIndices[0]];
+        const itemObj = this.countertop[this.selectedIndices[0]];
+        const item = getItemName(itemObj);
+        const mods = getItemModifiers(itemObj);
 
         let ingredients = null;
         for (let [key, val] of Object.entries(RECIPES)) {
@@ -371,8 +674,9 @@ export class Game {
         if (ingredients) {
             this.log(`Chopping: ${item} -> ${ingredients[0]} + ${ingredients[1]}`);
             this.countertop.splice(this.selectedIndices[0], 1);
-            this.countertop.push(ingredients[0]);
-            this.countertop.push(ingredients[1]);
+            // Both split items inherit parent modifiers
+            this.countertop.push(createItemObject(ingredients[0], mods));
+            this.countertop.push(createItemObject(ingredients[1], mods));
         } else {
             this.log(`Cannot split ${item}. It is atomic or generic.`, "error");
         }
@@ -388,12 +692,15 @@ export class Game {
         }
 
         const RECIPES = getRecipes();
-        const item = this.countertop[this.selectedIndices[0]];
-        const itemCost = this.getIngredientCost(item);
+        const itemObj = this.countertop[this.selectedIndices[0]];
+        const item = getItemName(itemObj);
+        const mods = getItemModifiers(itemObj);
+        const baseItemCost = this.getIngredientCost(item);
+        const itemCost = this.getAtomCostWithArtifacts(item, baseItemCost);
 
         if (RECIPES[item] && !item.includes("+")) {
             const result = RECIPES[item];
-            this.countertop[this.selectedIndices[0]] = result;
+            this.countertop[this.selectedIndices[0]] = createItemObject(result, mods);
             this.log(`Amplified ${item} ($${itemCost}) into ${result} ($${itemCost})!`);
 
             // Check if item is from Morning Prep (if so, don't unlock recipe)
@@ -419,8 +726,11 @@ export class Game {
         }
 
         const RECIPES = getRecipes();
-        const item = this.countertop[this.selectedIndices[0]];
-        const itemCost = this.getIngredientCost(item);
+        const itemObj = this.countertop[this.selectedIndices[0]];
+        const item = getItemName(itemObj);
+        const mods = getItemModifiers(itemObj);
+        const baseItemCost = this.getIngredientCost(item);
+        const itemCost = this.getAtomCostWithArtifacts(item, baseItemCost);
         const chance = Math.random();
 
         // Check if item is from Morning Prep (if so, don't unlock recipe)
@@ -432,7 +742,7 @@ export class Game {
         if (RECIPES[item] && (item === "Meat" || item === "Fish" || item === "Egg" || item === "Potato" || item === "Cheese")) {
             result = RECIPES[item];
             this.log(`Microwave mutated ${item} ($${itemCost}) into ${result} ($${itemCost})!`);
-            this.countertop.push(result);
+            this.countertop.push(createItemObject(result, mods));
             if (!usesMorningPrepItem) {
                 this.unlockIngredient(result, itemCost);
             } else {
@@ -441,7 +751,7 @@ export class Game {
         } else if (chance > 0.7) {
             result = "Radioactive Slime";
             this.log(`Microwave mutated ${item} ($${itemCost}) into: RADIOACTIVE SLIME ($${itemCost})`, "error");
-            this.countertop.push(result);
+            this.countertop.push(createItemObject(result, mods));
             if (!usesMorningPrepItem) {
                 this.unlockIngredient(result, itemCost);
             } else {
@@ -450,7 +760,7 @@ export class Game {
         } else {
             result = "Hot " + item;
             this.log(`Microwave made ${item} ($${itemCost}) really hot -> ${result} ($${itemCost})`);
-            this.countertop.push(result);
+            this.countertop.push(createItemObject(result, mods));
             if (!usesMorningPrepItem) {
                 this.unlockIngredient(result, itemCost);
             } else {
@@ -499,7 +809,8 @@ export class Game {
             this.log("Select 1 item to taste.", "error");
             return;
         }
-        const item = this.countertop[this.selectedIndices[0]];
+        const itemObj = this.countertop[this.selectedIndices[0]];
+        const item = getItemName(itemObj);
 
         // Base taste cost
         let sanityCost = 10;
@@ -517,7 +828,7 @@ export class Game {
 
         this.sanity -= sanityCost;
 
-        const attrs = getFoodAttributes(item);
+        const attrs = getFoodAttributes(itemObj);
 
         this.log(`═══ TASTING '${item.toUpperCase()}' ═══`, "system");
 
@@ -589,21 +900,30 @@ export class Game {
             this.log("Select 1 dish to serve.", "error");
             return;
         }
-        const item = this.countertop[this.selectedIndices[0]];
+        const itemObj = this.countertop[this.selectedIndices[0]];
+        const item = getItemName(itemObj);
 
         if (this.customer.isBoss) {
-            this.serveGordonG(item);
+            this.serveGordonG(itemObj);
             return;
         }
 
         this.log(`═══ SERVING ${item.toUpperCase()} ═══`, "system");
 
-        const foodAttrs = getFoodAttributes(item);
+        const foodAttrs = getFoodAttributes(itemObj);
         const demandVector = this.customer.demand;
 
         const distance = calculateDistance(foodAttrs, demandVector);
         let payment = calculatePayment(distance);
-        const satisfaction = getSatisfactionRating(distance);
+        let satisfaction = getSatisfactionRating(distance);
+
+        // Apply Golden Plate effect
+        if (this.activeEffects.goldenPlate) {
+            satisfaction = { rating: "PERFECT", emoji: "★★★★★", color: "#ffff00" };
+            payment = calculatePayment(0);
+            this.log("GOLDEN PLATE: Automatic PERFECT rating!", "system");
+            this.activeEffects.goldenPlate = false;
+        }
 
         const orderHints = getDemandHints(demandVector);
         this.log(`Order: ${orderHints}`);
@@ -673,6 +993,13 @@ export class Game {
             this.log(`BONUS (${bonusReasons.join(" + ")}): ${paymentMultiplier}x payment!`, "system");
         }
 
+        // Apply Lucky Coin effect
+        if (this.activeEffects.luckyCoins > 0) {
+            payment *= 2;
+            this.log("LUCKY COIN: Payment doubled!", "system");
+            this.activeEffects.luckyCoins--;
+        }
+
         if (payment >= 1) {
             this.money += Math.floor(payment);
             this.log(`Received $${Math.floor(payment)}.`, "system");
@@ -708,12 +1035,13 @@ export class Game {
         }
     }
 
-    serveGordonG(item) {
+    serveGordonG(itemObj) {
+        const item = getItemName(itemObj);
         const currentOrder = this.customer.orders[this.customer.currentCourse];
 
         this.log(`═══ SERVING ${item.toUpperCase()} AS ${currentOrder.name.toUpperCase()} ═══`, "system");
 
-        const foodAttrs = getFoodAttributes(item);
+        const foodAttrs = getFoodAttributes(itemObj);
         const demandVector = currentOrder.demand;
 
         const distance = calculateDistance(foodAttrs, demandVector);
@@ -945,7 +1273,7 @@ export class Game {
 
                 for (let i = 0; i < itemsToAdd; i++) {
                     const randomItem = allFoods[Math.floor(Math.random() * allFoods.length)];
-                    this.countertop.push(randomItem);
+                    this.countertop.push(createItemObject(randomItem));
                     this.morningPrepItems.add(randomItem);
                 }
 
@@ -993,7 +1321,13 @@ export class Game {
             countertop: this.countertop,
             selectedIndices: this.selectedIndices,
             activeArtifacts: this.activeArtifacts,
-            onToggleSelection: (index) => this.toggleSelection(index)
+            consumableInventory: this.consumableInventory,
+            selectedConsumable: this.selectedConsumable,
+            onToggleSelection: (index) => this.toggleSelection(index),
+            onUseConsumable: (id) => {
+                this.selectedConsumable = id;
+                this.useConsumable();
+            }
         });
     }
 }

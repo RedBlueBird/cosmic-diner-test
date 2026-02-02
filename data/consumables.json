@@ -1,0 +1,354 @@
+{
+  "consumables": [
+    {
+      "id": "sugar_dispenser",
+      "name": "Sugar Dispenser",
+      "description": "Pure suger that enhances sweetness",
+      "category": "spice_vials",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "sweet": 5, "bitter": -3 }
+      }
+    },
+    {
+      "id": "tears_of_clown",
+      "name": "Tears of a Clown",
+      "description": "Harvested from cosmic jesters, adds sadness and void energy",
+      "category": "spice_vials",
+      "rarity": "uncommon",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "sadness": 5, "void": 3 }
+      }
+    },
+    {
+      "id": "msg_packet",
+      "name": "MSG Packet",
+      "description": "Umami explosion in a packet, enhances savory and salty flavors",
+      "category": "spice_vials",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "savory": 6, "salty": 2 }
+      }
+    },
+    {
+      "id": "vinegar_bottle",
+      "name": "Vinegar Bottle",
+      "description": "Sharp acidity that cuts through sweetness, enhances sourness",
+      "category": "spice_vials",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "sour": 5, "sweet": -2 }
+      }
+    },
+    {
+      "id": "ghost_pepper_extract",
+      "name": "Ghost Pepper Extract",
+      "description": "Intense heat that burns the tongue, enhances spiciness",
+      "category": "spice_vials",
+      "rarity": "uncommon",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "spicy": 7, "temperature": 3 }
+      }
+    },
+    {
+      "id": "himalayan_rock_salt",
+      "name": "Himalayan Rock Salt",
+      "description": "Coarse salt crystals that add salinity and texture",
+      "category": "spice_vials",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "salty": 5, "crunchy": 2 }
+      }
+    },
+    {
+      "id": "liquid_smoke",
+      "name": "Liquid Smoke",
+      "description": "Concentrated smoke essence with bitter undertones",
+      "category": "spice_vials",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "bitter": 4, "savory": 2 }
+      }
+    },
+    {
+      "id": "ice_cube_tray",
+      "name": "Ice Cube Tray",
+      "description": "Rapidly chills food to freezing temperatures",
+      "category": "texture_modifiers",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "temperature": -8, "moisture": 2 }
+      }
+    },
+    {
+      "id": "blowtorch",
+      "name": "Blowtorch",
+      "description": "Intense heat that sears and dries",
+      "category": "texture_modifiers",
+      "rarity": "uncommon",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "temperature": 8, "moisture": -2 }
+      }
+    },
+    {
+      "id": "butter_stick",
+      "name": "Butter Stick",
+      "description": "Rich fat that adds greasiness and softness",
+      "category": "texture_modifiers",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "grease": 5, "soft": 3 }
+      }
+    },
+    {
+      "id": "deep_fryer_oil",
+      "name": "Deep Fryer Oil",
+      "description": "Hot oil that adds grease and crunch",
+      "category": "texture_modifiers",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "grease": 6, "crunchy": 4 }
+      }
+    },
+    {
+      "id": "panko_breadcrumbs",
+      "name": "Panko Breadcrumbs",
+      "description": "Airy coating that adds maximum crispiness",
+      "category": "texture_modifiers",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "crunchy": 6, "moisture": -2 }
+      }
+    },
+    {
+      "id": "gelatin_powder",
+      "name": "Gelatin Powder",
+      "description": "Creates bouncy, elastic texture",
+      "category": "texture_modifiers",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "chewy": 5, "moisture": 2 }
+      }
+    },
+    {
+      "id": "whipped_cream",
+      "name": "Whipped Cream",
+      "description": "Airy clouds of dairy goodness that add softness and moisture",
+      "category": "texture_modifiers",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "soft": 5, "moisture": 2, "sweet": 1 }
+      }
+    },
+    {
+      "id": "protein_shake_mix",
+      "name": "Protein Shake Mix",
+      "description": "Dense nutrition that satisfies and energizes",
+      "category": "effect_boosters",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "filling": 5, "energizing": 4 }
+      }
+    },
+    {
+      "id": "chamomile_extract",
+      "name": "Chamomile Extract",
+      "description": "Soothing essence that promotes relaxation",
+      "category": "effect_boosters",
+      "rarity": "uncommon",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "calming": 6, "energizing": -2 }
+      }
+    },
+    {
+      "id": "vitamin_capsule",
+      "name": "Vitamin Capsule",
+      "description": "Concentrated nutrients for vitality",
+      "category": "effect_boosters",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "health": 5, "energizing": 2 }
+      }
+    },
+    {
+      "id": "junk_food_seasoning",
+      "name": "Junk Food Seasoning",
+      "description": "Addictive flavor at the cost of nutrition",
+      "category": "effect_boosters",
+      "rarity": "common",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "filling": 4, "health": -4 }
+      }
+    },
+    {
+      "id": "void_essence",
+      "name": "Void Essence",
+      "description": "Concentrated darkness from beyond reality",
+      "category": "cosmic_additives",
+      "rarity": "rare",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "void": 6, "fear": 3, "sanity": -5 }
+      }
+    },
+    {
+      "id": "nightmare_fuel",
+      "name": "Nightmare Fuel",
+      "description": "Distilled terror in liquid form",
+      "category": "cosmic_additives",
+      "rarity": "rare",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "fear": 7, "sentience": 2, "bitter": 3 }
+      }
+    },
+    {
+      "id": "uranium_dust",
+      "name": "Uranium Dust",
+      "description": "Glowing green powder radiating intense energy",
+      "category": "cosmic_additives",
+      "rarity": "rare",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "radioactive": 8, "energizing": 3, "health": -3 }
+      }
+    },
+    {
+      "id": "philosophers_stone_fragment",
+      "name": "Philosopher's Stone Fragment",
+      "description": "A piece of conscious matter that whispers secrets",
+      "category": "cosmic_additives",
+      "rarity": "legendary",
+      "effect": {
+        "type": "attribute_modifier",
+        "modifiers": { "sentience": 4, "health": 3, "sanity": 2 }
+      }
+    },
+    {
+      "id": "sanity_pills",
+      "name": "Sanity Pills",
+      "description": "Instant mental clarity",
+      "category": "utility",
+      "rarity": "uncommon",
+      "effect": {
+        "type": "sanity_restore",
+        "value": 50
+      }
+    },
+    {
+      "id": "lucky_coin",
+      "name": "Lucky Coin",
+      "description": "Next customer pays double",
+      "category": "utility",
+      "rarity": "uncommon",
+      "effect": {
+        "type": "payment_multiplier",
+        "value": 2,
+        "duration": 1
+      }
+    },
+    {
+      "id": "emergency_rations",
+      "name": "Emergency Rations",
+      "description": "Can be served directly to customer - they pay $20 and leave satisfied",
+      "category": "utility",
+      "rarity": "common",
+      "effect": {
+        "type": "serve_emergency_food",
+        "payment": 20
+      }
+    },
+    {
+      "id": "mirror_shard",
+      "name": "Mirror Shard",
+      "description": "Duplicates selected item with all modifiers",
+      "category": "utility",
+      "rarity": "rare",
+      "effect": {
+        "type": "duplicate_item"
+      }
+    },
+    {
+      "id": "ingredient_catalog",
+      "name": "Ingredient Catalog",
+      "description": "Permanently adds one random food to your fridge, cost $1",
+      "category": "blueprint",
+      "rarity": "uncommon",
+      "effect": {
+        "type": "unlock_random_ingredient",
+        "cost": 1
+      }
+    },
+    {
+      "id": "golden_plate",
+      "name": "Golden Plate",
+      "description": "Next dish gets PERFECT rating automatically",
+      "category": "special",
+      "rarity": "legendary",
+      "effect": {
+        "type": "force_rating"
+      }
+    },
+    {
+      "id": "cursed_cutlery",
+      "name": "Cursed Cutlery",
+      "description": "+10 to all attributes (extremely powerful but also adds +10 VoidLevel)",
+      "category": "special",
+      "rarity": "rare",
+      "effect": {
+        "type": "cursed_boost",
+        "all_attributes_boost": 10,
+        "void_boost": 10
+      }
+    },
+    {
+      "id": "wishing_well_penny",
+      "name": "Wishing Well Penny",
+      "description": "Instantly unlocks a new artifact when consumed",
+      "category": "special",
+      "rarity": "uncommon",
+      "effect": {
+        "type": "grant_artifact"
+      }
+    },
+    {
+      "id": "customer_repellant",
+      "name": "Customer Repellant",
+      "description": "Current customer leaves peacefully without requiring food",
+      "category": "special",
+      "rarity": "uncommon",
+      "effect": {
+        "type": "skip_customer"
+      }
+    },
+    {
+      "id": "quantum_refrigerator_card",
+      "name": "Quantum Refrigerator Card",
+      "description": "Next 3 fridge withdrawals are free",
+      "category": "special",
+      "rarity": "rare",
+      "effect": {
+        "type": "free_withdrawals",
+        "count": 3
+      }
+    }
+  ]
+}
