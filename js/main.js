@@ -1,5 +1,6 @@
 import { loadFoodData, loadTasteFeedback, loadCustomers, loadArtifacts } from './utils.js';
 import { Game } from './game.js';
+import { initApplianceTooltips } from './ui.js';
 
 // Global game instance (needed for HTML onclick handlers)
 let game;
@@ -26,6 +27,9 @@ async function init() {
     console.log('All data loaded, starting game...');
     game = new Game();
     game.initializeArtifactPool();
+
+    // Initialize custom tooltips for appliance buttons
+    initApplianceTooltips();
 
     // Expose game methods to window for HTML onclick handlers
     window.game = game;

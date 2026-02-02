@@ -25,6 +25,12 @@
         <div>MONEY: $<span id="money">50</span></div>
         <div>SANITY: <span id="sanity">100</span>%</div>
         <br>
+        <div id="artifacts-section" class="hidden">
+            <h3>ARTIFACTS</h3>
+            <div id="artifacts-list">
+                <!-- Artifacts go here -->
+            </div>
+        </div>
         <h3>COUNTERTOP (Storage)</h3>
         <div id="countertop-list">
             <!-- Items go here -->
@@ -44,19 +50,19 @@
 
         <h3>KITCHEN APPLIANCES</h3>
         <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-            <button id="btn-fridge" class="btn" onclick="game.useFridge()" title="Withdraw an ingredient from your stock">[FRIDGE]</button>
-            <button id="btn-pan" class="btn" onclick="game.usePan()" title="Combine two ingredients into a new dish">[PAN]</button>
-            <button id="btn-board" class="btn" onclick="game.useBoard()" title="Break down a dish into its base ingredients">[BOARD]</button>
-            <button id="btn-amp" class="btn" onclick="game.useAmp()" title="Amplify an ingredient into a different variant">[AMP]</button>
-            <button id="btn-micro" class="btn" onclick="game.useMicrowave()" title="Mutate an ingredient with unpredictable results">[MICRO]</button>
-            <button id="btn-trash" class="btn" onclick="game.useTrash()" title="Discard selected items from the countertop">[TRASH]</button>
+            <button id="btn-fridge" class="btn" onclick="game.useFridge()">[FRIDGE]</button>
+            <button id="btn-pan" class="btn" onclick="game.usePan()">[PAN]</button>
+            <button id="btn-board" class="btn" onclick="game.useBoard()">[BOARD]</button>
+            <button id="btn-amp" class="btn" onclick="game.useAmp()">[AMP]</button>
+            <button id="btn-micro" class="btn" onclick="game.useMicrowave()">[MICRO]</button>
+            <button id="btn-trash" class="btn" onclick="game.useTrash()">[TRASH]</button>
         </div>
 
         <br>
         <h3>ACTIONS</h3>
         <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-            <button class="btn" onclick="game.tasteTest()" title="Analyze a dish's properties (costs 10 sanity)">[TASTE -10 S]</button>
-            <button class="btn" onclick="game.serveCustomer()" title="Serve the prepared dish to the customer">[SERVE]</button>
+            <button id="btn-taste" class="btn" onclick="game.tasteTest()">[TASTE]</button>
+            <button id="btn-serve" class="btn" onclick="game.serveCustomer()">[SERVE]</button>
         </div>
     </div>
 

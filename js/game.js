@@ -30,12 +30,16 @@ export class Game {
         this.artifactPool = [];          // Available artifact IDs for selection
         this.purchaseHistory = {};       // For Bulk Buyer: {itemName: count}
         this.rentFrozenUntilDay = 0;     // For Rent Negotiator tracking
+        this.morningPrepItems = new Set(); // Track items from Morning Prep (cannot unlock recipes)
 
         this.log("DAY 1 INITIALIZED.");
         this.log("RENT DUE END OF SHIFT: $" + this.rent);
 
         this.customer = null;
         this.nextCustomer();
+
+        // Initialize Chef's Intuition hover behavior
+        this.initChefIntuitionHover();
     }
 
     // Randomly select 6 ingredients from the basic ATOMS for this run
@@ -129,6 +133,53 @@ export class Game {
         }
 
         return cost;
+    }
+
+    // Initialize Chef's Intuition hover behavior on PAN button
+    initChefIntuitionHover() {
+        const panButton = document.getElementById('btn-pan');
+        if (!panButton) return;
+
+        // Make button position relative for tooltip positioning
+        panButton.style.position = 'relative';
+
+        panButton.addEventListener('mouseenter', () => {
+            // Only show tooltip if Chef's Intuition is active
+            if (!this.hasArtifact('chefs_intuition')) return;
+
+            // Check if exactly 2 items are selected
+            if (this.selectedIndices.length !== 2) return;
+
+            const item1 = this.countertop[this.selectedIndices[0]];
+            const item2 = this.countertop[this.selectedIndices[1]];
+            const key = item1 + "+" + item2;
+            const RECIPES = getRecipes();
+
+            // Check if recipe exists
+            const result = RECIPES[key];
+
+            // Create tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'appliance-tooltip';
+            tooltip.id = 'chef-intuition-tooltip';
+
+            if (result) {
+                tooltip.classList.add('success');
+                tooltip.textContent = '✓ This might work...';
+            } else {
+                tooltip.classList.add('fail');
+                tooltip.textContent = '✗ This will fail...';
+            }
+
+            panButton.appendChild(tooltip);
+        });
+
+        panButton.addEventListener('mouseleave', () => {
+            const tooltip = document.getElementById('chef-intuition-tooltip');
+            if (tooltip) {
+                tooltip.remove();
+            }
+        });
     }
 
     nextCustomer() {
@@ -249,14 +300,16 @@ export class Game {
         if (!result) {
             result = "Burnt Slop";
             this.log(`Failed Combo: ${item1} + ${item2} = ${result}`, "error");
-
-            // Chef's Intuition: Show hint for unknown combos
-            if (this.hasArtifact('chefs_intuition')) {
-                this.log("CHEF'S INTUITION: This combination doesn't exist in your recipe book.", "system");
-            }
         } else {
             this.log(`Cooking: ${item1} ($${cost1}) + ${item2} ($${cost2}) -> ${result} ($${totalCost})`);
-            this.unlockIngredient(result, totalCost);
+
+            // Check if any ingredient is from Morning Prep (if so, don't unlock recipe)
+            const usesMorningPrepItem = this.morningPrepItems.has(item1) || this.morningPrepItems.has(item2);
+            if (!usesMorningPrepItem) {
+                this.unlockIngredient(result, totalCost);
+            } else {
+                this.log("(Cannot unlock recipe - uses temporary Morning Prep ingredient)", "system");
+            }
         }
 
         this.selectedIndices.sort((a, b) => b - a);
@@ -312,7 +365,14 @@ export class Game {
             const result = RECIPES[item];
             this.countertop[this.selectedIndices[0]] = result;
             this.log(`Amplified ${item} ($${itemCost}) into ${result} ($${itemCost})!`);
-            this.unlockIngredient(result, itemCost);
+
+            // Check if item is from Morning Prep (if so, don't unlock recipe)
+            const usesMorningPrepItem = this.morningPrepItems.has(item);
+            if (!usesMorningPrepItem) {
+                this.unlockIngredient(result, itemCost);
+            } else {
+                this.log("(Cannot unlock recipe - uses temporary Morning Prep ingredient)", "system");
+            }
         } else {
             this.log("Nothing happened. Item cannot be amplified.", "error");
         }
@@ -333,6 +393,9 @@ export class Game {
         const itemCost = this.getIngredientCost(item);
         const chance = Math.random();
 
+        // Check if item is from Morning Prep (if so, don't unlock recipe)
+        const usesMorningPrepItem = this.morningPrepItems.has(item);
+
         this.countertop.splice(this.selectedIndices[0], 1);
 
         let result;
@@ -340,17 +403,29 @@ export class Game {
             result = RECIPES[item];
             this.log(`Microwave mutated ${item} ($${itemCost}) into ${result} ($${itemCost})!`);
             this.countertop.push(result);
-            this.unlockIngredient(result, itemCost);
+            if (!usesMorningPrepItem) {
+                this.unlockIngredient(result, itemCost);
+            } else {
+                this.log("(Cannot unlock recipe - uses temporary Morning Prep ingredient)", "system");
+            }
         } else if (chance > 0.7) {
             result = "Radioactive Slime";
             this.log(`Microwave mutated ${item} ($${itemCost}) into: RADIOACTIVE SLIME ($${itemCost})`, "error");
             this.countertop.push(result);
-            this.unlockIngredient(result, itemCost);
+            if (!usesMorningPrepItem) {
+                this.unlockIngredient(result, itemCost);
+            } else {
+                this.log("(Cannot unlock recipe - uses temporary Morning Prep ingredient)", "system");
+            }
         } else {
             result = "Hot " + item;
             this.log(`Microwave made ${item} ($${itemCost}) really hot -> ${result} ($${itemCost})`);
             this.countertop.push(result);
-            this.unlockIngredient(result, itemCost);
+            if (!usesMorningPrepItem) {
+                this.unlockIngredient(result, itemCost);
+            } else {
+                this.log("(Cannot unlock recipe - uses temporary Morning Prep ingredient)", "system");
+            }
         }
         this.clearSelection();
         this.render();
@@ -713,6 +788,7 @@ export class Game {
         }
 
         UI.hideArtifactModal();
+        this.render();
 
         // Start next day after a delay
         setTimeout(() => this.startNextDay(), 2000);
@@ -769,6 +845,9 @@ export class Game {
         this.day++;
         this.customersServedCount = 0;
 
+        // Clear Morning Prep items from previous day
+        this.morningPrepItems.clear();
+
         // Rent Negotiator: Freeze rent increase if artifact is active and within freeze period
         if (this.day <= this.rentFrozenUntilDay) {
             this.log(`RENT NEGOTIATOR: Rent increase frozen this day!`, "system");
@@ -788,19 +867,26 @@ export class Game {
             }
         }
 
-        // Morning Prep: Add 2 random items to countertop
+        // Morning Prep: Add 2 random items from ANY food (even unlocked ones)
         if (this.hasArtifact('morning_prep')) {
             const capacity = this.getCountertopCapacity();
             const spaceAvailable = capacity - this.countertop.length;
-            const itemsToAdd = Math.min(2, spaceAvailable, this.availableIngredients.length);
-
-            for (let i = 0; i < itemsToAdd; i++) {
-                const randomItem = this.availableIngredients[Math.floor(Math.random() * this.availableIngredients.length)];
-                this.countertop.push(randomItem);
-            }
+            const itemsToAdd = Math.min(2, spaceAvailable);
 
             if (itemsToAdd > 0) {
-                this.log(`MORNING PREP: Added ${itemsToAdd} random ingredient(s) to countertop!`, "system");
+                // Get all possible food items (atoms + all recipe results)
+                const RECIPES = getRecipes();
+                const atoms = getAtoms();
+                const recipeResults = [...new Set(Object.values(RECIPES))]; // Unique recipe results
+                const allFoods = [...atoms, ...recipeResults];
+
+                for (let i = 0; i < itemsToAdd; i++) {
+                    const randomItem = allFoods[Math.floor(Math.random() * allFoods.length)];
+                    this.countertop.push(randomItem);
+                    this.morningPrepItems.add(randomItem);
+                }
+
+                this.log(`MORNING PREP: Added ${itemsToAdd} mysterious ingredient(s) to countertop!`, "system");
             }
         }
 
@@ -842,6 +928,7 @@ export class Game {
             customersPerDay: this.customersPerDay,
             countertop: this.countertop,
             selectedIndices: this.selectedIndices,
+            activeArtifacts: this.activeArtifacts,
             onToggleSelection: (index) => this.toggleSelection(index)
         });
     }

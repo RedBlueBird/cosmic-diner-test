@@ -1,4 +1,41 @@
 import { APPLIANCE_UNLOCK_DAYS } from './config.js';
+import { getArtifactById } from './utils.js';
+
+// Reusable tooltip component
+export function createTooltip(element, title, description) {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+
+    if (description) {
+        tooltip.innerHTML = `
+            <span class="tooltip-name">${title}</span>
+            <span class="tooltip-description">${description}</span>
+        `;
+    } else {
+        tooltip.innerHTML = `<span class="tooltip-description">${title}</span>`;
+    }
+
+    element.appendChild(tooltip);
+    element.style.position = 'relative';
+
+    // Position tooltip on hover using fixed positioning
+    element.addEventListener('mouseenter', (e) => {
+        const rect = element.getBoundingClientRect();
+        tooltip.style.position = 'fixed';
+        tooltip.style.left = `${rect.right + 10}px`;
+        tooltip.style.top = `${rect.top + (rect.height / 2)}px`;
+        tooltip.style.transform = 'translateY(-50%)';
+        tooltip.style.visibility = 'visible';
+        tooltip.style.opacity = '1';
+    });
+
+    element.addEventListener('mouseleave', () => {
+        tooltip.style.visibility = 'hidden';
+        tooltip.style.opacity = '0';
+    });
+
+    return tooltip;
+}
 
 // Log a message to the log panel
 export function log(msg, type = "neutral") {
@@ -29,7 +66,7 @@ export function updateApplianceButtons(day) {
 
 // Render the main game UI
 export function render(gameState) {
-    const { money, sanity, day, rent, customersServedCount, customersPerDay, countertop, selectedIndices } = gameState;
+    const { money, sanity, day, rent, customersServedCount, customersPerDay, countertop, selectedIndices, activeArtifacts } = gameState;
 
     document.getElementById('money').textContent = money;
 
@@ -62,6 +99,9 @@ export function render(gameState) {
         list.appendChild(div);
     });
 
+    // Update artifacts display
+    updateArtifactsDisplay(activeArtifacts || []);
+
     // Visual effects based on sanity
     if (sanity < 20) {
         document.body.style.filter = "sepia(100%) hue-rotate(300deg) blur(2px) saturate(200%)";
@@ -70,6 +110,58 @@ export function render(gameState) {
     } else {
         document.body.style.filter = "none";
     }
+}
+
+// Initialize tooltips for all buttons
+export function initApplianceTooltips() {
+    const buttons = [
+        // Appliance buttons
+        { id: 'btn-fridge', text: 'Withdraw an ingredient from your stock' },
+        { id: 'btn-pan', text: 'Combine two ingredients into a new dish' },
+        { id: 'btn-board', text: 'Break down a dish into its base ingredients' },
+        { id: 'btn-amp', text: 'Amplify an ingredient into a different variant' },
+        { id: 'btn-micro', text: 'Mutate an ingredient with unpredictable results' },
+        { id: 'btn-trash', text: 'Discard selected items from the countertop' },
+        // Action buttons
+        { id: 'btn-taste', text: 'Analyze a dish\'s properties (costs 10 sanity)' },
+        { id: 'btn-serve', text: 'Serve the prepared dish to the customer' }
+    ];
+
+    buttons.forEach(({ id, text }) => {
+        const button = document.getElementById(id);
+        if (button) {
+            createTooltip(button, text);
+        }
+    });
+}
+
+// Update artifacts display
+export function updateArtifactsDisplay(activeArtifactIds) {
+    const section = document.getElementById('artifacts-section');
+    const list = document.getElementById('artifacts-list');
+
+    // Show section only if there are artifacts
+    if (activeArtifactIds.length === 0) {
+        section.classList.add('hidden');
+        return;
+    }
+
+    section.classList.remove('hidden');
+    list.innerHTML = "";
+
+    activeArtifactIds.forEach((artifactId, index) => {
+        const artifact = getArtifactById(artifactId);
+        if (!artifact) return;
+
+        const div = document.createElement('div');
+        div.className = 'artifact-item';
+        div.textContent = `[${index + 1}] ${artifact.name}`;
+
+        // Add tooltip using the reusable component
+        createTooltip(div, artifact.name, artifact.description);
+
+        list.appendChild(div);
+    });
 }
 
 // Update customer display
