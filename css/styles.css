@@ -1,0 +1,206 @@
+body {
+    background-color: #0d1117;
+    color: #33ff33;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    padding: 20px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#terminal {
+    width: 900px;
+    height: 600px;
+    border: 2px solid #33ff33;
+    background-color: #000;
+    display: grid;
+    grid-template-columns: 250px 1fr 250px;
+    grid-template-rows: 80px 1fr 150px;
+    gap: 10px;
+    padding: 10px;
+    box-shadow: 0 0 20px rgba(51, 255, 51, 0.2);
+    position: relative;
+}
+
+/* Scanlines */
+#terminal::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+}
+
+/* Layout Areas */
+header {
+    grid-column: 1 / -1;
+    border-bottom: 1px dashed #33ff33;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 10px;
+    font-weight: bold;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+/* Progress Bar */
+#progress-container {
+    width: 100%;
+    height: 15px;
+    border: 1px solid #555;
+    background-color: #111;
+    position: relative;
+}
+
+#progress-bar {
+    height: 100%;
+    background-color: #33ff33;
+    width: 0%;
+    transition: width 0.3s;
+}
+
+#progress-text {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: #000;
+    line-height: 15px;
+    font-weight: bold;
+}
+
+#left-panel {
+    grid-column: 1;
+    border-right: 1px dashed #33ff33;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+#center-panel {
+    grid-column: 2;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+}
+
+#right-panel {
+    grid-column: 3;
+    border-left: 1px dashed #33ff33;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+#log-panel {
+    grid-column: 1 / -1;
+    border-top: 1px dashed #33ff33;
+    padding: 10px;
+    overflow-y: auto;
+    font-size: 0.9em;
+    color: #aaffaa;
+}
+
+/* UI Elements */
+.btn {
+    background: transparent;
+    border: 1px solid #33ff33;
+    color: #33ff33;
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    text-transform: uppercase;
+    font-size: 0.85em;
+}
+.btn:hover {
+    background: #33ff33;
+    color: #000;
+}
+.btn:disabled {
+    border-color: #555;
+    color: #555;
+    cursor: not-allowed;
+}
+
+.item-slot {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+    cursor: pointer;
+}
+.item-slot:hover {
+    background-color: #113311;
+}
+.item-slot.selected {
+    background-color: #33ff33;
+    color: #000;
+}
+
+.ascii-art {
+    white-space: pre;
+    font-size: 10px;
+    line-height: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
+
+.design-alert {
+    color: #ff3333;
+    font-weight: bold;
+}
+
+.game-over {
+    color: #ff3333;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+/* Modal Styles */
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #000;
+    border: 2px solid #33ff33;
+    padding: 20px;
+    z-index: 10;
+    width: 350px;
+    max-height: 500px;
+    overflow-y: auto;
+    box-shadow: 0 0 30px rgba(51, 255, 51, 0.5);
+    text-align: center;
+}
+.hidden { display: none; }
+.grid-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.sanity-critical { animation: pulse 1s infinite; }
+@keyframes pulse {
+    0%, 100% { color: #ff3333; }
+    50% { color: #ff9999; }
+}

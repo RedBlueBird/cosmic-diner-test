@@ -1,0 +1,183 @@
+{
+    "savory": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 3, "msg": "A subtle hint of umami." },
+        { "min": 4, "max": 6, "msg": "Rich and savory." },
+        { "min": 7, "max": 9, "msg": "Deep, meaty richness fills your mouth." },
+        { "min": 10, "max": 999, "msg": "OVERWHELMING UMAMI BOMB." }
+    ],
+    "sweet": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 3, "msg": "A gentle sweetness." },
+        { "min": 4, "max": 6, "msg": "Pleasantly sweet." },
+        { "min": 7, "max": 9, "msg": "Very sweet, almost cloying." },
+        { "min": 10, "max": 999, "msg": "SUGAR OVERLOAD. Your teeth ache." }
+    ],
+    "salty": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 3, "msg": "Lightly salted." },
+        { "min": 4, "max": 6, "msg": "Well-seasoned with salt." },
+        { "min": 7, "max": 9, "msg": "Very salty. Your lips pucker." },
+        { "min": 10, "max": 999, "msg": "SALT CRYSTAL ASSAULT. Ocean incarnate." }
+    ],
+    "sour": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 3, "msg": "A slight tang." },
+        { "min": 4, "max": 6, "msg": "Pleasantly acidic." },
+        { "min": 7, "max": 9, "msg": "Sharp and tart. Face puckering." },
+        { "min": 10, "max": 999, "msg": "ACID ATTACK. Your enamel screams." }
+    ],
+    "bitter": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 3, "msg": "Slightly bitter undertones." },
+        { "min": 4, "max": 6, "msg": "Notable bitterness." },
+        { "min": 7, "max": 9, "msg": "Harsh and bitter. Coffee-like intensity." },
+        { "min": 10, "max": 999, "msg": "BITTER BEYOND REASON. Tastes like regret." }
+    ],
+    "spicy": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 3, "msg": "Mild warmth on the tongue." },
+        { "min": 4, "max": 6, "msg": "Decent kick of heat." },
+        { "min": 7, "max": 9, "msg": "SPICY! Your mouth is on fire." },
+        { "min": 10, "max": 12, "msg": "EXTREME HEAT. Pain and pleasure merge." },
+        { "min": 13, "max": 999, "msg": "VOLCANIC INFERNO. You see through time." }
+    ],
+    "temperature": [
+        { "min": -999, "max": -1, "msg": "ABSOLUTE ZERO. Reality freezes around it." },
+        { "min": 0, "max": 1, "msg": "Frozen solid. Ice cold." },
+        { "min": 2, "max": 3, "msg": "Chilled and refreshing." },
+        { "min": 4, "max": 6, "msg": null },
+        { "min": 7, "max": 8, "msg": "Warm and comforting." },
+        { "min": 9, "max": 10, "msg": "Hot! Steam rises from it." },
+        { "min": 11, "max": 13, "msg": "SCORCHING. Handle with extreme caution." },
+        { "min": 14, "max": 999, "msg": "INFERNAL TEMPERATURE. It burns just looking at it." }
+    ],
+    "moisture": [
+        { "min": 0, "max": 1, "msg": "Bone dry. Dessicated." },
+        { "min": 2, "max": 3, "msg": "Quite dry." },
+        { "min": 4, "max": 6, "msg": null },
+        { "min": 7, "max": 8, "msg": "Moist and juicy." },
+        { "min": 9, "max": 10, "msg": "Liquid. Dripping wet." }
+    ],
+    "grease": [
+        { "min": 0, "max": 1, "msg": null },
+        { "min": 2, "max": 4, "msg": "Slightly oily." },
+        { "min": 5, "max": 7, "msg": "Greasy. Leaves residue on fingers." },
+        { "min": 8, "max": 10, "msg": "DRIPPING WITH GREASE. Cardiovascular nightmare." }
+    ],
+    "crunch": [
+        { "min": 0, "max": 2, "msg": null },
+        { "min": 3, "max": 5, "msg": "Slight crunch." },
+        { "min": 6, "max": 8, "msg": "Satisfyingly crispy." },
+        { "min": 9, "max": 999, "msg": "MAXIMUM CRUNCH. Like biting into glass (safely)." }
+    ],
+    "chew": [
+        { "min": 0, "max": 2, "msg": null },
+        { "min": 3, "max": 5, "msg": "Some chewiness." },
+        { "min": 6, "max": 8, "msg": "Chewy. Good jaw workout." },
+        { "min": 9, "max": 999, "msg": "EXTREMELY CHEWY. Endless mastication." }
+    ],
+    "soft": [
+        { "min": 0, "max": 3, "msg": null },
+        { "min": 4, "max": 6, "msg": null },
+        { "min": 7, "max": 8, "msg": "Soft and pillowy." },
+        { "min": 9, "max": 10, "msg": "Melt-in-your-mouth smooth." }
+    ],
+    "filling": [
+        { "min": -999, "max": 0, "msg": "Somehow makes you MORE hungry." },
+        { "min": 1, "max": 3, "msg": "Light snack." },
+        { "min": 4, "max": 6, "msg": "Moderately filling." },
+        { "min": 7, "max": 8, "msg": "Very filling. Substantial meal." },
+        { "min": 9, "max": 999, "msg": "FOOD COMA IMMINENT. Maximum satiation." }
+    ],
+    "energizing": [
+        { "min": 0, "max": 2, "msg": null },
+        { "min": 3, "max": 5, "msg": "Gives you a little boost." },
+        { "min": 6, "max": 8, "msg": "Energizing! You feel alert." },
+        { "min": 9, "max": 12, "msg": "WIRED. Sleep is for the weak." },
+        { "min": 13, "max": 999, "msg": "TRANSCENDENT ENERGY. You vibrate at the atomic level." }
+    ],
+    "calming": [
+        { "min": -999, "max": -3, "msg": "Actively stressful. Your cortisol spikes." },
+        { "min": -2, "max": 0, "msg": null },
+        { "min": 1, "max": 3, "msg": "Slightly soothing." },
+        { "min": 4, "max": 6, "msg": "Calming. Tension melts away." },
+        { "min": 7, "max": 999, "msg": "PROFOUND PEACE. Om." }
+    ],
+    "health": [
+        { "min": -999, "max": -6, "msg": "HIGHLY TOXIC. This will kill you." },
+        { "min": -5, "max": -3, "msg": "TOXIC. Definitely not safe to eat." },
+        { "min": -2, "max": -1, "msg": "Questionable safety. Proceed with caution." },
+        { "min": 0, "max": 3, "msg": "Not particularly healthy." },
+        { "min": 4, "max": 6, "msg": null },
+        { "min": 7, "max": 8, "msg": "Nutritious and wholesome." },
+        { "min": 9, "max": 999, "msg": "SUPERFOOD. Your cells rejoice." }
+    ],
+    "sanity": [
+        { "min": -999, "max": -10, "msg": "ELDRITCH HORROR. Your mind shatters into fragments." },
+        { "min": -9, "max": -5, "msg": "SANITY DRAIN. The void whispers back." },
+        { "min": -4, "max": -2, "msg": "Unsettling. Something feels deeply wrong." },
+        { "min": -1, "max": 1, "msg": null },
+        { "min": 2, "max": 4, "msg": "Mentally refreshing." },
+        { "min": 5, "max": 999, "msg": "SANITY RESTORATION. Reality snaps back into focus." }
+    ],
+    "sadness": [
+        { "min": 0, "max": 2, "msg": null },
+        { "min": 3, "max": 5, "msg": "Melancholy seeps in." },
+        { "min": 6, "max": 9, "msg": "Profound sadness. Tears well up." },
+        { "min": 10, "max": 999, "msg": "EXISTENTIAL DESPAIR. The weight of existence crushes you." }
+    ],
+    "fear": [
+        { "min": 0, "max": 1, "msg": null },
+        { "min": 2, "max": 4, "msg": "Slightly unnerving." },
+        { "min": 5, "max": 7, "msg": "Fear grips your heart." },
+        { "min": 8, "max": 10, "msg": "TERROR. Fight or flight activates." },
+        { "min": 11, "max": 999, "msg": "PRIMAL HORROR. Every instinct screams RUN." }
+    ],
+    "sentience": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 2, "msg": "...did it just twitch?" },
+        { "min": 3, "max": 5, "msg": "It's looking at you. IT KNOWS." },
+        { "min": 6, "max": 8, "msg": "The food is ALIVE and AWARE." },
+        { "min": 9, "max": 999, "msg": "FULLY SENTIENT. It begs for mercy." }
+    ],
+    "radioactivity": [
+        { "min": 0, "max": 1, "msg": null },
+        { "min": 2, "max": 4, "msg": "Faint glow. Slightly radioactive." },
+        { "min": 5, "max": 7, "msg": "RADIOACTIVE. Geiger counter clicking." },
+        { "min": 8, "max": 10, "msg": "HIGHLY IRRADIATED. Mutagen levels critical." },
+        { "min": 11, "max": 999, "msg": "NUCLEAR. You can taste the isotopes." }
+    ],
+    "voidLevel": [
+        { "min": 0, "max": 1, "msg": null },
+        { "min": 2, "max": 4, "msg": "Touched by the void. Emptiness lingers." },
+        { "min": 5, "max": 8, "msg": "VOID-TOUCHED. Reality bends around it." },
+        { "min": 9, "max": 12, "msg": "VOID INCARNATE. Existence itself recoils." },
+        { "min": 13, "max": 999, "msg": "THE ABYSS STARES BACK. You are unmade." }
+    ],
+    "isBurnt": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 999, "msg": "BURNT. Charred and blackened." }
+    ],
+    "isRaw": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 999, "msg": "RAW. Uncooked." }
+    ],
+    "isVegetarian": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 999, "msg": "Vegetarian-friendly." }
+    ],
+    "isVegan": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 999, "msg": "Vegan-friendly." }
+    ],
+    "containsGluten": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 999, "msg": "Contains gluten." }
+    ],
+    "containsBone": [
+        { "min": 0, "max": 0.2, "msg": null },
+        { "min": 0.21, "max": 0.5, "msg": "May contain small bones." },
+        { "min": 0.51, "max": 999, "msg": "Contains bones. Chew carefully." }
+    ]
+}
