@@ -1,0 +1,237 @@
+// ConsumableManager.js - Consumables system management
+
+import { getConsumables, getConsumableById, getRecipes, getAtoms } from '../data/DataStore.js';
+import { createItemObject, getItemName, getItemModifiers, getFoodAttributes } from '../utils/ItemUtils.js';
+
+export class ConsumableManager {
+    constructor(gameState, callbacks) {
+        this.state = gameState;
+        this.callbacks = callbacks;
+    }
+
+    grantRandomConsumable() {
+        const consumables = getConsumables();
+        const random = consumables[Math.floor(Math.random() * consumables.length)];
+        this.grantConsumable(random.id, 1);
+        this.callbacks.onLog(`STARTING BONUS: Received ${random.name}!`, "system");
+    }
+
+    grantConsumable(consumableId, quantity = 1) {
+        if (!this.state.consumableInventory[consumableId]) {
+            this.state.consumableInventory[consumableId] = 0;
+        }
+        this.state.consumableInventory[consumableId] += quantity;
+        this.callbacks.onRender();
+    }
+
+    selectConsumable(consumableId) {
+        if (this.state.selectedConsumable === consumableId) {
+            this.state.selectedConsumable = null;
+            this.callbacks.onLog("Consumable deselected.");
+        } else {
+            const consumable = getConsumableById(consumableId);
+            this.state.selectedConsumable = consumableId;
+            this.callbacks.onLog(`Selected: ${consumable.name}. ${consumable.description}`);
+        }
+        this.callbacks.onRender();
+    }
+
+    useConsumable() {
+        if (!this.state.selectedConsumable) {
+            this.callbacks.onLog("No consumable selected!", "error");
+            return;
+        }
+
+        const consumable = getConsumableById(this.state.selectedConsumable);
+        const qty = this.state.consumableInventory[this.state.selectedConsumable] || 0;
+
+        if (qty <= 0) {
+            this.callbacks.onLog(`Out of ${consumable.name}!`, "error");
+            return;
+        }
+
+        const effectType = consumable.effect.type;
+
+        try {
+            if (effectType === 'attribute_modifier') {
+                this.applyAttributeModifier(consumable);
+            } else if (effectType === 'sanity_restore') {
+                this.applySanityRestore(consumable);
+            } else if (effectType === 'payment_multiplier') {
+                this.state.activeEffects.luckyCoins += consumable.effect.duration;
+                this.callbacks.onLog(`${consumable.name}: Next customer pays ${consumable.effect.value}x!`, "system");
+            } else if (effectType === 'serve_emergency_food') {
+                this.serveEmergencyFood(consumable);
+            } else if (effectType === 'duplicate_item') {
+                this.duplicateSelectedItem();
+            } else if (effectType === 'unlock_random_ingredient') {
+                this.unlockRandomIngredient(consumable);
+            } else if (effectType === 'force_rating') {
+                this.state.activeEffects.goldenPlate = true;
+                this.callbacks.onLog(`${consumable.name}: Next dish gets PERFECT rating!`, "system");
+            } else if (effectType === 'cursed_boost') {
+                this.applyCursedBoost(consumable);
+            } else if (effectType === 'grant_artifact') {
+                this.callbacks.onGrantArtifact();
+            } else if (effectType === 'skip_customer') {
+                this.skipCurrentCustomer();
+            } else if (effectType === 'free_withdrawals') {
+                this.state.activeEffects.freeWithdrawals += consumable.effect.count;
+                this.callbacks.onLog(`${consumable.name}: Next ${consumable.effect.count} fridge uses are free!`, "system");
+            }
+
+            // Consume the item
+            this.state.consumableInventory[this.state.selectedConsumable]--;
+            this.state.selectedConsumable = null;
+            this.callbacks.onClearSelection();
+            this.callbacks.onRender();
+        } catch (error) {
+            this.callbacks.onRender();
+        }
+    }
+
+    applyAttributeModifier(consumable) {
+        if (this.state.selectedIndices.length !== 1) {
+            const errorMsg = `${consumable.name.toUpperCase()} requires exactly 1 item selected.`;
+            this.callbacks.onLog(errorMsg, "error");
+            throw new Error("Need item selection");
+        }
+
+        const itemIndex = this.state.selectedIndices[0];
+        const itemObj = this.state.countertop[itemIndex];
+        const modifiers = consumable.effect.modifiers;
+
+        for (const [attr, value] of Object.entries(modifiers)) {
+            itemObj.modifiers[attr] = (itemObj.modifiers[attr] || 0) + value;
+        }
+
+        const modList = Object.entries(modifiers)
+            .map(([k, v]) => `${k} ${v > 0 ? '+' : ''}${v}`)
+            .join(', ');
+        this.callbacks.onLog(`Applied ${consumable.name} to ${itemObj.name}! (${modList})`);
+    }
+
+    applySanityRestore(consumable) {
+        const restoreAmount = consumable.effect.value;
+        this.callbacks.onRestoreSanity(restoreAmount);
+        this.callbacks.onLog(`${consumable.name}: Restored ${restoreAmount} sanity!`, "system");
+    }
+
+    serveEmergencyFood(consumable) {
+        if (!this.state.customer) {
+            this.callbacks.onLog("No customer to serve!", "error");
+            throw new Error("No customer");
+        }
+
+        if (this.state.customer.isBoss) {
+            this.callbacks.onLog("Cannot serve emergency rations to GORDON G!", "error");
+            throw new Error("Cannot serve to boss");
+        }
+
+        const payment = consumable.effect.payment;
+        this.state.money += payment;
+        this.callbacks.onLog(`${consumable.name}: Customer accepts emergency rations and pays $${payment}!`, "system");
+
+        this.state.customersServedCount++;
+
+        if (this.state.customersServedCount >= this.state.customersPerDay) {
+            this.callbacks.onEndDay();
+        } else {
+            setTimeout(() => {
+                this.callbacks.onNextCustomer();
+            }, 1500);
+        }
+    }
+
+    duplicateSelectedItem() {
+        if (this.state.selectedIndices.length !== 1) {
+            this.callbacks.onLog("MIRROR SHARD requires exactly 1 item selected.", "error");
+            throw new Error("Need item selection");
+        }
+
+        const capacity = this.callbacks.getCountertopCapacity();
+        if (this.state.countertop.length >= capacity) {
+            this.callbacks.onLog("Countertop is full! Cannot duplicate.", "error");
+            throw new Error("Countertop full");
+        }
+
+        const itemIndex = this.state.selectedIndices[0];
+        const itemObj = this.state.countertop[itemIndex];
+        const itemName = getItemName(itemObj);
+        const modifiers = getItemModifiers(itemObj);
+
+        const duplicate = createItemObject(itemName, modifiers);
+        this.state.countertop.push(duplicate);
+
+        this.callbacks.onLog(`Mirror Shard: Duplicated ${itemName}${Object.keys(modifiers).length > 0 ? ' (with modifiers)' : ''}!`, "system");
+    }
+
+    unlockRandomIngredient(consumable) {
+        const RECIPES = getRecipes();
+        const atoms = getAtoms();
+        const recipeResults = [...new Set(Object.values(RECIPES))];
+        const allFoods = [...atoms, ...recipeResults];
+
+        const notInFridge = allFoods.filter(food => !this.state.availableIngredients.includes(food));
+
+        if (notInFridge.length === 0) {
+            this.callbacks.onLog("All ingredients already unlocked!", "system");
+            return;
+        }
+
+        const randomFood = notInFridge[Math.floor(Math.random() * notInFridge.length)];
+        const cost = consumable.effect.cost;
+
+        this.state.availableIngredients.push(randomFood);
+        this.state.ingredientCosts[randomFood] = cost;
+
+        this.callbacks.onLog(`${consumable.name}: Unlocked ${randomFood} ($${cost}) in your fridge!`, "system");
+    }
+
+    applyCursedBoost(consumable) {
+        if (this.state.selectedIndices.length !== 1) {
+            this.callbacks.onLog("CURSED CUTLERY requires exactly 1 item selected.", "error");
+            throw new Error("Need item selection");
+        }
+
+        const itemIndex = this.state.selectedIndices[0];
+        const itemObj = this.state.countertop[itemIndex];
+        const boost = consumable.effect.all_attributes_boost;
+        const voidBoost = consumable.effect.void_boost;
+
+        const currentAttrs = getFoodAttributes(itemObj);
+
+        for (const attr in currentAttrs) {
+            if (currentAttrs[attr] !== 0) {
+                itemObj.modifiers[attr] = (itemObj.modifiers[attr] || 0) + boost;
+            }
+        }
+
+        itemObj.modifiers.void = (itemObj.modifiers.void || 0) + voidBoost;
+
+        this.callbacks.onLog(`${consumable.name}: ${itemObj.name} is now EXTREMELY POWERFUL (+${boost} all, +${voidBoost} void)!`, "error");
+    }
+
+    skipCurrentCustomer() {
+        if (!this.state.customer) {
+            this.callbacks.onLog("No customer to skip!", "error");
+            throw new Error("No customer");
+        }
+
+        if (this.state.customer.isBoss) {
+            this.callbacks.onLog("Cannot skip GORDON G!", "error");
+            throw new Error("Cannot skip boss");
+        }
+
+        this.callbacks.onLog(`Wishing Well Penny: Skipped ${this.state.customer.name}!`, "system");
+        this.state.customersServedCount++;
+
+        if (this.state.customersServedCount >= this.state.customersPerDay) {
+            this.callbacks.onEndDay();
+        } else {
+            setTimeout(() => {
+                this.callbacks.onNextCustomer();
+            }, 1000);
+        }
+    }
+}

@@ -4,7 +4,7 @@
       "id": "sugar_dispenser",
       "name": "Sugar Dispenser",
       "description": "Pure suger that enhances sweetness",
-      "category": "spice_vials",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -15,7 +15,7 @@
       "id": "tears_of_clown",
       "name": "Tears of a Clown",
       "description": "Harvested from cosmic jesters, adds sadness and void energy",
-      "category": "spice_vials",
+      "category": "vial",
       "rarity": "uncommon",
       "effect": {
         "type": "attribute_modifier",
@@ -26,7 +26,7 @@
       "id": "msg_packet",
       "name": "MSG Packet",
       "description": "Umami explosion in a packet, enhances savory and salty flavors",
-      "category": "spice_vials",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -37,7 +37,7 @@
       "id": "vinegar_bottle",
       "name": "Vinegar Bottle",
       "description": "Sharp acidity that cuts through sweetness, enhances sourness",
-      "category": "spice_vials",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -48,7 +48,7 @@
       "id": "ghost_pepper_extract",
       "name": "Ghost Pepper Extract",
       "description": "Intense heat that burns the tongue, enhances spiciness",
-      "category": "spice_vials",
+      "category": "vial",
       "rarity": "uncommon",
       "effect": {
         "type": "attribute_modifier",
@@ -59,7 +59,7 @@
       "id": "himalayan_rock_salt",
       "name": "Himalayan Rock Salt",
       "description": "Coarse salt crystals that add salinity and texture",
-      "category": "spice_vials",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -70,7 +70,7 @@
       "id": "liquid_smoke",
       "name": "Liquid Smoke",
       "description": "Concentrated smoke essence with bitter undertones",
-      "category": "spice_vials",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -81,7 +81,7 @@
       "id": "ice_cube_tray",
       "name": "Ice Cube Tray",
       "description": "Rapidly chills food to freezing temperatures",
-      "category": "texture_modifiers",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -92,7 +92,7 @@
       "id": "blowtorch",
       "name": "Blowtorch",
       "description": "Intense heat that sears and dries",
-      "category": "texture_modifiers",
+      "category": "vial",
       "rarity": "uncommon",
       "effect": {
         "type": "attribute_modifier",
@@ -103,7 +103,7 @@
       "id": "butter_stick",
       "name": "Butter Stick",
       "description": "Rich fat that adds greasiness and softness",
-      "category": "texture_modifiers",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -114,7 +114,7 @@
       "id": "deep_fryer_oil",
       "name": "Deep Fryer Oil",
       "description": "Hot oil that adds grease and crunch",
-      "category": "texture_modifiers",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -125,7 +125,7 @@
       "id": "panko_breadcrumbs",
       "name": "Panko Breadcrumbs",
       "description": "Airy coating that adds maximum crispiness",
-      "category": "texture_modifiers",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -136,7 +136,7 @@
       "id": "gelatin_powder",
       "name": "Gelatin Powder",
       "description": "Creates bouncy, elastic texture",
-      "category": "texture_modifiers",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -147,7 +147,7 @@
       "id": "whipped_cream",
       "name": "Whipped Cream",
       "description": "Airy clouds of dairy goodness that add softness and moisture",
-      "category": "texture_modifiers",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -158,7 +158,7 @@
       "id": "protein_shake_mix",
       "name": "Protein Shake Mix",
       "description": "Dense nutrition that satisfies and energizes",
-      "category": "effect_boosters",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -169,7 +169,7 @@
       "id": "chamomile_extract",
       "name": "Chamomile Extract",
       "description": "Soothing essence that promotes relaxation",
-      "category": "effect_boosters",
+      "category": "vial",
       "rarity": "uncommon",
       "effect": {
         "type": "attribute_modifier",
@@ -180,7 +180,7 @@
       "id": "vitamin_capsule",
       "name": "Vitamin Capsule",
       "description": "Concentrated nutrients for vitality",
-      "category": "effect_boosters",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -191,7 +191,7 @@
       "id": "junk_food_seasoning",
       "name": "Junk Food Seasoning",
       "description": "Addictive flavor at the cost of nutrition",
-      "category": "effect_boosters",
+      "category": "vial",
       "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
@@ -202,7 +202,7 @@
       "id": "void_essence",
       "name": "Void Essence",
       "description": "Concentrated darkness from beyond reality",
-      "category": "cosmic_additives",
+      "category": "vial",
       "rarity": "rare",
       "effect": {
         "type": "attribute_modifier",
@@ -213,7 +213,7 @@
       "id": "nightmare_fuel",
       "name": "Nightmare Fuel",
       "description": "Distilled terror in liquid form",
-      "category": "cosmic_additives",
+      "category": "vial",
       "rarity": "rare",
       "effect": {
         "type": "attribute_modifier",
@@ -224,7 +224,7 @@
       "id": "uranium_dust",
       "name": "Uranium Dust",
       "description": "Glowing green powder radiating intense energy",
-      "category": "cosmic_additives",
+      "category": "vial",
       "rarity": "rare",
       "effect": {
         "type": "attribute_modifier",
@@ -235,7 +235,7 @@
       "id": "philosophers_stone_fragment",
       "name": "Philosopher's Stone Fragment",
       "description": "A piece of conscious matter that whispers secrets",
-      "category": "cosmic_additives",
+      "category": "vial",
       "rarity": "legendary",
       "effect": {
         "type": "attribute_modifier",
@@ -290,7 +290,7 @@
       "id": "ingredient_catalog",
       "name": "Ingredient Catalog",
       "description": "Permanently adds one random food to your fridge, cost $1",
-      "category": "blueprint",
+      "category": "utility",
       "rarity": "uncommon",
       "effect": {
         "type": "unlock_random_ingredient",
@@ -301,7 +301,7 @@
       "id": "golden_plate",
       "name": "Golden Plate",
       "description": "Next dish gets PERFECT rating automatically",
-      "category": "special",
+      "category": "utility",
       "rarity": "legendary",
       "effect": {
         "type": "force_rating"
@@ -311,7 +311,7 @@
       "id": "cursed_cutlery",
       "name": "Cursed Cutlery",
       "description": "+10 to all attributes (extremely powerful but also adds +10 VoidLevel)",
-      "category": "special",
+      "category": "vial",
       "rarity": "rare",
       "effect": {
         "type": "cursed_boost",
@@ -323,7 +323,7 @@
       "id": "wishing_well_penny",
       "name": "Wishing Well Penny",
       "description": "Instantly unlocks a new artifact when consumed",
-      "category": "special",
+      "category": "utility",
       "rarity": "uncommon",
       "effect": {
         "type": "grant_artifact"
@@ -333,7 +333,7 @@
       "id": "customer_repellant",
       "name": "Customer Repellant",
       "description": "Current customer leaves peacefully without requiring food",
-      "category": "special",
+      "category": "utility",
       "rarity": "uncommon",
       "effect": {
         "type": "skip_customer"
@@ -343,7 +343,7 @@
       "id": "quantum_refrigerator_card",
       "name": "Quantum Refrigerator Card",
       "description": "Next 3 fridge withdrawals are free",
-      "category": "special",
+      "category": "utility",
       "rarity": "rare",
       "effect": {
         "type": "free_withdrawals",

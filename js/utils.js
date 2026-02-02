@@ -1,258 +1,55 @@
-import { DISTANCE_ATTRIBUTES, ATTR_DESCRIPTIONS } from './config.js';
+// utils.js - Re-exports and utility functions
+// This file maintains backward compatibility while delegating to new modules
 
-// Food data (loaded from JSON)
-let RECIPES = {};
-let MUTATIONS = {};
-let AMPLIFICATIONS = {};
-let ATOMS = [];
-let DEFAULT_ATTRIBUTES = {};
-let FOOD_ATTRIBUTES = {};
-let TASTE_FEEDBACK = {};
-let CUSTOMER_TYPES = [];
-let ARTIFACTS = [];
-let CONSUMABLES = [];
+// Re-export from DataLoader
+export {
+    loadFoodData,
+    loadTasteFeedback,
+    loadCustomers,
+    loadArtifacts,
+    loadConsumables
+} from './data/DataLoader.js';
 
-// Helper to create food attributes with defaults
-export function createFoodAttr(overrides) {
-    return { ...DEFAULT_ATTRIBUTES, ...overrides };
-}
+// Re-export from DataStore
+export {
+    getRecipes,
+    getAtoms,
+    getCustomerTypes,
+    getArtifacts,
+    getArtifactById,
+    getConsumables,
+    getConsumableById,
+    getRecipeResult,
+    createFoodAttr,
+    getDefaultAttributes,
+    getFoodAttributesData,
+    getTasteFeedbackData
+} from './data/DataStore.js';
 
-// Load food data from JSON file
-export async function loadFoodData() {
-    try {
-        const response = await fetch('data/food-data.json');
-        const data = await response.json();
+// Re-export from ItemUtils
+export {
+    createItemObject,
+    getItemName,
+    getItemModifiers,
+    mergeModifiers,
+    getFoodAttributes
+} from './utils/ItemUtils.js';
 
-        // Load base data
-        RECIPES = data.recipes;
-        MUTATIONS = data.mutations;
-        AMPLIFICATIONS = data.amplifications;
-        ATOMS = data.atoms;
-        DEFAULT_ATTRIBUTES = data.defaultAttributes;
+// Re-export from FeedbackService
+export {
+    getTasteFeedback,
+    getDemandHints
+} from './services/FeedbackService.js';
 
-        // Build FOOD_ATTRIBUTES by applying defaults to each food's overrides
-        FOOD_ATTRIBUTES = {};
-        for (const [foodName, overrides] of Object.entries(data.foodAttributes)) {
-            FOOD_ATTRIBUTES[foodName] = createFoodAttr(overrides);
-        }
+// Re-export from PaymentService
+export {
+    calculateDistance,
+    calculatePayment,
+    getSatisfactionRating
+} from './services/PaymentService.js';
 
-        // Merge mutations and amplifications into RECIPES for backward compatibility
-        Object.assign(RECIPES, MUTATIONS);
-        Object.assign(RECIPES, AMPLIFICATIONS);
-
-        console.log('Food data loaded successfully');
-        return true;
-    } catch (error) {
-        console.error('Failed to load food data:', error);
-        return false;
-    }
-}
-
-// Load taste feedback data from JSON
-export async function loadTasteFeedback() {
-    try {
-        const response = await fetch('data/taste-feedback.json');
-        TASTE_FEEDBACK = await response.json();
-        console.log('Taste feedback loaded successfully');
-        return true;
-    } catch (error) {
-        console.error('Failed to load taste feedback:', error);
-        return false;
-    }
-}
-
-// Load customer types from JSON
-export async function loadCustomers() {
-    try {
-        const response = await fetch('data/customers.json');
-        CUSTOMER_TYPES = await response.json();
-        console.log('Customer data loaded successfully');
-        return true;
-    } catch (error) {
-        console.error('Failed to load customer data:', error);
-        return false;
-    }
-}
-
-// Load artifacts from JSON
-export async function loadArtifacts() {
-    try {
-        const response = await fetch('data/artifacts.json');
-        ARTIFACTS = await response.json();
-        console.log('Artifact data loaded successfully');
-        return true;
-    } catch (error) {
-        console.error('Failed to load artifact data:', error);
-        return false;
-    }
-}
-
-// Load consumables from JSON
-export async function loadConsumables() {
-    try {
-        const response = await fetch('data/consumables.json');
-        const data = await response.json();
-        CONSUMABLES = data.consumables;
-        console.log('Consumables loaded successfully');
-        return true;
-    } catch (error) {
-        console.error('Failed to load consumables:', error);
-        return false;
-    }
-}
-
-// Getters for loaded data
-export function getRecipes() { return RECIPES; }
-export function getAtoms() { return ATOMS; }
-export function getCustomerTypes() { return CUSTOMER_TYPES; }
-export function getArtifacts() { return ARTIFACTS; }
-export function getArtifactById(id) {
-    return ARTIFACTS.find(artifact => artifact.id === id);
-}
-export function getConsumables() { return CONSUMABLES; }
-export function getConsumableById(id) {
-    return CONSUMABLES.find(c => c.id === id);
-}
-
-// --- Item Object Helper Functions ---
-
-// Create standardized item object
-export function createItemObject(name, modifiers = {}) {
-    return { name, modifiers: { ...modifiers } };
-}
-
-// Extract name (backward compatible with strings)
-export function getItemName(item) {
-    return typeof item === 'string' ? item : item.name;
-}
-
-// Extract modifiers
-export function getItemModifiers(item) {
-    return typeof item === 'string' ? {} : (item.modifiers || {});
-}
-
-// Merge parent modifiers for recipe inheritance
-export function mergeModifiers(mods1, mods2) {
-    const merged = { ...mods1 };
-    for (const [attr, value] of Object.entries(mods2)) {
-        merged[attr] = (merged[attr] || 0) + value;
-    }
-    return merged;
-}
-
-// Get attributes for any food item (with fallback for unknown items)
-export function getFoodAttributes(item) {
-    const itemName = getItemName(item);
-    const itemModifiers = getItemModifiers(item);
-
-    // Get base attributes (existing logic)
-    let baseAttrs;
-    if (FOOD_ATTRIBUTES[itemName]) {
-        baseAttrs = { ...FOOD_ATTRIBUTES[itemName] };
-    } else if (itemName.startsWith("Hot ")) {
-        // Fallback for dynamically created items (like "Hot X")
-        const baseItem = itemName.substring(4);
-        if (FOOD_ATTRIBUTES[baseItem]) {
-            baseAttrs = { ...FOOD_ATTRIBUTES[baseItem], temperature: 8 };
-        } else {
-            baseAttrs = createFoodAttr({ sanity: -1, health: 2, filling: 3 });
-        }
-    } else {
-        // Ultimate fallback - mysterious unknown food
-        baseAttrs = createFoodAttr({ sanity: -1, health: 2, filling: 3 });
-    }
-
-    // Apply runtime modifiers
-    for (const [attr, modifier] of Object.entries(itemModifiers)) {
-        baseAttrs[attr] = (baseAttrs[attr] || 0) + modifier;
-    }
-
-    return baseAttrs;
-}
-
-// Get feedback message for an attribute value
-export function getTasteFeedback(attribute, value) {
-    const ranges = TASTE_FEEDBACK[attribute];
-    if (!ranges) return null;
-
-    for (const range of ranges) {
-        if (value >= range.min && value <= range.max) {
-            return range.msg;
-        }
-    }
-    return null;
-}
-
-// Calculate Euclidean distance between food attributes and customer demand
-export function calculateDistance(foodAttrs, demandVector) {
-    let sumSquares = 0;
-
-    for (const attr of DISTANCE_ATTRIBUTES) {
-        const foodVal = foodAttrs[attr] || 0;
-        const demandVal = demandVector[attr];
-
-        // Skip attributes not specified in demand (undefined = don't care)
-        if (demandVal === undefined) continue;
-
-        const diff = foodVal - demandVal;
-        sumSquares += diff * diff;
-    }
-
-    return Math.sqrt(sumSquares);
-}
-
-// Calculate payment based on distance: 20 * 1.3^(-distance)
-// Close match = more money, far match = less money
-export function calculatePayment(distance) {
-    const payment = 30 * Math.pow(1.1, -Math.pow(distance, 1.2));
-    return Math.max(0, Math.round(payment * 100) / 100); // Round to cents, min $0
-}
-
-// Get satisfaction rating based on distance
-export function getSatisfactionRating(distance) {
-    if (distance <= 2) return { rating: "PERFECT", emoji: "★★★★★", color: "#ffff00" };
-    if (distance <= 5) return { rating: "EXCELLENT", emoji: "★★★★☆", color: "#33ff33" };
-    if (distance <= 8) return { rating: "GOOD", emoji: "★★★☆☆", color: "#33ff33" };
-    if (distance <= 11) return { rating: "OKAY", emoji: "★★☆☆☆", color: "#aaffaa" };
-    if (distance <= 14) return { rating: "POOR", emoji: "★☆☆☆☆", color: "#ffaa00" };
-    return { rating: "TERRIBLE", emoji: "☆☆☆☆☆", color: "#ff3333" };
-}
-
-// Generate readable hints from demand vector
-export function getDemandHints(demand) {
-    const hints = [];
-
-    for (const [attr, val] of Object.entries(demand)) {
-        const desc = ATTR_DESCRIPTIONS[attr];
-        if (desc) {
-            if (typeof desc === 'function') {
-                const result = desc(val);
-                if (result) hints.push(result);
-            } else if (val >= 5) {
-                hints.push(desc.toUpperCase());
-            } else if (val >= 3) {
-                hints.push(desc);
-            }
-        }
-    }
-
-    return hints.length > 0 ? hints.join(", ") : "???";
-}
-
-// Check if a dish is a simple dish (made from only 2 atoms)
-export function isSimpleDish(itemName) {
-    const recipes = getRecipes();
-
-    // Check all possible 2-atom combinations
-    for (const [combo, result] of Object.entries(recipes)) {
-        if (result === itemName) {
-            const parts = combo.split('+');
-            // A simple dish is made from exactly 2 atoms (base ingredients)
-            if (parts.length === 2 && ATOMS.includes(parts[0]) && ATOMS.includes(parts[1])) {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
+// Re-export from RecipeService
+export {
+    isSimpleDish,
+    tryUnlockRecipe
+} from './services/RecipeService.js';
