@@ -113,6 +113,18 @@ export default class RecipeBookManager {
     }
 
     /**
+     * Track merchant purchase (bought from morning merchant)
+     */
+    trackMerchantPurchase(foodName) {
+        const discovery = {
+            method: 'Merchant',
+            isMerchant: true
+        };
+
+        this.persistence.addDiscovery(foodName, discovery);
+    }
+
+    /**
      * Get formatted discovery methods for a food (for tooltip)
      * @param {string} foodName - Name of the food
      * @returns {string} Formatted methods string
@@ -131,6 +143,8 @@ export default class RecipeBookManager {
                 methods.push(`Pan(${discovery.ingredients.join(' + ')})`);
             } else if (discovery.method === 'Atom') {
                 methods.push('Starting Ingredient');
+            } else if (discovery.method === 'Merchant') {
+                methods.push('Purchased from Merchant');
             } else if (discovery.method === 'Amplify') {
                 methods.push(`Amplify(${discovery.source})`);
             } else if (discovery.method === 'Microwave') {

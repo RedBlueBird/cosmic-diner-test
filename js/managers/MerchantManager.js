@@ -5,10 +5,10 @@ import * as UI from '../ui.js';
 
 // Base prices for consumables by rarity
 const CONSUMABLE_BASE_PRICES = {
-    common: 10,
-    uncommon: 15,
-    rare: 20,
-    legendary: 30
+    common: 5,
+    uncommon: 10,
+    rare: 15,
+    legendary: 20
 };
 
 // Base price for foods
@@ -174,6 +174,9 @@ export class MerchantManager {
             this.state.availableIngredients.push(foodName);
             this.state.ingredientCosts[foodName] = price;
             this.callbacks.onLog(`Purchased ${foodName} for $${price}! Now available in Fridge!`, "system");
+
+            // Track in recipe book as merchant purchase
+            this.callbacks.trackMerchantPurchase(foodName);
         }
 
         // Remove from stock

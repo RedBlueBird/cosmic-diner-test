@@ -137,7 +137,8 @@ export class Game {
             onLog: (msg, type) => this.log(msg, type),
             onRender: () => this.render(),
             onNextCustomer: () => this.customers.nextCustomer(),
-            grantConsumable: (id, qty) => this.consumables.grantConsumable(id, qty)
+            grantConsumable: (id, qty) => this.consumables.grantConsumable(id, qty),
+            trackMerchantPurchase: (foodName) => this.recipeBook.trackMerchantPurchase(foodName)
         });
     }
 

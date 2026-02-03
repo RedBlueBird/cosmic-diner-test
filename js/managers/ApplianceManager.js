@@ -139,6 +139,10 @@ export class ApplianceManager {
         const item = getItemName(itemObj);
         const mods = getItemModifiers(itemObj);
 
+        // Calculate cost of source item with artifact modifiers
+        const baseItemCost = this.state.ingredientCosts[item] || 1;
+        const itemCost = this.callbacks.getAtomCostWithArtifacts(item, baseItemCost);
+
         let ingredients = null;
         for (let [key, val] of Object.entries(RECIPES)) {
             if (val === item && key.includes("+")) {
@@ -148,7 +152,12 @@ export class ApplianceManager {
         }
 
         if (ingredients) {
-            this.callbacks.onLog(`Chopping: ${item} -> ${ingredients[0]} + ${ingredients[1]}`);
+            this.callbacks.onLog(`Chopping: ${item} ($${itemCost}) -> ${ingredients[0]} ($${itemCost}) + ${ingredients[1]} ($${itemCost})`);
+
+            // Unlock both split results at source item cost
+            this.callbacks.unlockIngredient(ingredients[0], itemCost, [itemObj]);
+            this.callbacks.unlockIngredient(ingredients[1], itemCost, [itemObj]);
+
             this.state.countertop.splice(this.state.selectedIndices[0], 1);
             this.state.countertop.push(createItemObject(ingredients[0], mods));
             this.state.countertop.push(createItemObject(ingredients[1], mods));
