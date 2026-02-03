@@ -24,7 +24,10 @@ export function isSimpleDish(itemName) {
 
 // Try to unlock a recipe if conditions are met
 // Returns true if unlocked or updated, false if no change
-export function tryUnlockRecipe(result, cost, availableIngredients, ingredientCosts, inputItems, log) {
+// cost: base cost to store in ingredientCosts
+// displayCost: optional cost to show in log messages for new recipe (includes artifact effects)
+// oldDisplayCost: optional cost to show in log messages for old recipe (includes artifact effects)
+export function tryUnlockRecipe(result, cost, availableIngredients, ingredientCosts, inputItems, log, displayCost = null, oldDisplayCost = null) {
     // Check if any input item has the temporary modifier
     const hasTemporaryIngredient = inputItems.some(item => {
         const itemObj = typeof item === 'string' ? { name: item, modifiers: {} } : item;
@@ -38,18 +41,23 @@ export function tryUnlockRecipe(result, cost, availableIngredients, ingredientCo
         return false;
     }
 
+    // Use displayCost for messages if provided, otherwise use stored cost
+    const costToShow = displayCost !== null ? displayCost : cost;
+
     if (!availableIngredients.includes(result)) {
         availableIngredients.push(result);
         ingredientCosts[result] = cost;
         if (log) {
-            log(`NEW RECIPE UNLOCKED: ${result} ($${cost}) now available in Fridge!`, "system");
+            log(`NEW RECIPE UNLOCKED: ${result} ($${costToShow}) now available in Fridge!`, "system");
         }
         return true;
     } else if (cost < ingredientCosts[result]) {
         const oldCost = ingredientCosts[result];
+        const oldCostMsg = oldDisplayCost !== null ? oldDisplayCost : oldCost;
+        const newCostMsg = displayCost !== null ? displayCost : cost;
         ingredientCosts[result] = cost;
         if (log) {
-            log(`CHEAPER RECIPE FOR ${result.toUpperCase()} UNLOCKED! $${oldCost} -> $${cost}`, "system");
+            log(`CHEAPER RECIPE FOR ${result.toUpperCase()} UNLOCKED! $${oldCostMsg} -> $${newCostMsg}`, "system");
         }
         return true;
     }

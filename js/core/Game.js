@@ -102,7 +102,7 @@ export class Game {
             applyBulkDiscount: (item, cost) => this.artifacts.applyBulkDiscount(item, cost),
             getCountertopCapacity: () => this.artifacts.getCountertopCapacity(),
             hasArtifact: (id) => this.artifacts.hasArtifact(id),
-            unlockIngredient: (item, cost, inputItems = []) => this.unlockIngredient(item, cost, inputItems),
+            unlockIngredient: (item, cost, inputItems = [], displayCost = null) => this.unlockIngredient(item, cost, inputItems, displayCost),
             trackRecipe: (method, result, inputItems) => this.recipeBook.trackRecipe(method, result, inputItems),
             trackAtom: (atom) => this.recipeBook.trackAtom(atom)
         });
@@ -159,14 +159,26 @@ export class Game {
         return this.ingredientCosts[item] || 1;
     }
 
-    unlockIngredient(item, cost, inputItems = []) {
+    unlockIngredient(item, cost, inputItems = [], displayCost = null) {
+        // If displayCost not provided, calculate it with artifacts
+        const costToDisplay = displayCost !== null ? displayCost : this.artifacts.getAtomCostWithArtifacts(item, cost);
+
+        // If item exists and we're potentially updating it, calculate old display cost
+        let oldDisplayCost = null;
+        if (this.availableIngredients.includes(item)) {
+            const oldBaseCost = this.ingredientCosts[item];
+            oldDisplayCost = this.artifacts.getAtomCostWithArtifacts(item, oldBaseCost);
+        }
+
         tryUnlockRecipe(
             item,
             cost,
             this.availableIngredients,
             this.ingredientCosts,
             inputItems,
-            (msg, type) => this.log(msg, type)
+            (msg, type) => this.log(msg, type),
+            costToDisplay,
+            oldDisplayCost
         );
     }
 
