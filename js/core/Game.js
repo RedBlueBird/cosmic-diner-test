@@ -11,6 +11,7 @@ import { ApplianceManager } from '../managers/ApplianceManager.js';
 import { CustomerManager } from '../managers/CustomerManager.js';
 import { DayManager } from '../managers/DayManager.js';
 import { MerchantManager } from '../managers/MerchantManager.js';
+import RecipeBookManager from '../managers/RecipeBookManager.js';
 
 export class Game {
     constructor() {
@@ -27,6 +28,9 @@ export class Game {
 
         this.countertop = [];
         this.selectedIndices = [];
+
+        // Recipe Book Manager (initialize before ingredient deck)
+        this.recipeBook = new RecipeBookManager();
 
         // Ingredient deck
         this.availableIngredients = [];
@@ -98,7 +102,9 @@ export class Game {
             applyBulkDiscount: (item, cost) => this.artifacts.applyBulkDiscount(item, cost),
             getCountertopCapacity: () => this.artifacts.getCountertopCapacity(),
             hasArtifact: (id) => this.artifacts.hasArtifact(id),
-            unlockIngredient: (item, cost, inputItems = []) => this.unlockIngredient(item, cost, inputItems)
+            unlockIngredient: (item, cost, inputItems = []) => this.unlockIngredient(item, cost, inputItems),
+            trackRecipe: (method, result, inputItems) => this.recipeBook.trackRecipe(method, result, inputItems),
+            trackAtom: (atom) => this.recipeBook.trackAtom(atom)
         });
 
         // Customer Manager
@@ -141,6 +147,8 @@ export class Game {
         this.availableIngredients = shuffled.slice(0, 6);
         this.availableIngredients.forEach(atom => {
             this.ingredientCosts[atom] = 1;
+            // Track starting atoms in recipe book immediately
+            this.recipeBook.trackAtom(atom);
         });
         const stockList = this.availableIngredients.map(a => `${a} ($1)`).join(", ");
         this.log("FRIDGE STOCKED WITH: " + stockList, "system");

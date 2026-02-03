@@ -98,6 +98,13 @@ header {
     padding: 10px;
     overflow-y: auto;
     overflow-x: visible;
+    /* Hide scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+#left-panel::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
 }
 
 #center-panel {
@@ -107,6 +114,13 @@ header {
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
+    /* Hide scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+#center-panel::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
 }
 
 #right-panel {
@@ -114,6 +128,13 @@ header {
     border-left: 1px dashed #33ff33;
     padding: 10px;
     overflow-y: auto;
+    /* Hide scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+#right-panel::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
 }
 
 #log-panel {
@@ -196,6 +217,7 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     width: 350px;
     max-height: 500px;
     overflow-y: auto;
+    overflow-x: hidden;
     box-shadow: 0 0 30px rgba(51, 255, 51, 0.5);
     text-align: center;
 }
@@ -426,35 +448,11 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
 
 /* GitHub Button */
 .github-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: transparent;
-    border: 2px solid #33ff33;
-    color: #33ff33;
-    padding: 12px 24px;
-    cursor: pointer;
-    font-family: 'Courier New', Courier, monospace;
-    text-transform: uppercase;
-    font-size: 1em;
-    font-weight: bold;
+    display: block;
+    width: 100%;
+    text-align: center;
     text-decoration: none;
-    transition: all 0.2s;
-}
-
-.github-btn svg {
-    width: 24px;
-    height: 24px;
-    fill: #33ff33;
-}
-
-.github-btn:hover {
-    background: #33ff33;
-    color: #000;
-}
-
-.github-btn:hover svg {
-    fill: #000;
+    margin-bottom: 0;
 }
 
 /* Exit Button */
@@ -462,4 +460,56 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     margin-top: 20px;
     width: 100%;
     font-size: 1em;
+}
+
+/* Recipe Book View */
+.recipe-book-btn {
+    width: 100%;
+    margin-bottom: 15px;
+    font-size: 1em;
+}
+
+.recipe-book-content {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-align: left;
+    margin: 20px 0;
+    padding-right: 10px;
+}
+
+.recipe-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: visible;
+}
+
+.recipe-item {
+    padding: 10px 15px;
+    border: 1px solid #33ff33;
+    background: rgba(0, 255, 0, 0.05);
+    cursor: help;
+    transition: all 0.2s;
+    position: relative;
+    overflow: visible;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.recipe-item:hover {
+    background: rgba(0, 255, 0, 0.15);
+    border-color: #ffff00;
+}
+
+.recipe-name {
+    color: #ffff00;
+    font-weight: bold;
+}
+
+.no-recipes {
+    text-align: center;
+    color: #888;
+    padding: 40px 20px;
+    line-height: 1.6;
 }

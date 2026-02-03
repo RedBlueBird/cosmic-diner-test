@@ -191,12 +191,8 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) 
         btn.className = 'btn';
         btn.textContent = `${item.name} ($${item.price})`;
 
-        if (money < item.price) {
-            btn.style.opacity = '0.5';
-            btn.style.cursor = 'not-allowed';
-        } else {
-            btn.onclick = () => onBuyConsumable(item.id, item.price);
-        }
+        // Always allow clicking, merchant will handle insufficient funds
+        btn.onclick = () => onBuyConsumable(item.id, item.price);
 
         // Add tooltip
         createTooltip(btn, item.name, `${item.description}\n\n(Click to purchase)`);
@@ -217,12 +213,8 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) 
         btn.className = 'btn';
         btn.textContent = `${item.name} ($${item.price})`;
 
-        if (money < item.price) {
-            btn.style.opacity = '0.5';
-            btn.style.cursor = 'not-allowed';
-        } else {
-            btn.onclick = () => onBuyFood(item.name, item.price);
-        }
+        // Always allow clicking, merchant will handle insufficient funds
+        btn.onclick = () => onBuyFood(item.name, item.price);
 
         // Add tooltip
         createTooltip(btn, item.name, `Unlocks in Fridge for future use.\n\n(Click to purchase)`);

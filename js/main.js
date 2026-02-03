@@ -28,6 +28,7 @@ async function init() {
     console.log('All data loaded, starting game...');
     game = new Game();
     game.initializeArtifactPool();
+    game.recipeBook.loadFromPersistence();
 
     // Initialize custom tooltips for appliance buttons
     initApplianceTooltips();
@@ -54,6 +55,7 @@ function restartGame() {
     // Create a fresh game instance
     game = new Game();
     game.initializeArtifactPool();
+    game.recipeBook.loadFromPersistence();
 
     // Update window reference
     window.game = game;
@@ -71,12 +73,31 @@ function showSettings() {
 function hideSettings() {
     const modal = document.getElementById('settings-modal');
     modal.classList.add('hidden');
+    // Reset to settings view when closing
+    showSettingsView();
+}
+
+// Show recipe book view
+function showRecipeBookView() {
+    // Import dynamically to avoid circular dependencies
+    import('./ui/modals.js').then(module => {
+        module.showRecipeBookView(game.recipeBook);
+    });
+}
+
+// Show settings view
+function showSettingsView() {
+    import('./ui/modals.js').then(module => {
+        module.showSettingsView();
+    });
 }
 
 // Expose functions to window
 window.restartGame = restartGame;
 window.showSettings = showSettings;
 window.hideSettings = hideSettings;
+window.showRecipeBookView = showRecipeBookView;
+window.showSettingsView = showSettingsView;
 
 // Start initialization when DOM is ready
 if (document.readyState === 'loading') {

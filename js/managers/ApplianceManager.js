@@ -63,6 +63,10 @@ export class ApplianceManager {
 
         this.state.money -= cost;
         this.state.countertop.push(createItemObject(item));
+
+        // Track atom withdrawal for recipe book
+        this.callbacks.trackAtom(item);
+
         if (cost > 0) {
             this.callbacks.onLog(`Withdrew ${item} from Fridge. -$${cost}`);
         } else {
@@ -111,6 +115,8 @@ export class ApplianceManager {
         } else {
             this.callbacks.onLog(`Cooking: ${item1} ($${cost1}) + ${item2} ($${cost2}) -> ${result} ($${totalCost})`);
             this.callbacks.unlockIngredient(result, totalCost, [item1Obj, item2Obj]);
+            // Track Pan recipe for recipe book
+            this.callbacks.trackRecipe('Pan', result, [item1Obj, item2Obj]);
         }
 
         this.state.selectedIndices.sort((a, b) => b - a);
@@ -146,6 +152,9 @@ export class ApplianceManager {
             this.state.countertop.splice(this.state.selectedIndices[0], 1);
             this.state.countertop.push(createItemObject(ingredients[0], mods));
             this.state.countertop.push(createItemObject(ingredients[1], mods));
+            // Track Board usage for BOTH resulting ingredients
+            this.callbacks.trackRecipe('Board', ingredients[0], [itemObj]);
+            this.callbacks.trackRecipe('Board', ingredients[1], [itemObj]);
         } else {
             this.callbacks.onLog(`Cannot split ${item}. It is atomic or generic.`, "error");
         }
@@ -172,6 +181,8 @@ export class ApplianceManager {
             this.state.countertop[this.state.selectedIndices[0]] = createItemObject(result, mods);
             this.callbacks.onLog(`Amplified ${item} ($${itemCost}) into ${result} ($${itemCost})!`);
             this.callbacks.unlockIngredient(result, itemCost, [itemObj]);
+            // Track Amplify recipe for recipe book
+            this.callbacks.trackRecipe('Amplify', result, [itemObj]);
         } else {
             this.callbacks.onLog("Nothing happened. Item cannot be amplified.", "error");
         }
@@ -203,16 +214,22 @@ export class ApplianceManager {
             this.callbacks.onLog(`Microwave mutated ${item} ($${itemCost}) into ${result} ($${itemCost})!`);
             this.state.countertop.push(createItemObject(result, mods));
             this.callbacks.unlockIngredient(result, itemCost, [itemObj]);
+            // Track Microwave recipe for recipe book
+            this.callbacks.trackRecipe('Microwave', result, [itemObj]);
         } else if (chance > 0.7) {
             result = "Radioactive Slime";
             this.callbacks.onLog(`Microwave mutated ${item} ($${itemCost}) into: RADIOACTIVE SLIME ($${itemCost})`, "error");
             this.state.countertop.push(createItemObject(result, mods));
             this.callbacks.unlockIngredient(result, itemCost, [itemObj]);
+            // Track Microwave recipe for recipe book
+            this.callbacks.trackRecipe('Microwave', result, [itemObj]);
         } else {
             result = "Hot " + item;
             this.callbacks.onLog(`Microwave made ${item} ($${itemCost}) really hot -> ${result} ($${itemCost})`);
             this.state.countertop.push(createItemObject(result, mods));
             this.callbacks.unlockIngredient(result, itemCost, [itemObj]);
+            // Track Microwave recipe for recipe book
+            this.callbacks.trackRecipe('Microwave', result, [itemObj]);
         }
         this.callbacks.onClearSelection();
         this.callbacks.onRender();

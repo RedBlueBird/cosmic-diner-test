@@ -211,6 +211,24 @@ export class CustomerManager {
 
         this.callbacks.onLog(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`);
 
+        // Sanity penalty for poor service
+        if (satisfaction.rating === "TERRIBLE") {
+            this.state.sanity -= 15;
+            this.callbacks.onLog("Customer's disgust damages your sanity! (-15 sanity)", "error");
+        } else if (satisfaction.rating === "POOR") {
+            this.state.sanity -= 5;
+            this.callbacks.onLog("Customer's disappointment weighs on you. (-5 sanity)", "error");
+        }
+
+        // Check for sanity game over
+        if (this.state.sanity <= 0) {
+            this.callbacks.onRender();
+            setTimeout(() => {
+                this.callbacks.onGameOver("SANITY DEPLETED");
+            }, 1000);
+            return;
+        }
+
         // Apply payment bonus artifacts
         let paymentMultiplier = 1;
         const bonusReasons = [];

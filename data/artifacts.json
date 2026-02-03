@@ -114,9 +114,9 @@
   {
     "id": "caffeine_addiction",
     "name": "Caffeine Addiction",
-    "description": "Tasting coffee items restores 15 sanity instead of costing 10",
+    "description": "Tasting coffee items restores 10 sanity instead of costing 10",
     "category": "sanity",
-    "effect": { "type": "taste_sanity_bonus", "value": 15, "condition": "contains_coffee" }
+    "effect": { "type": "taste_sanity_bonus", "value": 10, "condition": "contains_coffee" }
   },
   {
     "id": "adrenaline_rush",

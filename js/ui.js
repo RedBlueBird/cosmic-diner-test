@@ -28,5 +28,7 @@ export {
     hideArtifactModal,
     showGameOver,
     showVictory,
-    hideModal
+    hideModal,
+    showRecipeBookView,
+    showSettingsView
 } from './ui/modals.js';

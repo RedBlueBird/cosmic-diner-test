@@ -123,7 +123,15 @@ export class MerchantManager {
      */
     buyConsumable(consumableId, price) {
         if (this.state.money < price) {
-            this.callbacks.onLog("Not enough money!", "error");
+            const messages = [
+                "MERCHANT: \"You're too broke for this! Come back with more coin.\"",
+                "MERCHANT: \"Sorry pal, your wallet's lighter than my pack mule.\"",
+                "MERCHANT: \"Not enough cash, friend. This ain't a charity!\"",
+                "MERCHANT: \"You can't afford that! Maybe try the dumpster out back?\"",
+                "MERCHANT: \"Got any more gold hiding? No? Then keep walking.\""
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            this.callbacks.onLog(randomMessage, "error");
             return;
         }
 
@@ -147,7 +155,15 @@ export class MerchantManager {
      */
     buyFood(foodName, price) {
         if (this.state.money < price) {
-            this.callbacks.onLog("Not enough money!", "error");
+            const messages = [
+                "MERCHANT: \"You're too broke for this! Come back with more coin.\"",
+                "MERCHANT: \"Sorry pal, your wallet's lighter than my pack mule.\"",
+                "MERCHANT: \"Not enough cash, friend. This ain't a charity!\"",
+                "MERCHANT: \"You can't afford that! Maybe try the dumpster out back?\"",
+                "MERCHANT: \"Got any more gold hiding? No? Then keep walking.\""
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            this.callbacks.onLog(randomMessage, "error");
             return;
         }
 

@@ -1,6 +1,7 @@
 // modals.js - Modal show/hide functions
 
 import { getArtifactById } from '../data/DataStore.js';
+import { createTooltip } from './tooltips.js';
 
 // Generic hide modal helper
 export function hideModal(modalId) {
@@ -53,7 +54,6 @@ export function showArtifactModal(artifactIds, onSelect) {
         card.innerHTML = `
             <div class="artifact-name">${artifact.name}</div>
             <div class="artifact-description">${artifact.description}</div>
-            <div class="artifact-category">[${artifact.category}]</div>
         `;
         card.onclick = () => onSelect(artifactId);
         optionsDiv.appendChild(card);
@@ -112,4 +112,104 @@ export function showVictory(day, money, sanity) {
         <button class="btn" onclick="window.restartGame()">RESTART GAME</button>
     `;
     panel.appendChild(victoryDiv);
+}
+
+// Show recipe book view
+export function showRecipeBookView(recipeBookManager) {
+    // Clean up any existing tooltips first
+    cleanupRecipeTooltips();
+
+    document.getElementById('settings-view').classList.add('hidden');
+    const recipeView = document.getElementById('recipe-book-view');
+    const content = document.getElementById('recipe-book-content');
+
+    const allFoods = recipeBookManager.getAllFoods();
+
+    if (allFoods.length === 0) {
+        content.innerHTML = '<div class="no-recipes">No recipes discovered yet!<br>Start cooking to unlock recipes.</div>';
+    } else {
+        const recipeList = document.createElement('div');
+        recipeList.className = 'recipe-list';
+
+        allFoods.forEach(foodName => {
+            const methods = recipeBookManager.getDiscoveryMethods(foodName);
+            const recipeItem = document.createElement('div');
+            recipeItem.className = 'recipe-item';
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'recipe-name';
+            nameSpan.textContent = foodName;
+            recipeItem.appendChild(nameSpan);
+
+            // Create tooltip and append to body instead of element
+            createRecipeTooltip(recipeItem, 'Discovery Methods', methods);
+            recipeList.appendChild(recipeItem);
+        });
+
+        content.innerHTML = '';
+        content.appendChild(recipeList);
+    }
+
+    recipeView.classList.remove('hidden');
+}
+
+// Custom tooltip for recipe book that appends to body
+function createRecipeTooltip(element, title, description) {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+
+    if (description) {
+        tooltip.innerHTML = `
+            <span class="tooltip-name">${title}</span>
+            <span class="tooltip-description">${description}</span>
+        `;
+    } else {
+        tooltip.innerHTML = `<span class="tooltip-description">${title}</span>`;
+    }
+
+    // Append to body instead of element
+    document.body.appendChild(tooltip);
+
+    // Position tooltip on hover
+    element.addEventListener('mouseenter', (e) => {
+        const rect = element.getBoundingClientRect();
+        tooltip.style.position = 'fixed';
+        tooltip.style.left = `${rect.right + 10}px`;
+        tooltip.style.top = `${rect.top + (rect.height / 2)}px`;
+        tooltip.style.transform = 'translateY(-50%)';
+        tooltip.style.visibility = 'visible';
+        tooltip.style.opacity = '1';
+    });
+
+    element.addEventListener('mouseleave', () => {
+        tooltip.style.visibility = 'hidden';
+        tooltip.style.opacity = '0';
+    });
+
+    // Clean up tooltip when modal closes
+    element.addEventListener('remove', () => {
+        tooltip.remove();
+    });
+
+    return tooltip;
+}
+
+// Show settings view
+export function showSettingsView() {
+    // Clean up any recipe tooltips
+    cleanupRecipeTooltips();
+    document.getElementById('recipe-book-view').classList.add('hidden');
+    document.getElementById('settings-view').classList.remove('hidden');
+}
+
+// Clean up recipe tooltips from DOM
+function cleanupRecipeTooltips() {
+    // Remove all tooltips that were added to body
+    const tooltips = document.querySelectorAll('.tooltip');
+    tooltips.forEach(tooltip => {
+        // Only remove tooltips that are direct children of body (recipe tooltips)
+        if (tooltip.parentElement === document.body) {
+            tooltip.remove();
+        }
+    });
 }
