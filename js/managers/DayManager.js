@@ -68,9 +68,6 @@ export class DayManager {
         this.state.day++;
         this.state.customersServedCount = 0;
 
-        // Clear Morning Prep items from previous day
-        this.state.morningPrepItems.clear();
-
         // Rent Negotiator: Freeze rent increase if artifact is active and within freeze period
         if (this.state.day <= this.state.rentFrozenUntilDay) {
             this.callbacks.onLog(`RENT NEGOTIATOR: Rent increase frozen this day!`, "system");
@@ -106,11 +103,11 @@ export class DayManager {
 
                 for (let i = 0; i < itemsToAdd; i++) {
                     const randomItem = allFoods[Math.floor(Math.random() * allFoods.length)];
-                    this.state.countertop.push(createItemObject(randomItem));
-                    this.state.morningPrepItems.add(randomItem);
+                    // Apply temporary modifier instead of Set tracking
+                    this.state.countertop.push(createItemObject(randomItem, { temporary: 1 }));
                 }
 
-                this.callbacks.onLog(`MORNING PREP: Added ${itemsToAdd} mysterious ingredient(s) to countertop!`, "system");
+                this.callbacks.onLog(`MORNING PREP: Added ${itemsToAdd} temporary ingredient(s) to countertop!`, "system");
             }
         }
 

@@ -1,6 +1,7 @@
 // RecipeService.js - Centralized recipe unlocking logic
 
 import { getRecipes, getAtoms } from '../data/DataStore.js';
+import { getItemModifiers } from '../utils/ItemUtils.js';
 
 // Check if a dish is a simple dish (made from only 2 atoms)
 export function isSimpleDish(itemName) {
@@ -23,12 +24,18 @@ export function isSimpleDish(itemName) {
 
 // Try to unlock a recipe if conditions are met
 // Returns true if unlocked or updated, false if no change
-export function tryUnlockRecipe(result, cost, availableIngredients, ingredientCosts, morningPrepItems, log) {
-    // Check if any ingredient is from Morning Prep (if so, don't unlock recipe)
-    if (morningPrepItems && morningPrepItems.size > 0) {
-        for (const item of morningPrepItems) {
-            // This check should be done at the caller level by checking specific items
+export function tryUnlockRecipe(result, cost, availableIngredients, ingredientCosts, inputItems, log) {
+    // Check if any input item has the temporary modifier
+    const hasTemporaryIngredient = inputItems.some(item => {
+        const itemObj = typeof item === 'string' ? { name: item, modifiers: {} } : item;
+        return itemObj.modifiers?.temporary > 0;
+    });
+
+    if (hasTemporaryIngredient) {
+        if (log) {
+            log("(Cannot unlock recipe - uses temporary ingredient)", "system");
         }
+        return false;
     }
 
     if (!availableIngredients.includes(result)) {

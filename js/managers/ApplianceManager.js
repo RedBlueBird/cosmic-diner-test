@@ -110,13 +110,7 @@ export class ApplianceManager {
             this.callbacks.onLog(`Failed Combo: ${item1} + ${item2} = ${result}`, "error");
         } else {
             this.callbacks.onLog(`Cooking: ${item1} ($${cost1}) + ${item2} ($${cost2}) -> ${result} ($${totalCost})`);
-
-            const usesMorningPrepItem = this.state.morningPrepItems.has(item1) || this.state.morningPrepItems.has(item2);
-            if (!usesMorningPrepItem) {
-                this.callbacks.unlockIngredient(result, totalCost);
-            } else {
-                this.callbacks.onLog("(Cannot unlock recipe - uses temporary Morning Prep ingredient)", "system");
-            }
+            this.callbacks.unlockIngredient(result, totalCost, [item1Obj, item2Obj]);
         }
 
         this.state.selectedIndices.sort((a, b) => b - a);
@@ -177,13 +171,7 @@ export class ApplianceManager {
             const result = RECIPES[item];
             this.state.countertop[this.state.selectedIndices[0]] = createItemObject(result, mods);
             this.callbacks.onLog(`Amplified ${item} ($${itemCost}) into ${result} ($${itemCost})!`);
-
-            const usesMorningPrepItem = this.state.morningPrepItems.has(item);
-            if (!usesMorningPrepItem) {
-                this.callbacks.unlockIngredient(result, itemCost);
-            } else {
-                this.callbacks.onLog("(Cannot unlock recipe - uses temporary Morning Prep ingredient)", "system");
-            }
+            this.callbacks.unlockIngredient(result, itemCost, [itemObj]);
         } else {
             this.callbacks.onLog("Nothing happened. Item cannot be amplified.", "error");
         }
@@ -207,8 +195,6 @@ export class ApplianceManager {
         const itemCost = this.callbacks.getAtomCostWithArtifacts(item, baseItemCost);
         const chance = Math.random();
 
-        const usesMorningPrepItem = this.state.morningPrepItems.has(item);
-
         this.state.countertop.splice(this.state.selectedIndices[0], 1);
 
         let result;
@@ -216,29 +202,17 @@ export class ApplianceManager {
             result = RECIPES[item];
             this.callbacks.onLog(`Microwave mutated ${item} ($${itemCost}) into ${result} ($${itemCost})!`);
             this.state.countertop.push(createItemObject(result, mods));
-            if (!usesMorningPrepItem) {
-                this.callbacks.unlockIngredient(result, itemCost);
-            } else {
-                this.callbacks.onLog("(Cannot unlock recipe - uses temporary Morning Prep ingredient)", "system");
-            }
+            this.callbacks.unlockIngredient(result, itemCost, [itemObj]);
         } else if (chance > 0.7) {
             result = "Radioactive Slime";
             this.callbacks.onLog(`Microwave mutated ${item} ($${itemCost}) into: RADIOACTIVE SLIME ($${itemCost})`, "error");
             this.state.countertop.push(createItemObject(result, mods));
-            if (!usesMorningPrepItem) {
-                this.callbacks.unlockIngredient(result, itemCost);
-            } else {
-                this.callbacks.onLog("(Cannot unlock recipe - uses temporary Morning Prep ingredient)", "system");
-            }
+            this.callbacks.unlockIngredient(result, itemCost, [itemObj]);
         } else {
             result = "Hot " + item;
             this.callbacks.onLog(`Microwave made ${item} ($${itemCost}) really hot -> ${result} ($${itemCost})`);
             this.state.countertop.push(createItemObject(result, mods));
-            if (!usesMorningPrepItem) {
-                this.callbacks.unlockIngredient(result, itemCost);
-            } else {
-                this.callbacks.onLog("(Cannot unlock recipe - uses temporary Morning Prep ingredient)", "system");
-            }
+            this.callbacks.unlockIngredient(result, itemCost, [itemObj]);
         }
         this.callbacks.onClearSelection();
         this.callbacks.onRender();

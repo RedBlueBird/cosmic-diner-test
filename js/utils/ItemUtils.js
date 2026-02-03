@@ -56,3 +56,9 @@ export function getFoodAttributes(item) {
 
     return baseAttrs;
 }
+
+// Check if item has temporary modifier
+export function hasTemporaryModifier(item) {
+    const itemObj = typeof item === 'string' ? { name: item, modifiers: {} } : item;
+    return itemObj.modifiers?.temporary > 0;
+}

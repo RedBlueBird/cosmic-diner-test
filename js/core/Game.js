@@ -2,6 +2,7 @@
 
 import { APPLIANCE_UNLOCK_DAYS } from '../config.js';
 import { getAtoms } from '../data/DataStore.js';
+import { tryUnlockRecipe } from '../services/RecipeService.js';
 import * as UI from '../ui.js';
 
 import { ArtifactManager } from '../managers/ArtifactManager.js';
@@ -36,7 +37,6 @@ export class Game {
         this.artifactPool = [];
         this.purchaseHistory = {};
         this.rentFrozenUntilDay = 0;
-        this.morningPrepItems = new Set();
 
         // Consumables system
         this.consumableInventory = {};
@@ -53,8 +53,8 @@ export class Game {
         // Initialize managers with callbacks
         this.initializeManagers();
 
-        // Grant starting consumable
-        this.consumables.grantRandomConsumable();
+        // Grant starting consumable (Commented out for testing)
+        // this.consumables.grantRandomConsumable(); 
 
         this.log("DAY 1 INITIALIZED.");
         this.log("RENT DUE END OF SHIFT: $" + this.rent);
@@ -97,7 +97,7 @@ export class Game {
             applyBulkDiscount: (item, cost) => this.artifacts.applyBulkDiscount(item, cost),
             getCountertopCapacity: () => this.artifacts.getCountertopCapacity(),
             hasArtifact: (id) => this.artifacts.hasArtifact(id),
-            unlockIngredient: (item, cost) => this.unlockIngredient(item, cost)
+            unlockIngredient: (item, cost, inputItems = []) => this.unlockIngredient(item, cost, inputItems)
         });
 
         // Customer Manager
@@ -149,16 +149,15 @@ export class Game {
         return this.ingredientCosts[item] || 1;
     }
 
-    unlockIngredient(item, cost) {
-        if (!this.availableIngredients.includes(item)) {
-            this.availableIngredients.push(item);
-            this.ingredientCosts[item] = cost;
-            this.log(`NEW RECIPE UNLOCKED: ${item} ($${cost}) now available in Fridge!`, "system");
-        } else if (cost < this.ingredientCosts[item]) {
-            const oldCost = this.ingredientCosts[item];
-            this.ingredientCosts[item] = cost;
-            this.log(`CHEAPER RECIPE FOR ${item.toUpperCase()} UNLOCKED! $${oldCost} -> $${cost}`, "system");
-        }
+    unlockIngredient(item, cost, inputItems = []) {
+        tryUnlockRecipe(
+            item,
+            cost,
+            this.availableIngredients,
+            this.ingredientCosts,
+            inputItems,
+            (msg, type) => this.log(msg, type)
+        );
     }
 
     isApplianceUnlocked(appliance) {

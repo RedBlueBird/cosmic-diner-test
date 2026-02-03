@@ -5,6 +5,22 @@ import { getArtifactById, getConsumableById } from '../data/DataStore.js';
 import { getItemName, getItemModifiers } from '../utils/ItemUtils.js';
 import { createTooltip } from './tooltips.js';
 
+// Format modifiers object into readable description
+function formatModifiers(modifiers) {
+    const entries = Object.entries(modifiers);
+    if (entries.length === 0) return "No modifiers";
+
+    return entries.map(([key, value]) => {
+        const sign = value > 0 ? '+' : '';
+        // Special handling for temporary modifier
+        if (key === 'temporary') {
+            return '• Temporary (cannot unlock recipes)';
+        }
+        // Format attribute modifiers
+        return `• ${key}: ${sign}${value}`;
+    }).join('\n');
+}
+
 // Log a message to the log panel
 export function log(msg, type = "neutral") {
     const panel = document.getElementById('log-panel');
@@ -71,6 +87,13 @@ export function render(gameState) {
         div.textContent = `[${index + 1}] ${itemName}${indicator}`;
 
         div.onclick = () => gameState.onToggleSelection(index);
+
+        // Add tooltip if item has modifiers
+        if (Object.keys(modifiers).length > 0) {
+            const modifierDescription = formatModifiers(modifiers);
+            createTooltip(div, "Modifiers", modifierDescription);
+        }
+
         list.appendChild(div);
     });
 
