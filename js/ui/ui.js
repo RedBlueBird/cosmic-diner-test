@@ -108,9 +108,9 @@ export function render(gameState) {
 
     // Visual effects based on sanity
     if (sanity < 20) {
-        document.body.style.filter = "sepia(100%) hue-rotate(300deg) blur(2px) saturate(200%)";
+        document.body.style.filter = "sepia(100%) hue-rotate(300deg) blur(1.3px) saturate(200%)";
     } else if (sanity < 50) {
-        document.body.style.filter = "sepia(50%) hue-rotate(300deg) blur(1px)";
+        document.body.style.filter = "sepia(50%) hue-rotate(300deg) blur(0.8px)";
     } else {
         document.body.style.filter = "none";
     }

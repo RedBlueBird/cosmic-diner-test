@@ -4,6 +4,8 @@
 // Re-export from DataLoader
 export {
     loadFoodData,
+    loadRecipes,
+    loadFoodAttributes,
     loadTasteFeedback,
     loadCustomers,
     loadArtifacts,
@@ -13,6 +15,7 @@ export {
 // Re-export from DataStore
 export {
     getRecipes,
+    getAdditions,
     getAtoms,
     getCustomerTypes,
     getArtifacts,

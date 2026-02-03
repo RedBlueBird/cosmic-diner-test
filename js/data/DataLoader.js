@@ -2,6 +2,8 @@
 
 import {
     setFoodData,
+    setRecipes,
+    setFoodAttributes,
     setTasteFeedback,
     setCustomerTypes,
     setArtifacts,
@@ -9,38 +11,76 @@ import {
     createFoodAttr
 } from './DataStore.js';
 
-// Load food data from JSON file
+// Load food data (atoms and defaultAttributes) from JSON file
 export async function loadFoodData() {
     try {
         const response = await fetch('data/food-data.json');
         const data = await response.json();
 
-        // Build FOOD_ATTRIBUTES by applying defaults to each food's overrides
-        const processedFoodAttributes = {};
-        for (const [foodName, overrides] of Object.entries(data.foodAttributes)) {
-            processedFoodAttributes[foodName] = { ...data.defaultAttributes, ...overrides };
-        }
-
-        // Merge mutations and amplifications into recipes for backward compatibility
-        const mergedRecipes = {
-            ...data.recipes,
-            ...data.mutations,
-            ...data.amplifications
-        };
-
         setFoodData({
-            recipes: mergedRecipes,
-            mutations: data.mutations,
-            amplifications: data.amplifications,
             atoms: data.atoms,
-            defaultAttributes: data.defaultAttributes,
-            foodAttributes: processedFoodAttributes
+            defaultAttributes: data.defaultAttributes
         });
 
         console.log('Food data loaded successfully');
         return true;
     } catch (error) {
         console.error('Failed to load food data:', error);
+        return false;
+    }
+}
+
+// Load recipes (additions, mutations, amplifications) from JSON file
+export async function loadRecipes() {
+    try {
+        const response = await fetch('data/recipes.json');
+        const data = await response.json();
+
+        // Merge mutations and amplifications into additions for backward compatibility
+        const mergedRecipes = {
+            ...data.additions,
+            ...data.mutations,
+            ...data.amplifications
+        };
+
+        setRecipes({
+            recipes: mergedRecipes,
+            additions: data.additions,
+            mutations: data.mutations,
+            amplifications: data.amplifications
+        });
+
+        console.log('Recipes loaded successfully');
+        return true;
+    } catch (error) {
+        console.error('Failed to load recipes:', error);
+        return false;
+    }
+}
+
+// Load food attributes from JSON file
+export async function loadFoodAttributes() {
+    try {
+        const [foodAttrResponse, foodDataResponse] = await Promise.all([
+            fetch('data/food-attributes.json'),
+            fetch('data/food-data.json')
+        ]);
+
+        const foodAttrData = await foodAttrResponse.json();
+        const foodData = await foodDataResponse.json();
+
+        // Build FOOD_ATTRIBUTES by applying defaults to each food's overrides
+        const processedFoodAttributes = {};
+        for (const [foodName, overrides] of Object.entries(foodAttrData.foodAttributes)) {
+            processedFoodAttributes[foodName] = { ...foodData.defaultAttributes, ...overrides };
+        }
+
+        setFoodAttributes(processedFoodAttributes);
+
+        console.log('Food attributes loaded successfully');
+        return true;
+    } catch (error) {
+        console.error('Failed to load food attributes:', error);
         return false;
     }
 }

@@ -1,4 +1,4 @@
-import { loadFoodData, loadTasteFeedback, loadCustomers, loadArtifacts, loadConsumables } from './utils.js';
+import { loadFoodData, loadRecipes, loadFoodAttributes, loadTasteFeedback, loadCustomers, loadArtifacts, loadConsumables } from './utils.js';
 import { Game } from './core/Game.js';
 import { initApplianceTooltips } from './ui.js';
 
@@ -10,15 +10,17 @@ async function init() {
     console.log('Initializing Cosmic Diner...');
 
     // Load all data files in parallel
-    const [foodLoaded, feedbackLoaded, customersLoaded, artifactsLoaded, consumablesLoaded] = await Promise.all([
+    const [foodLoaded, recipesLoaded, foodAttrLoaded, feedbackLoaded, customersLoaded, artifactsLoaded, consumablesLoaded] = await Promise.all([
         loadFoodData(),
+        loadRecipes(),
+        loadFoodAttributes(),
         loadTasteFeedback(),
         loadCustomers(),
         loadArtifacts(),
         loadConsumables()
     ]);
 
-    if (!foodLoaded || !feedbackLoaded || !customersLoaded || !artifactsLoaded || !consumablesLoaded) {
+    if (!foodLoaded || !recipesLoaded || !foodAttrLoaded || !feedbackLoaded || !customersLoaded || !artifactsLoaded || !consumablesLoaded) {
         console.error('Failed to load required data files');
         document.getElementById('log-panel').innerHTML =
             '<div style="color: #ff3333;">> ERROR: Failed to load game data. Please refresh.</div>';

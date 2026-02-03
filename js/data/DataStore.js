@@ -2,6 +2,7 @@
 
 // Module-level storage for loaded data
 let RECIPES = {};
+let ADDITIONS = {};
 let MUTATIONS = {};
 let AMPLIFICATIONS = {};
 let ATOMS = [];
@@ -14,12 +15,19 @@ let CONSUMABLES = [];
 
 // Setters for loaders
 export function setFoodData(data) {
-    RECIPES = data.recipes;
-    MUTATIONS = data.mutations;
-    AMPLIFICATIONS = data.amplifications;
     ATOMS = data.atoms;
     DEFAULT_ATTRIBUTES = data.defaultAttributes;
-    FOOD_ATTRIBUTES = data.foodAttributes;
+}
+
+export function setRecipes(data) {
+    RECIPES = data.recipes;
+    ADDITIONS = data.additions;
+    MUTATIONS = data.mutations;
+    AMPLIFICATIONS = data.amplifications;
+}
+
+export function setFoodAttributes(data) {
+    FOOD_ATTRIBUTES = data;
 }
 
 export function setTasteFeedback(data) {
@@ -41,6 +49,10 @@ export function setConsumables(data) {
 // Getters
 export function getRecipes() {
     return RECIPES;
+}
+
+export function getAdditions() {
+    return ADDITIONS;
 }
 
 export function getAtoms() {

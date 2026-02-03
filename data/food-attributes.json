@@ -1,0 +1,2715 @@
+{
+  "foodAttributes": {
+    "Rice": {
+      "filling": 6,
+      "chew": 3,
+      "soft": 6,
+      "moisture": 4,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "containsGluten": 0
+    },
+    "Meat": {
+      "savory": 6,
+      "filling": 7,
+      "chew": 7,
+      "health": 3,
+      "isRaw": 1,
+      "containsBone": 0.3
+    },
+    "Water": {
+      "moisture": 10,
+      "health": 8,
+      "calming": 2,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "soft": 10,
+      "chew": 0,
+      "filling": 0
+    },
+    "Heat": {
+      "temperature": 12,
+      "spicy": 2,
+      "health": -2
+    },
+    "Bread": {
+      "filling": 5,
+      "chew": 5,
+      "soft": 6,
+      "crunch": 2,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Pepper": {
+      "spicy": 6,
+      "bitter": 2,
+      "crunch": 3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Fish": {
+      "savory": 5,
+      "salty": 2,
+      "filling": 5,
+      "chew": 5,
+      "health": 3,
+      "isRaw": 1,
+      "containsBone": 0.5
+    },
+    "Noodles": {
+      "filling": 5,
+      "chew": 7,
+      "soft": 4,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Cheese": {
+      "savory": 6,
+      "salty": 5,
+      "filling": 4,
+      "soft": 7,
+      "grease": 4,
+      "isVegetarian": 1,
+      "calming": 2
+    },
+    "Tomato": {
+      "sour": 5,
+      "sweet": 3,
+      "moisture": 7,
+      "soft": 6,
+      "health": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Egg": {
+      "savory": 4,
+      "filling": 4,
+      "soft": 6,
+      "health": 5,
+      "isVegetarian": 1,
+      "isRaw": 1
+    },
+    "Potato": {
+      "filling": 7,
+      "chew": 4,
+      "soft": 5,
+      "health": 5,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Oil": {
+      "grease": 10,
+      "moisture": 8,
+      "health": 2,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "soft": 10
+    },
+    "Milk": {
+      "sweet": 2,
+      "soft": 10,
+      "moisture": 9,
+      "calming": 4,
+      "health": 6,
+      "isVegetarian": 1
+    },
+    "Ice": {
+      "temperature": 0,
+      "moisture": 8,
+      "crunch": 6,
+      "health": 3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Chocolate": {
+      "sweet": 8,
+      "bitter": 3,
+      "savory": 2,
+      "soft": 6,
+      "filling": 3,
+      "isVegetarian": 1,
+      "calming": 3,
+      "energizing": 2
+    },
+    "Coffee": {
+      "bitter": 7,
+      "energizing": 8,
+      "health": 4,
+      "moisture": 2,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 10
+    },
+    "Tea": {
+      "bitter": 3,
+      "calming": 8,
+      "moisture": 9,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 7
+    },
+    "Sugar": {
+      "sweet": 10,
+      "energizing": 5,
+      "crunch": 4,
+      "health": 2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Salt": {
+      "salty": 10,
+      "crunch": 3,
+      "health": 1,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Lettuce": {
+      "crunch": 8,
+      "moisture": 6,
+      "health": 8,
+      "filling": 2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Void": {
+      "voidLevel": 8,
+      "sanity": -5,
+      "fear": 3,
+      "health": -3,
+      "temperature": 0,
+      "moisture": 0,
+      "filling": -2
+    },
+    "Sadness": {
+      "sadness": 8,
+      "sanity": -3,
+      "calming": -3,
+      "health": -1,
+      "temperature": 3,
+      "moisture": 5
+    },
+    "Fear": {
+      "fear": 8,
+      "sanity": -4,
+      "energizing": 3,
+      "health": -2
+    },
+    "Beef Bowl": {
+      "savory": 8,
+      "salty": 6,
+      "filling": 9,
+      "chew": 6,
+      "soft": 5,
+      "temperature": 8,
+      "health": 6,
+      "calming": 3
+    },
+    "Steak": {
+      "savory": 9,
+      "salty": 4,
+      "filling": 8,
+      "chew": 8,
+      "temperature": 8,
+      "health": 7,
+      "grease": 3
+    },
+    "Burger": {
+      "savory": 7,
+      "salty": 5,
+      "filling": 8,
+      "chew": 6,
+      "soft": 5,
+      "temperature": 7,
+      "grease": 4,
+      "containsGluten": 1
+    },
+    "Toast": {
+      "crunch": 8,
+      "filling": 3,
+      "temperature": 7,
+      "isVegetarian": 1,
+      "containsGluten": 1,
+      "moisture": 1
+    },
+    "Soggy Bread": {
+      "moisture": 9,
+      "soft": 9,
+      "sadness": 3,
+      "health": 2,
+      "isVegetarian": 1,
+      "containsGluten": 1,
+      "filling": 3
+    },
+    "Sushi": {
+      "savory": 6,
+      "salty": 3,
+      "filling": 5,
+      "soft": 6,
+      "moisture": 4,
+      "temperature": 4,
+      "health": 7,
+      "isRaw": 1,
+      "containsBone": 0.2
+    },
+    "Spicy Meat": {
+      "savory": 7,
+      "spicy": 6,
+      "filling": 7,
+      "chew": 7,
+      "temperature": 8,
+      "health": 5
+    },
+    "Steam": {
+      "temperature": 10,
+      "moisture": 10,
+      "health": 3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Fire": {
+      "temperature": 15,
+      "spicy": 3,
+      "health": -5,
+      "fear": 2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Ramen Base": {
+      "savory": 4,
+      "salty": 4,
+      "moisture": 9,
+      "temperature": 8,
+      "filling": 4,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Ramen": {
+      "savory": 7,
+      "salty": 5,
+      "filling": 8,
+      "moisture": 8,
+      "chew": 6,
+      "temperature": 8,
+      "calming": 4,
+      "containsGluten": 1
+    },
+    "Fried Noodles": {
+      "savory": 6,
+      "salty": 4,
+      "grease": 6,
+      "filling": 6,
+      "chew": 6,
+      "temperature": 8,
+      "containsGluten": 1
+    },
+    "Grilled Cheese": {
+      "savory": 6,
+      "salty": 5,
+      "soft": 7,
+      "grease": 5,
+      "filling": 5,
+      "temperature": 8,
+      "calming": 5,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Melted Cheese": {
+      "savory": 6,
+      "salty": 5,
+      "soft": 9,
+      "grease": 5,
+      "temperature": 9,
+      "isVegetarian": 1
+    },
+    "Tomato Sauce": {
+      "savory": 5,
+      "sour": 5,
+      "sweet": 3,
+      "moisture": 8,
+      "soft": 9,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 6
+    },
+    "Fried Egg": {
+      "savory": 5,
+      "filling": 5,
+      "soft": 6,
+      "grease": 4,
+      "temperature": 8,
+      "health": 7,
+      "isVegetarian": 1
+    },
+    "Poached Egg": {
+      "savory": 4,
+      "soft": 8,
+      "moisture": 6,
+      "filling": 4,
+      "temperature": 7,
+      "health": 7,
+      "isVegetarian": 1
+    },
+    "Egg Rice": {
+      "savory": 5,
+      "filling": 7,
+      "soft": 6,
+      "chew": 4,
+      "temperature": 7,
+      "isVegetarian": 1,
+      "calming": 2
+    },
+    "Baked Potato": {
+      "filling": 8,
+      "soft": 7,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 6,
+      "calming": 3
+    },
+    "French Fries": {
+      "salty": 4,
+      "crunch": 8,
+      "grease": 7,
+      "filling": 5,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Hot Milk": {
+      "sweet": 2,
+      "soft": 10,
+      "moisture": 9,
+      "calming": 6,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "health": 6
+    },
+    "Ice Cream Base": {
+      "sweet": 5,
+      "soft": 9,
+      "moisture": 6,
+      "temperature": 1,
+      "isVegetarian": 1,
+      "calming": 3
+    },
+    "Chocolate Milk": {
+      "sweet": 7,
+      "soft": 10,
+      "moisture": 8,
+      "calming": 4,
+      "isVegetarian": 1,
+      "energizing": 2
+    },
+    "Black Coffee": {
+      "bitter": 8,
+      "energizing": 9,
+      "moisture": 8,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 4,
+      "caffeine": 10
+    },
+    "Latte": {
+      "bitter": 4,
+      "sweet": 2,
+      "soft": 8,
+      "moisture": 8,
+      "energizing": 6,
+      "temperature": 7,
+      "isVegetarian": 1,
+      "calming": 2,
+      "caffeine": 6
+    },
+    "Brewed Tea": {
+      "bitter": 3,
+      "calming": 8,
+      "moisture": 9,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 7
+    },
+    "Sugar Water": {
+      "sweet": 8,
+      "moisture": 10,
+      "energizing": 4,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Salt Water": {
+      "salty": 9,
+      "moisture": 10,
+      "health": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Salad": {
+      "crunch": 7,
+      "sour": 3,
+      "moisture": 5,
+      "health": 9,
+      "filling": 3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Salted Meat": {
+      "savory": 7,
+      "salty": 8,
+      "filling": 6,
+      "chew": 7,
+      "health": 4
+    },
+    "Salted Fish": {
+      "savory": 6,
+      "salty": 8,
+      "filling": 5,
+      "chew": 5,
+      "health": 4,
+      "containsBone": 0.4
+    },
+    "Hot Oil": {
+      "temperature": 12,
+      "grease": 10,
+      "health": -4,
+      "fear": 1,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Fried Meat": {
+      "savory": 7,
+      "crunch": 6,
+      "grease": 7,
+      "filling": 7,
+      "chew": 5,
+      "temperature": 8
+    },
+    "Fried Fish": {
+      "savory": 6,
+      "crunch": 7,
+      "grease": 6,
+      "filling": 5,
+      "temperature": 8,
+      "containsBone": 0.3
+    },
+    "Pasta": {
+      "savory": 6,
+      "sour": 4,
+      "filling": 7,
+      "chew": 6,
+      "soft": 5,
+      "temperature": 8,
+      "containsGluten": 1,
+      "isVegetarian": 1
+    },
+    "Mac and Cheese": {
+      "savory": 7,
+      "salty": 5,
+      "soft": 8,
+      "grease": 5,
+      "filling": 8,
+      "temperature": 8,
+      "calming": 5,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Cheeseburger": {
+      "savory": 8,
+      "salty": 6,
+      "filling": 9,
+      "chew": 6,
+      "soft": 5,
+      "grease": 5,
+      "temperature": 7,
+      "containsGluten": 1
+    },
+    "Egg Toast": {
+      "savory": 5,
+      "crunch": 6,
+      "filling": 5,
+      "soft": 4,
+      "temperature": 7,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Dressed Salad": {
+      "crunch": 6,
+      "sour": 4,
+      "grease": 4,
+      "health": 8,
+      "filling": 4,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Peppered Steak": {
+      "savory": 9,
+      "salty": 4,
+      "spicy": 5,
+      "filling": 8,
+      "chew": 8,
+      "temperature": 8,
+      "health": 7,
+      "grease": 3
+    },
+    "Ice Cream": {
+      "sweet": 9,
+      "soft": 10,
+      "temperature": 1,
+      "calming": 5,
+      "filling": 4,
+      "isVegetarian": 1
+    },
+    "Chocolate Shake": {
+      "sweet": 9,
+      "soft": 10,
+      "moisture": 8,
+      "temperature": 1,
+      "calming": 4,
+      "energizing": 3,
+      "isVegetarian": 1
+    },
+    "Sweet Latte": {
+      "sweet": 6,
+      "bitter": 3,
+      "soft": 8,
+      "moisture": 8,
+      "energizing": 5,
+      "temperature": 7,
+      "isVegetarian": 1,
+      "calming": 3
+    },
+    "Salted Fries": {
+      "salty": 7,
+      "crunch": 8,
+      "grease": 7,
+      "filling": 5,
+      "temperature": 7,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Egg Fried Rice": {
+      "savory": 7,
+      "salty": 4,
+      "filling": 8,
+      "grease": 4,
+      "chew": 4,
+      "temperature": 8,
+      "isVegetarian": 1
+    },
+    "Spicy Sushi": {
+      "savory": 6,
+      "salty": 3,
+      "spicy": 5,
+      "filling": 5,
+      "soft": 5,
+      "temperature": 4,
+      "isRaw": 1,
+      "containsBone": 0.2
+    },
+    "Deluxe Beef Bowl": {
+      "savory": 9,
+      "salty": 6,
+      "filling": 10,
+      "chew": 5,
+      "soft": 6,
+      "temperature": 8,
+      "health": 7,
+      "calming": 4
+    },
+    "Ghost Pepper": {
+      "spicy": 15,
+      "health": -3,
+      "fear": 2,
+      "crunch": 3,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "sanity": -2
+    },
+    "Mystery Meat": {
+      "savory": 5,
+      "radioactivity": 8,
+      "filling": 6,
+      "chew": 6,
+      "health": -4,
+      "sanity": -2,
+      "sentience": 1
+    },
+    "Three-Eyed Fish": {
+      "savory": 4,
+      "radioactivity": 9,
+      "filling": 5,
+      "health": -5,
+      "sanity": -3,
+      "fear": 2,
+      "sentience": 2
+    },
+    "Radioactive Slime": {
+      "radioactivity": 10,
+      "soft": 10,
+      "moisture": 8,
+      "health": -8,
+      "sanity": -4,
+      "sentience": 1
+    },
+    "Glowing Egg": {
+      "radioactivity": 7,
+      "soft": 6,
+      "filling": 4,
+      "health": -3,
+      "sanity": -2,
+      "fear": 1,
+      "energizing": 3
+    },
+    "Mutant Potato": {
+      "radioactivity": 7,
+      "filling": 8,
+      "chew": 5,
+      "health": -4,
+      "sanity": -3,
+      "sentience": 3,
+      "fear": 2
+    },
+    "Sentient Cheese": {
+      "savory": 6,
+      "salty": 5,
+      "soft": 7,
+      "sentience": 8,
+      "health": 2,
+      "sanity": -4,
+      "fear": 3,
+      "calming": -2
+    },
+    "Charred Steak": {
+      "savory": 6,
+      "bitter": 6,
+      "crunch": 7,
+      "chew": 6,
+      "filling": 7,
+      "temperature": 9,
+      "isBurnt": 1,
+      "health": 3
+    },
+    "Inferno Meat": {
+      "savory": 6,
+      "spicy": 12,
+      "filling": 7,
+      "chew": 6,
+      "temperature": 14,
+      "health": -3,
+      "fear": 3
+    },
+    "Absolute Zero": {
+      "temperature": -5,
+      "crunch": 9,
+      "health": -6,
+      "fear": 4,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "sanity": -3
+    },
+    "Salt Crystal": {
+      "salty": 15,
+      "crunch": 10,
+      "health": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Pure Sugar": {
+      "sweet": 15,
+      "energizing": 10,
+      "crunch": 6,
+      "health": -1,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "sanity": 1
+    },
+    "Espresso Shot": {
+      "bitter": 10,
+      "energizing": 15,
+      "moisture": 6,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "sanity": -1,
+      "health": 3
+    },
+    "Depression": {
+      "sadness": 15,
+      "sanity": -8,
+      "calming": -5,
+      "health": -5,
+      "temperature": 2,
+      "moisture": 6,
+      "fear": 2,
+      "energizing": -5
+    },
+    "Terror": {
+      "fear": 15,
+      "sanity": -10,
+      "energizing": 8,
+      "health": -6,
+      "sadness": 3,
+      "calming": -8
+    },
+    "The Abyss": {
+      "voidLevel": 15,
+      "sanity": -15,
+      "fear": 10,
+      "health": -10,
+      "temperature": 0,
+      "filling": -5,
+      "sentience": 5
+    },
+    "Charred Bread": {
+      "bitter": 7,
+      "crunch": 9,
+      "isBurnt": 1,
+      "health": 1,
+      "isVegetarian": 1,
+      "containsGluten": 1,
+      "temperature": 8
+    },
+    "Charred Meat": {
+      "savory": 5,
+      "bitter": 6,
+      "crunch": 6,
+      "isBurnt": 1,
+      "health": 2,
+      "temperature": 9,
+      "filling": 6
+    },
+    "Burnt Rice": {
+      "bitter": 8,
+      "crunch": 7,
+      "isBurnt": 1,
+      "health": 0,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "filling": 4,
+      "temperature": 8
+    },
+    "Grease Fire": {
+      "temperature": 15,
+      "grease": 10,
+      "health": -8,
+      "fear": 6,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "sanity": -3
+    },
+    "Burnt Slop": {
+      "bitter": 8,
+      "isBurnt": 1,
+      "health": -3,
+      "sadness": 3,
+      "filling": 2,
+      "temperature": 7,
+      "sanity": -1
+    },
+    "Hot Rice": {
+      "filling": 6,
+      "chew": 3,
+      "soft": 6,
+      "moisture": 4,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Hot Bread": {
+      "filling": 5,
+      "chew": 5,
+      "soft": 7,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Rice Porridge": {
+      "filling": 7,
+      "soft": 9,
+      "moisture": 8,
+      "temperature": 8,
+      "calming": 4,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 6
+    },
+    "Crispy Rice": {
+      "filling": 5,
+      "crunch": 8,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Rice Ball": {
+      "filling": 6,
+      "soft": 6,
+      "chew": 4,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Spicy Rice": {
+      "filling": 6,
+      "spicy": 5,
+      "temperature": 7,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Carb Bowl": {
+      "filling": 9,
+      "chew": 5,
+      "soft": 5,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Cheesy Rice": {
+      "savory": 6,
+      "salty": 4,
+      "filling": 7,
+      "soft": 7,
+      "grease": 3,
+      "isVegetarian": 1
+    },
+    "Tomato Rice": {
+      "savory": 5,
+      "sour": 4,
+      "filling": 7,
+      "moisture": 5,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 6
+    },
+    "Starch Bowl": {
+      "filling": 10,
+      "chew": 4,
+      "soft": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Oily Rice": {
+      "filling": 6,
+      "grease": 6,
+      "soft": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Rice Pudding": {
+      "sweet": 6,
+      "soft": 8,
+      "filling": 5,
+      "calming": 4,
+      "isVegetarian": 1
+    },
+    "Cold Rice": {
+      "filling": 5,
+      "temperature": 1,
+      "chew": 4,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "sadness": 2
+    },
+    "Chocolate Rice": {
+      "sweet": 7,
+      "filling": 5,
+      "soft": 6,
+      "isVegetarian": 1
+    },
+    "Coffee Rice": {
+      "bitter": 4,
+      "filling": 5,
+      "energizing": 4,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 3
+    },
+    "Tea Rice": {
+      "bitter": 2,
+      "filling": 5,
+      "calming": 4,
+      "moisture": 5,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Sweet Rice": {
+      "sweet": 7,
+      "filling": 6,
+      "soft": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Salted Rice": {
+      "salty": 6,
+      "filling": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Rice Salad": {
+      "filling": 5,
+      "crunch": 5,
+      "health": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Lonely Rice": {
+      "filling": 4,
+      "sadness": 6,
+      "sanity": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Anxiety Rice": {
+      "filling": 4,
+      "fear": 5,
+      "energizing": 3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Boiled Meat": {
+      "savory": 6,
+      "filling": 7,
+      "soft": 7,
+      "moisture": 7,
+      "temperature": 8,
+      "health": 6
+    },
+    "Surf and Turf": {
+      "savory": 9,
+      "salty": 4,
+      "filling": 9,
+      "chew": 6,
+      "temperature": 7,
+      "health": 6
+    },
+    "Meat Noodles": {
+      "savory": 7,
+      "filling": 8,
+      "chew": 6,
+      "temperature": 8,
+      "containsGluten": 1
+    },
+    "Cheesy Meat": {
+      "savory": 8,
+      "salty": 5,
+      "filling": 8,
+      "soft": 6,
+      "grease": 5,
+      "temperature": 8
+    },
+    "Meat Marinara": {
+      "savory": 8,
+      "sour": 4,
+      "filling": 8,
+      "temperature": 8,
+      "health": 5
+    },
+    "Meat and Eggs": {
+      "savory": 7,
+      "filling": 8,
+      "chew": 6,
+      "temperature": 8,
+      "health": 6,
+      "isVegetarian": 0
+    },
+    "Meat and Potatoes": {
+      "savory": 7,
+      "filling": 10,
+      "chew": 5,
+      "soft": 6,
+      "temperature": 8,
+      "calming": 4
+    },
+    "Creamy Meat": {
+      "savory": 7,
+      "filling": 7,
+      "soft": 7,
+      "grease": 4,
+      "temperature": 8,
+      "calming": 3
+    },
+    "Frozen Meat": {
+      "savory": 4,
+      "filling": 5,
+      "temperature": 0,
+      "chew": 8,
+      "health": 2,
+      "isRaw": 1
+    },
+    "Mole": {
+      "savory": 7,
+      "sweet": 4,
+      "bitter": 3,
+      "filling": 7,
+      "temperature": 8,
+      "health": 5
+    },
+    "Coffee Rubbed Meat": {
+      "savory": 8,
+      "bitter": 4,
+      "filling": 7,
+      "chew": 7,
+      "temperature": 8,
+      "energizing": 3,
+      "caffeine": 3
+    },
+    "Tea Smoked Meat": {
+      "savory": 7,
+      "bitter": 2,
+      "filling": 7,
+      "chew": 7,
+      "temperature": 7,
+      "calming": 2
+    },
+    "Glazed Meat": {
+      "savory": 7,
+      "sweet": 6,
+      "filling": 7,
+      "chew": 6,
+      "temperature": 8,
+      "grease": 3
+    },
+    "Lettuce Wrap": {
+      "savory": 6,
+      "filling": 6,
+      "crunch": 5,
+      "health": 6
+    },
+    "Sad Meat": {
+      "savory": 5,
+      "filling": 5,
+      "sadness": 6,
+      "health": 3,
+      "sanity": -2
+    },
+    "Fearsome Flesh": {
+      "savory": 6,
+      "filling": 6,
+      "fear": 7,
+      "chew": 8,
+      "sanity": -3,
+      "health": 2
+    },
+    "Pepper Water": {
+      "spicy": 4,
+      "moisture": 10,
+      "health": 3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Fish Soup": {
+      "savory": 6,
+      "salty": 4,
+      "filling": 6,
+      "moisture": 9,
+      "temperature": 8,
+      "health": 6,
+      "containsBone": 0.2
+    },
+    "Cheese Soup": {
+      "savory": 6,
+      "salty": 5,
+      "soft": 9,
+      "moisture": 8,
+      "temperature": 8,
+      "grease": 4,
+      "isVegetarian": 1,
+      "calming": 3
+    },
+    "Tomato Soup": {
+      "savory": 5,
+      "sour": 5,
+      "sweet": 3,
+      "moisture": 9,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 7,
+      "calming": 4
+    },
+    "Potato Soup": {
+      "savory": 4,
+      "filling": 7,
+      "soft": 8,
+      "moisture": 8,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "calming": 4
+    },
+    "Oil and Water": {
+      "grease": 5,
+      "moisture": 9,
+      "health": 1,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Diluted Milk": {
+      "sweet": 1,
+      "soft": 10,
+      "moisture": 10,
+      "health": 5,
+      "isVegetarian": 1
+    },
+    "Ice Water": {
+      "moisture": 10,
+      "temperature": 1,
+      "health": 7,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "calming": 3
+    },
+    "Hot Chocolate": {
+      "sweet": 8,
+      "bitter": 3,
+      "soft": 9,
+      "moisture": 8,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "calming": 5,
+      "energizing": 2
+    },
+    "Lettuce Soup": {
+      "moisture": 9,
+      "soft": 7,
+      "health": 7,
+      "temperature": 7,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Tears": {
+      "salty": 6,
+      "moisture": 10,
+      "sadness": 10,
+      "sanity": -3,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 2
+    },
+    "Cold Sweat": {
+      "salty": 3,
+      "moisture": 9,
+      "fear": 7,
+      "temperature": 3,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "sanity": -2
+    },
+    "Roasted Pepper": {
+      "spicy": 5,
+      "sweet": 3,
+      "crunch": 4,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 5
+    },
+    "Grilled Fish": {
+      "savory": 7,
+      "salty": 3,
+      "filling": 6,
+      "crunch": 4,
+      "temperature": 8,
+      "health": 7,
+      "containsBone": 0.3
+    },
+    "Lukewarm Water": {
+      "moisture": 9,
+      "temperature": 5,
+      "health": 5,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Melted Chocolate": {
+      "sweet": 9,
+      "bitter": 3,
+      "soft": 10,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "calming": 4
+    },
+    "Hot Coffee": {
+      "bitter": 8,
+      "energizing": 9,
+      "moisture": 8,
+      "temperature": 9,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 9
+    },
+    "Hot Tea": {
+      "bitter": 3,
+      "calming": 8,
+      "moisture": 9,
+      "temperature": 9,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 7
+    },
+    "Caramel": {
+      "sweet": 10,
+      "soft": 8,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "chew": 7
+    },
+    "Hot Salt": {
+      "salty": 10,
+      "temperature": 10,
+      "health": 0,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Wilted Lettuce": {
+      "soft": 7,
+      "moisture": 4,
+      "temperature": 7,
+      "health": 5,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "sadness": 2
+    },
+    "Void Flame": {
+      "temperature": 12,
+      "voidLevel": 6,
+      "fear": 5,
+      "health": -6,
+      "sanity": -5
+    },
+    "Burning Sorrow": {
+      "temperature": 10,
+      "sadness": 7,
+      "fear": 3,
+      "health": -3,
+      "sanity": -4
+    },
+    "Panic Fire": {
+      "temperature": 12,
+      "fear": 8,
+      "energizing": 6,
+      "health": -4,
+      "sanity": -4
+    },
+    "Pepper Bread": {
+      "spicy": 4,
+      "filling": 5,
+      "crunch": 3,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Fish Sandwich": {
+      "savory": 6,
+      "salty": 4,
+      "filling": 7,
+      "chew": 5,
+      "containsGluten": 1,
+      "containsBone": 0.2
+    },
+    "Yakisoba Pan": {
+      "savory": 5,
+      "filling": 8,
+      "chew": 6,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Bruschetta": {
+      "savory": 5,
+      "sour": 4,
+      "crunch": 6,
+      "temperature": 6,
+      "isVegetarian": 1,
+      "containsGluten": 1,
+      "health": 5
+    },
+    "Egg Sandwich": {
+      "savory": 5,
+      "filling": 6,
+      "soft": 6,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Potato Bread": {
+      "filling": 7,
+      "soft": 7,
+      "chew": 5,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Oiled Bread": {
+      "grease": 5,
+      "filling": 5,
+      "soft": 7,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Milk Bread": {
+      "sweet": 3,
+      "soft": 8,
+      "filling": 5,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Frozen Bread": {
+      "filling": 4,
+      "temperature": 0,
+      "crunch": 7,
+      "isVegetarian": 1,
+      "containsGluten": 1,
+      "health": 2
+    },
+    "Chocolate Bread": {
+      "sweet": 7,
+      "filling": 5,
+      "soft": 6,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Coffee Bread": {
+      "bitter": 4,
+      "filling": 5,
+      "energizing": 3,
+      "isVegetarian": 1,
+      "containsGluten": 1,
+      "caffeine": 3
+    },
+    "Tea Bread": {
+      "bitter": 2,
+      "filling": 5,
+      "calming": 3,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Sweet Bread": {
+      "sweet": 7,
+      "filling": 5,
+      "soft": 7,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Pretzel": {
+      "salty": 7,
+      "crunch": 6,
+      "filling": 5,
+      "chew": 6,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Lettuce Sandwich": {
+      "crunch": 6,
+      "filling": 4,
+      "health": 6,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Void Bread": {
+      "filling": 3,
+      "voidLevel": 5,
+      "sanity": -4,
+      "containsGluten": 1,
+      "health": -2
+    },
+    "Sad Sandwich": {
+      "filling": 4,
+      "sadness": 6,
+      "sanity": -2,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Fear Toast": {
+      "crunch": 6,
+      "fear": 5,
+      "filling": 3,
+      "containsGluten": 1,
+      "sanity": -2
+    },
+    "Peppered Fish": {
+      "savory": 6,
+      "salty": 3,
+      "spicy": 5,
+      "filling": 5,
+      "health": 5,
+      "containsBone": 0.3
+    },
+    "Spicy Noodles": {
+      "savory": 5,
+      "spicy": 6,
+      "filling": 6,
+      "chew": 6,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Pepper Jack": {
+      "savory": 6,
+      "salty": 5,
+      "spicy": 5,
+      "soft": 6,
+      "grease": 4,
+      "isVegetarian": 1
+    },
+    "Spicy Tomato": {
+      "sour": 5,
+      "spicy": 5,
+      "moisture": 6,
+      "health": 5,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Spicy Egg": {
+      "savory": 5,
+      "spicy": 5,
+      "filling": 5,
+      "isVegetarian": 1
+    },
+    "Spicy Potato": {
+      "filling": 7,
+      "spicy": 5,
+      "chew": 4,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Chili Oil": {
+      "spicy": 8,
+      "grease": 10,
+      "temperature": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Spicy Milk": {
+      "spicy": 4,
+      "sweet": 2,
+      "soft": 9,
+      "moisture": 8,
+      "isVegetarian": 1
+    },
+    "Frozen Pepper": {
+      "spicy": 4,
+      "temperature": 0,
+      "crunch": 7,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Spicy Chocolate": {
+      "sweet": 7,
+      "spicy": 5,
+      "bitter": 3,
+      "isVegetarian": 1
+    },
+    "Spicy Coffee": {
+      "bitter": 7,
+      "spicy": 4,
+      "energizing": 8,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 6
+    },
+    "Spicy Tea": {
+      "bitter": 3,
+      "spicy": 4,
+      "calming": 5,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Sweet Heat": {
+      "sweet": 8,
+      "spicy": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Seasoning Mix": {
+      "salty": 7,
+      "spicy": 5,
+      "crunch": 4,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Spicy Salad": {
+      "crunch": 7,
+      "spicy": 5,
+      "health": 7,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Void Pepper": {
+      "spicy": 5,
+      "voidLevel": 5,
+      "sanity": -3,
+      "health": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Melancholy Spice": {
+      "spicy": 5,
+      "sadness": 6,
+      "sanity": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Fear Pepper": {
+      "spicy": 6,
+      "fear": 6,
+      "sanity": -3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Fish Noodle Soup": {
+      "savory": 7,
+      "salty": 5,
+      "filling": 7,
+      "moisture": 8,
+      "temperature": 8,
+      "containsGluten": 1,
+      "containsBone": 0.2,
+      "health": 6
+    },
+    "Fish Melt": {
+      "savory": 6,
+      "salty": 5,
+      "filling": 6,
+      "soft": 6,
+      "grease": 4,
+      "temperature": 8,
+      "containsBone": 0.2
+    },
+    "Fish Stew": {
+      "savory": 7,
+      "sour": 4,
+      "filling": 7,
+      "moisture": 8,
+      "temperature": 8,
+      "health": 6,
+      "containsBone": 0.2
+    },
+    "Fish and Eggs": {
+      "savory": 6,
+      "salty": 3,
+      "filling": 7,
+      "temperature": 7,
+      "isVegetarian": 0,
+      "containsBone": 0.3
+    },
+    "Fish and Chips": {
+      "savory": 6,
+      "salty": 4,
+      "filling": 8,
+      "crunch": 6,
+      "grease": 5,
+      "temperature": 8,
+      "containsBone": 0.2
+    },
+    "Fish Chowder": {
+      "savory": 7,
+      "salty": 4,
+      "filling": 7,
+      "soft": 7,
+      "moisture": 8,
+      "temperature": 8,
+      "calming": 3,
+      "containsBone": 0.2
+    },
+    "Frozen Fish": {
+      "savory": 3,
+      "filling": 4,
+      "temperature": 0,
+      "chew": 8,
+      "isRaw": 1,
+      "containsBone": 0.4,
+      "health": 2
+    },
+    "Chocolate Fish": {
+      "savory": 3,
+      "sweet": 6,
+      "filling": 4,
+      "containsBone": 0.3,
+      "sanity": -1
+    },
+    "Coffee Fish": {
+      "savory": 4,
+      "bitter": 4,
+      "filling": 4,
+      "energizing": 3,
+      "containsBone": 0.3,
+      "caffeine": 3
+    },
+    "Tea Fish": {
+      "savory": 4,
+      "bitter": 2,
+      "filling": 4,
+      "calming": 3,
+      "containsBone": 0.3
+    },
+    "Sweet Fish": {
+      "savory": 4,
+      "sweet": 6,
+      "filling": 5,
+      "containsBone": 0.3
+    },
+    "Fish Salad": {
+      "savory": 5,
+      "salty": 3,
+      "crunch": 5,
+      "filling": 5,
+      "health": 7,
+      "containsBone": 0.2
+    },
+    "Void Fish": {
+      "savory": 3,
+      "filling": 3,
+      "voidLevel": 6,
+      "sanity": -4,
+      "containsBone": 0.3,
+      "health": -3
+    },
+    "Sad Fish": {
+      "savory": 4,
+      "filling": 4,
+      "sadness": 6,
+      "sanity": -2,
+      "containsBone": 0.3
+    },
+    "Fearfish": {
+      "savory": 4,
+      "filling": 4,
+      "fear": 7,
+      "sanity": -3,
+      "containsBone": 0.3,
+      "health": -1
+    },
+    "Cheesy Noodles": {
+      "savory": 6,
+      "salty": 5,
+      "filling": 7,
+      "soft": 6,
+      "grease": 4,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Tomato Noodles": {
+      "savory": 5,
+      "sour": 5,
+      "filling": 6,
+      "chew": 6,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "containsGluten": 1,
+      "health": 5
+    },
+    "Egg Noodles": {
+      "savory": 5,
+      "filling": 7,
+      "chew": 6,
+      "soft": 5,
+      "temperature": 7,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Potato Noodles": {
+      "filling": 9,
+      "chew": 5,
+      "soft": 5,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Oily Noodles": {
+      "filling": 6,
+      "grease": 7,
+      "chew": 6,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Creamy Noodles": {
+      "savory": 4,
+      "sweet": 2,
+      "filling": 6,
+      "soft": 7,
+      "moisture": 6,
+      "isVegetarian": 1,
+      "containsGluten": 1,
+      "calming": 3
+    },
+    "Cold Noodles": {
+      "filling": 5,
+      "temperature": 2,
+      "chew": 6,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Chocolate Noodles": {
+      "sweet": 6,
+      "filling": 5,
+      "chew": 5,
+      "isVegetarian": 1,
+      "containsGluten": 1,
+      "sanity": -1
+    },
+    "Coffee Noodles": {
+      "bitter": 4,
+      "filling": 5,
+      "chew": 6,
+      "energizing": 3,
+      "isVegetarian": 1,
+      "containsGluten": 1,
+      "caffeine": 3
+    },
+    "Tea Noodles": {
+      "bitter": 2,
+      "filling": 5,
+      "chew": 6,
+      "calming": 3,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Sweet Noodles": {
+      "sweet": 6,
+      "filling": 6,
+      "chew": 5,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Salted Noodles": {
+      "salty": 6,
+      "filling": 6,
+      "chew": 6,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Noodle Salad": {
+      "filling": 5,
+      "crunch": 5,
+      "chew": 5,
+      "health": 5,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Void Noodles": {
+      "filling": 3,
+      "chew": 5,
+      "voidLevel": 5,
+      "sanity": -4,
+      "containsGluten": 1,
+      "health": -2
+    },
+    "Sad Noodles": {
+      "filling": 4,
+      "chew": 5,
+      "sadness": 6,
+      "sanity": -2,
+      "isVegetarian": 1,
+      "containsGluten": 1
+    },
+    "Fear Noodles": {
+      "filling": 4,
+      "chew": 5,
+      "fear": 6,
+      "sanity": -3,
+      "containsGluten": 1
+    },
+    "Caprese": {
+      "savory": 5,
+      "salty": 4,
+      "sour": 3,
+      "soft": 6,
+      "moisture": 5,
+      "isVegetarian": 1,
+      "health": 7
+    },
+    "Cheese Omelette": {
+      "savory": 7,
+      "salty": 5,
+      "filling": 6,
+      "soft": 7,
+      "grease": 4,
+      "temperature": 8,
+      "isVegetarian": 1
+    },
+    "Cheesy Potato": {
+      "savory": 6,
+      "salty": 5,
+      "filling": 8,
+      "soft": 7,
+      "grease": 4,
+      "temperature": 8,
+      "isVegetarian": 1
+    },
+    "Oiled Cheese": {
+      "savory": 5,
+      "salty": 4,
+      "soft": 8,
+      "grease": 7,
+      "isVegetarian": 1
+    },
+    "Cheese Sauce": {
+      "savory": 6,
+      "salty": 5,
+      "soft": 10,
+      "grease": 5,
+      "moisture": 8,
+      "isVegetarian": 1,
+      "calming": 3
+    },
+    "Frozen Cheese": {
+      "savory": 4,
+      "salty": 4,
+      "temperature": 0,
+      "crunch": 5,
+      "isVegetarian": 1
+    },
+    "Chocolate Cheese": {
+      "sweet": 6,
+      "savory": 4,
+      "soft": 7,
+      "isVegetarian": 1
+    },
+    "Coffee Cheese": {
+      "bitter": 4,
+      "savory": 4,
+      "soft": 6,
+      "energizing": 3,
+      "isVegetarian": 1,
+      "caffeine": 3
+    },
+    "Tea Cheese": {
+      "bitter": 2,
+      "savory": 4,
+      "soft": 6,
+      "calming": 3,
+      "isVegetarian": 1
+    },
+    "Sweet Cheese": {
+      "sweet": 6,
+      "savory": 4,
+      "soft": 7,
+      "isVegetarian": 1
+    },
+    "Extra Salty Cheese": {
+      "savory": 6,
+      "salty": 10,
+      "soft": 6,
+      "grease": 4,
+      "isVegetarian": 1
+    },
+    "Cheese Salad": {
+      "savory": 5,
+      "salty": 4,
+      "crunch": 5,
+      "health": 6,
+      "isVegetarian": 1
+    },
+    "Void Cheese": {
+      "savory": 4,
+      "salty": 3,
+      "voidLevel": 6,
+      "sanity": -4,
+      "isVegetarian": 1,
+      "health": -2
+    },
+    "Sad Cheese": {
+      "savory": 4,
+      "salty": 4,
+      "sadness": 6,
+      "sanity": -2,
+      "isVegetarian": 1
+    },
+    "Fear Cheese": {
+      "savory": 4,
+      "salty": 4,
+      "fear": 6,
+      "sanity": -3,
+      "isVegetarian": 1
+    },
+    "Tomato Egg": {
+      "savory": 5,
+      "sour": 4,
+      "sweet": 2,
+      "filling": 5,
+      "soft": 6,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "health": 6
+    },
+    "Tomato Potato": {
+      "sour": 4,
+      "filling": 7,
+      "soft": 6,
+      "moisture": 5,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 6
+    },
+    "Tomato Oil": {
+      "sour": 4,
+      "grease": 6,
+      "moisture": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Tomato Cream": {
+      "sour": 4,
+      "sweet": 3,
+      "soft": 8,
+      "moisture": 7,
+      "temperature": 7,
+      "isVegetarian": 1,
+      "health": 5,
+      "calming": 3
+    },
+    "Cold Tomato": {
+      "sour": 5,
+      "sweet": 3,
+      "temperature": 1,
+      "moisture": 7,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 6
+    },
+    "Chocolate Tomato": {
+      "sweet": 5,
+      "sour": 3,
+      "soft": 6,
+      "isVegetarian": 1,
+      "sanity": -1
+    },
+    "Coffee Tomato": {
+      "bitter": 4,
+      "sour": 3,
+      "energizing": 3,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 3
+    },
+    "Tea Tomato": {
+      "bitter": 2,
+      "sour": 3,
+      "calming": 3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Sweet Tomato": {
+      "sweet": 6,
+      "sour": 4,
+      "moisture": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Salted Tomato": {
+      "salty": 6,
+      "sour": 4,
+      "moisture": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Void Tomato": {
+      "sour": 3,
+      "voidLevel": 5,
+      "sanity": -4,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": -2
+    },
+    "Sad Tomato": {
+      "sour": 4,
+      "sadness": 6,
+      "sanity": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Fear Tomato": {
+      "sour": 4,
+      "fear": 6,
+      "sanity": -3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Egg and Potato": {
+      "savory": 5,
+      "filling": 8,
+      "soft": 6,
+      "temperature": 7,
+      "isVegetarian": 1
+    },
+    "Oiled Egg": {
+      "savory": 5,
+      "filling": 5,
+      "grease": 6,
+      "soft": 6,
+      "isVegetarian": 1
+    },
+    "Egg Custard": {
+      "sweet": 6,
+      "soft": 9,
+      "filling": 4,
+      "temperature": 6,
+      "isVegetarian": 1,
+      "calming": 4
+    },
+    "Frozen Egg": {
+      "filling": 3,
+      "temperature": 0,
+      "crunch": 5,
+      "isVegetarian": 1,
+      "health": 2,
+      "isRaw": 1
+    },
+    "Chocolate Egg": {
+      "sweet": 8,
+      "filling": 4,
+      "soft": 6,
+      "isVegetarian": 1
+    },
+    "Coffee Egg": {
+      "bitter": 4,
+      "savory": 3,
+      "filling": 4,
+      "energizing": 3,
+      "isVegetarian": 1,
+      "caffeine": 3
+    },
+    "Tea Egg": {
+      "bitter": 2,
+      "savory": 5,
+      "filling": 5,
+      "calming": 3,
+      "temperature": 6,
+      "isVegetarian": 1
+    },
+    "Sweet Egg": {
+      "sweet": 5,
+      "savory": 3,
+      "filling": 4,
+      "isVegetarian": 1
+    },
+    "Salted Egg": {
+      "salty": 7,
+      "savory": 5,
+      "filling": 5,
+      "isVegetarian": 1
+    },
+    "Egg Salad": {
+      "savory": 5,
+      "filling": 5,
+      "soft": 6,
+      "health": 5,
+      "isVegetarian": 1
+    },
+    "Void Egg": {
+      "filling": 2,
+      "voidLevel": 6,
+      "sanity": -4,
+      "isVegetarian": 1,
+      "health": -3
+    },
+    "Sad Egg": {
+      "savory": 3,
+      "filling": 3,
+      "sadness": 6,
+      "sanity": -2,
+      "isVegetarian": 1
+    },
+    "Fear Egg": {
+      "savory": 3,
+      "filling": 3,
+      "fear": 6,
+      "sanity": -3,
+      "isVegetarian": 1
+    },
+    "Mashed Potato": {
+      "filling": 8,
+      "soft": 9,
+      "temperature": 7,
+      "calming": 5,
+      "isVegetarian": 1
+    },
+    "Frozen Potato": {
+      "filling": 5,
+      "temperature": 0,
+      "crunch": 6,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 2
+    },
+    "Chocolate Potato": {
+      "sweet": 6,
+      "filling": 6,
+      "soft": 5,
+      "isVegetarian": 1
+    },
+    "Coffee Potato": {
+      "bitter": 3,
+      "filling": 6,
+      "energizing": 3,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 3
+    },
+    "Tea Potato": {
+      "bitter": 2,
+      "filling": 6,
+      "calming": 3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Candied Potato": {
+      "sweet": 8,
+      "filling": 7,
+      "soft": 6,
+      "temperature": 7,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Salted Potato": {
+      "salty": 6,
+      "filling": 7,
+      "chew": 4,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Potato Salad": {
+      "savory": 4,
+      "filling": 6,
+      "soft": 5,
+      "health": 5,
+      "isVegetarian": 1
+    },
+    "Void Potato": {
+      "filling": 4,
+      "voidLevel": 5,
+      "sanity": -4,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": -2
+    },
+    "Sad Potato": {
+      "filling": 5,
+      "sadness": 6,
+      "sanity": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Fear Potato": {
+      "filling": 5,
+      "fear": 6,
+      "sanity": -3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Oily Milk": {
+      "grease": 6,
+      "soft": 9,
+      "moisture": 8,
+      "health": 1,
+      "isVegetarian": 1
+    },
+    "Frozen Oil": {
+      "grease": 9,
+      "temperature": 0,
+      "health": 1,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Chocolate Oil": {
+      "sweet": 5,
+      "grease": 7,
+      "soft": 8,
+      "isVegetarian": 1
+    },
+    "Coffee Oil": {
+      "bitter": 4,
+      "grease": 7,
+      "energizing": 3,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 3
+    },
+    "Tea Oil": {
+      "bitter": 2,
+      "grease": 6,
+      "calming": 2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Sugar Oil": {
+      "sweet": 6,
+      "grease": 7,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Seasoned Oil": {
+      "salty": 5,
+      "grease": 9,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Oiled Lettuce": {
+      "grease": 5,
+      "crunch": 6,
+      "health": 5,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Void Oil": {
+      "grease": 7,
+      "voidLevel": 5,
+      "sanity": -3,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": -2
+    },
+    "Sad Oil": {
+      "grease": 7,
+      "sadness": 5,
+      "sanity": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Fear Oil": {
+      "grease": 7,
+      "fear": 5,
+      "sanity": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Milk Tea": {
+      "sweet": 4,
+      "soft": 8,
+      "moisture": 8,
+      "calming": 6,
+      "temperature": 7,
+      "isVegetarian": 1
+    },
+    "Sweet Milk": {
+      "sweet": 7,
+      "soft": 10,
+      "moisture": 9,
+      "calming": 5,
+      "isVegetarian": 1
+    },
+    "Salted Milk": {
+      "salty": 5,
+      "soft": 9,
+      "moisture": 9,
+      "health": 3,
+      "isVegetarian": 1
+    },
+    "Milk Salad": {
+      "soft": 7,
+      "moisture": 6,
+      "crunch": 4,
+      "health": 5,
+      "isVegetarian": 1
+    },
+    "Void Milk": {
+      "soft": 8,
+      "moisture": 7,
+      "voidLevel": 5,
+      "sanity": -4,
+      "isVegetarian": 1,
+      "health": -2
+    },
+    "Sad Milk": {
+      "soft": 9,
+      "moisture": 8,
+      "sadness": 6,
+      "sanity": -2,
+      "isVegetarian": 1
+    },
+    "Fear Milk": {
+      "soft": 8,
+      "moisture": 8,
+      "fear": 5,
+      "sanity": -2,
+      "isVegetarian": 1
+    },
+    "Frozen Chocolate": {
+      "sweet": 8,
+      "bitter": 3,
+      "temperature": 0,
+      "crunch": 6,
+      "isVegetarian": 1
+    },
+    "Iced Coffee": {
+      "bitter": 7,
+      "energizing": 8,
+      "moisture": 8,
+      "temperature": 1,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 8
+    },
+    "Iced Tea": {
+      "bitter": 3,
+      "calming": 6,
+      "moisture": 9,
+      "temperature": 1,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 6
+    },
+    "Ice Candy": {
+      "sweet": 9,
+      "temperature": 0,
+      "crunch": 5,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Salted Ice": {
+      "salty": 6,
+      "temperature": -1,
+      "crunch": 6,
+      "health": 0,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Frozen Lettuce": {
+      "crunch": 9,
+      "temperature": 0,
+      "health": 4,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Void Ice": {
+      "temperature": -2,
+      "voidLevel": 6,
+      "sanity": -4,
+      "fear": 3,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": -3
+    },
+    "Frozen Tears": {
+      "temperature": 0,
+      "salty": 4,
+      "sadness": 8,
+      "sanity": -3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Frozen Fear": {
+      "temperature": -1,
+      "fear": 8,
+      "sanity": -4,
+      "crunch": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Mocha": {
+      "sweet": 5,
+      "bitter": 6,
+      "energizing": 8,
+      "moisture": 8,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "calming": 2,
+      "caffeine": 6
+    },
+    "Chocolate Tea": {
+      "sweet": 6,
+      "bitter": 4,
+      "calming": 5,
+      "moisture": 8,
+      "temperature": 7,
+      "isVegetarian": 1
+    },
+    "Sweet Chocolate": {
+      "sweet": 12,
+      "bitter": 2,
+      "soft": 7,
+      "energizing": 4,
+      "isVegetarian": 1
+    },
+    "Salted Chocolate": {
+      "sweet": 7,
+      "salty": 5,
+      "bitter": 3,
+      "soft": 6,
+      "isVegetarian": 1
+    },
+    "Chocolate Salad": {
+      "sweet": 5,
+      "crunch": 5,
+      "health": 3,
+      "isVegetarian": 1,
+      "sanity": -1
+    },
+    "Void Chocolate": {
+      "sweet": 5,
+      "bitter": 3,
+      "voidLevel": 5,
+      "sanity": -4,
+      "isVegetarian": 1,
+      "health": -2
+    },
+    "Sad Chocolate": {
+      "sweet": 7,
+      "bitter": 4,
+      "sadness": 5,
+      "sanity": -1,
+      "calming": 2,
+      "isVegetarian": 1
+    },
+    "Fear Chocolate": {
+      "sweet": 6,
+      "bitter": 4,
+      "fear": 5,
+      "sanity": -2,
+      "isVegetarian": 1
+    },
+    "Dirty Chai": {
+      "bitter": 6,
+      "energizing": 7,
+      "calming": 3,
+      "moisture": 8,
+      "temperature": 8,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 5
+    },
+    "Sweet Coffee": {
+      "sweet": 6,
+      "bitter": 5,
+      "energizing": 7,
+      "moisture": 7,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 6
+    },
+    "Salted Coffee": {
+      "salty": 4,
+      "bitter": 6,
+      "energizing": 7,
+      "moisture": 7,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 6
+    },
+    "Coffee Salad": {
+      "bitter": 4,
+      "crunch": 5,
+      "energizing": 3,
+      "health": 4,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 3
+    },
+    "Void Coffee": {
+      "bitter": 6,
+      "energizing": 5,
+      "voidLevel": 5,
+      "sanity": -4,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": -1,
+      "caffeine": 4
+    },
+    "Depresso": {
+      "bitter": 8,
+      "sadness": 8,
+      "energizing": 4,
+      "sanity": -3,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 4
+    },
+    "Anxiety Brew": {
+      "bitter": 7,
+      "fear": 7,
+      "energizing": 9,
+      "sanity": -4,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "caffeine": 5
+    },
+    "Sweet Tea": {
+      "sweet": 6,
+      "bitter": 2,
+      "calming": 7,
+      "moisture": 9,
+      "temperature": 7,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": 6
+    },
+    "Salted Tea": {
+      "salty": 5,
+      "bitter": 3,
+      "calming": 4,
+      "moisture": 8,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Tea Salad": {
+      "bitter": 2,
+      "crunch": 5,
+      "calming": 3,
+      "health": 5,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Void Tea": {
+      "bitter": 3,
+      "calming": 2,
+      "voidLevel": 5,
+      "sanity": -4,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": -1
+    },
+    "Melancholy Tea": {
+      "bitter": 4,
+      "calming": 4,
+      "sadness": 7,
+      "sanity": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Paranoia Tea": {
+      "bitter": 4,
+      "fear": 6,
+      "energizing": 4,
+      "sanity": -3,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Sweet and Salty": {
+      "sweet": 8,
+      "salty": 8,
+      "crunch": 4,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Sweet Lettuce": {
+      "sweet": 5,
+      "crunch": 6,
+      "health": 5,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Void Sugar": {
+      "sweet": 7,
+      "voidLevel": 5,
+      "sanity": -3,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": -1
+    },
+    "Bittersweet": {
+      "sweet": 6,
+      "bitter": 3,
+      "sadness": 6,
+      "sanity": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Nervous Candy": {
+      "sweet": 8,
+      "fear": 5,
+      "energizing": 5,
+      "sanity": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Salted Lettuce": {
+      "salty": 6,
+      "crunch": 7,
+      "health": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Void Salt": {
+      "salty": 8,
+      "voidLevel": 5,
+      "sanity": -3,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": -1
+    },
+    "Tears of Salt": {
+      "salty": 9,
+      "sadness": 8,
+      "sanity": -3,
+      "moisture": 6,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Fear Salt": {
+      "salty": 8,
+      "fear": 5,
+      "sanity": -2,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Void Salad": {
+      "crunch": 5,
+      "voidLevel": 6,
+      "sanity": -4,
+      "health": -1,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Sad Salad": {
+      "crunch": 6,
+      "sadness": 6,
+      "sanity": -2,
+      "health": 5,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Fear Salad": {
+      "crunch": 6,
+      "fear": 6,
+      "sanity": -3,
+      "health": 4,
+      "isVegetarian": 1,
+      "isVegan": 1
+    },
+    "Existential Dread": {
+      "voidLevel": 10,
+      "sadness": 10,
+      "sanity": -10,
+      "fear": 5,
+      "health": -6,
+      "calming": -5
+    },
+    "Cosmic Horror": {
+      "voidLevel": 10,
+      "fear": 12,
+      "sanity": -12,
+      "sadness": 3,
+      "health": -7,
+      "sentience": 3
+    },
+    "Despair": {
+      "sadness": 12,
+      "fear": 10,
+      "sanity": -8,
+      "health": -5,
+      "calming": -6,
+      "energizing": -3
+    },
+    "Void Rice": {
+      "filling": 3,
+      "voidLevel": 5,
+      "sanity": -3,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": -2
+    },
+    "Void Meat": {
+      "savory": 4,
+      "filling": 4,
+      "voidLevel": 6,
+      "sanity": -4,
+      "health": -3
+    },
+    "Void Water": {
+      "moisture": 7,
+      "voidLevel": 6,
+      "sanity": -4,
+      "isVegetarian": 1,
+      "isVegan": 1,
+      "health": -3
+    }
+  }
+}

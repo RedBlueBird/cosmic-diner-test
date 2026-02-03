@@ -21,7 +21,7 @@ export class Game {
         this.day = 1;
         this.rent = 30;
 
-        this.customersPerDay = 3;
+        this.customersPerDay = 4;
         this.customersServedCount = 0;
         this.isDayActive = true;
         this.endlessMode = false;
