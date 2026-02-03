@@ -114,9 +114,9 @@
   {
     "id": "caffeine_addiction",
     "name": "Caffeine Addiction",
-    "description": "Tasting coffee items restores 10 sanity instead of costing 10",
+    "description": "Tasting caffeinated items costs no sanity, restores 15 sanity, and consumes them. Non-caffeinated taste tests cost 15 sanity",
     "category": "sanity",
-    "effect": { "type": "taste_sanity_bonus", "value": 10, "condition": "contains_coffee" }
+    "effect": { "type": "taste_sanity_bonus", "value": 15, "condition": "contains_caffeine", "consume": true, "normalCost": 15 }
   },
   {
     "id": "adrenaline_rush",

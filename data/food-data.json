@@ -356,6 +356,7 @@
     "soft": 5,
     "filling": 0,
     "energizing": 0,
+    "caffeine": 0,
     "calming": 0,
     "health": 5,
     "sanity": 0,
@@ -509,7 +510,8 @@
       "health": 4,
       "moisture": 2,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 10
     },
     "Tea": {
       "bitter": 3,
@@ -781,7 +783,8 @@
       "temperature": 8,
       "isVegetarian": 1,
       "isVegan": 1,
-      "health": 4
+      "health": 4,
+      "caffeine": 10
     },
     "Latte": {
       "bitter": 4,
@@ -791,7 +794,8 @@
       "energizing": 6,
       "temperature": 7,
       "isVegetarian": 1,
-      "calming": 2
+      "calming": 2,
+      "caffeine": 6
     },
     "Brewed Tea": {
       "bitter": 3,
@@ -1290,7 +1294,8 @@
       "filling": 5,
       "energizing": 4,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 3
     },
     "Tea Rice": {
       "bitter": 2,
@@ -1418,7 +1423,8 @@
       "filling": 7,
       "chew": 7,
       "temperature": 8,
-      "energizing": 3
+      "energizing": 3,
+      "caffeine": 3
     },
     "Tea Smoked Meat": {
       "savory": 7,
@@ -1601,7 +1607,8 @@
       "moisture": 8,
       "temperature": 9,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 9
     },
     "Hot Tea": {
       "bitter": 3,
@@ -1736,7 +1743,8 @@
       "filling": 5,
       "energizing": 3,
       "isVegetarian": 1,
-      "containsGluten": 1
+      "containsGluten": 1,
+      "caffeine": 3
     },
     "Tea Bread": {
       "bitter": 2,
@@ -1866,7 +1874,8 @@
       "spicy": 4,
       "energizing": 8,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 6
     },
     "Spicy Tea": {
       "bitter": 3,
@@ -1994,7 +2003,8 @@
       "bitter": 4,
       "filling": 4,
       "energizing": 3,
-      "containsBone": 0.3
+      "containsBone": 0.3,
+      "caffeine": 3
     },
     "Tea Fish": {
       "savory": 4,
@@ -2114,7 +2124,8 @@
       "chew": 6,
       "energizing": 3,
       "isVegetarian": 1,
-      "containsGluten": 1
+      "containsGluten": 1,
+      "caffeine": 3
     },
     "Tea Noodles": {
       "bitter": 2,
@@ -2230,7 +2241,8 @@
       "savory": 4,
       "soft": 6,
       "energizing": 3,
-      "isVegetarian": 1
+      "isVegetarian": 1,
+      "caffeine": 3
     },
     "Tea Cheese": {
       "bitter": 2,
@@ -2338,7 +2350,8 @@
       "sour": 3,
       "energizing": 3,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 3
     },
     "Tea Tomato": {
       "bitter": 2,
@@ -2424,7 +2437,8 @@
       "savory": 3,
       "filling": 4,
       "energizing": 3,
-      "isVegetarian": 1
+      "isVegetarian": 1,
+      "caffeine": 3
     },
     "Tea Egg": {
       "bitter": 2,
@@ -2500,7 +2514,8 @@
       "filling": 6,
       "energizing": 3,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 3
     },
     "Tea Potato": {
       "bitter": 2,
@@ -2578,7 +2593,8 @@
       "grease": 7,
       "energizing": 3,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 3
     },
     "Tea Oil": {
       "bitter": 2,
@@ -2692,7 +2708,8 @@
       "moisture": 8,
       "temperature": 1,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 8
     },
     "Iced Tea": {
       "bitter": 3,
@@ -2757,7 +2774,8 @@
       "moisture": 8,
       "temperature": 8,
       "isVegetarian": 1,
-      "calming": 2
+      "calming": 2,
+      "caffeine": 6
     },
     "Chocolate Tea": {
       "sweet": 6,
@@ -2818,7 +2836,8 @@
       "moisture": 8,
       "temperature": 8,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 5
     },
     "Sweet Coffee": {
       "sweet": 6,
@@ -2826,7 +2845,8 @@
       "energizing": 7,
       "moisture": 7,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 6
     },
     "Salted Coffee": {
       "salty": 4,
@@ -2834,7 +2854,8 @@
       "energizing": 7,
       "moisture": 7,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 6
     },
     "Coffee Salad": {
       "bitter": 4,
@@ -2842,7 +2863,8 @@
       "energizing": 3,
       "health": 4,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 3
     },
     "Void Coffee": {
       "bitter": 6,
@@ -2851,7 +2873,8 @@
       "sanity": -4,
       "isVegetarian": 1,
       "isVegan": 1,
-      "health": -1
+      "health": -1,
+      "caffeine": 4
     },
     "Depresso": {
       "bitter": 8,
@@ -2859,7 +2882,8 @@
       "energizing": 4,
       "sanity": -3,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 4
     },
     "Anxiety Brew": {
       "bitter": 7,
@@ -2867,7 +2891,8 @@
       "energizing": 9,
       "sanity": -4,
       "isVegetarian": 1,
-      "isVegan": 1
+      "isVegan": 1,
+      "caffeine": 5
     },
     "Sweet Tea": {
       "sweet": 6,

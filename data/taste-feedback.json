@@ -97,6 +97,14 @@
         { "min": 9, "max": 12, "msg": "WIRED. Sleep is for the weak." },
         { "min": 13, "max": 999, "msg": "TRANSCENDENT ENERGY. You vibrate at the atomic level." }
     ],
+    "caffeine": [
+        { "min": 0, "max": 0, "msg": null },
+        { "min": 1, "max": 3, "msg": "Mild caffeine kick." },
+        { "min": 4, "max": 6, "msg": "Caffeinated. You feel more awake." },
+        { "min": 7, "max": 9, "msg": "STRONG CAFFEINE. Jittery focus." },
+        { "min": 10, "max": 12, "msg": "EXTREME CAFFEINE. Your heart races." },
+        { "min": 13, "max": 999, "msg": "PURE CAFFEINE OVERLOAD. Time dilates. Colors sharpen." }
+    ],
     "calming": [
         { "min": -999, "max": -3, "msg": "Actively stressful. Your cortisol spikes." },
         { "min": -2, "max": 0, "msg": null },

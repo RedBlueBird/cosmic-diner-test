@@ -73,6 +73,20 @@ export class CustomerManager {
 
         let sanityCost = 10;
 
+        // Get food attributes to check for caffeine
+        const attrs = getFoodAttributes(itemObj);
+
+        // Caffeine Addiction: No cost for caffeinated items, increased cost for non-caffeinated
+        if (this.callbacks.hasArtifact('caffeine_addiction')) {
+            const artifact = getArtifactById('caffeine_addiction');
+            const hasCaffeine = attrs.caffeine && attrs.caffeine > 0;
+            if (hasCaffeine) {
+                sanityCost = 0;  // Caffeinated items cost no sanity
+            } else {
+                sanityCost = artifact.effect.normalCost || 15;  // Non-caffeinated items cost more
+            }
+        }
+
         // Adrenaline Rush: Cap taste cost when below threshold
         if (this.callbacks.hasArtifact('adrenaline_rush')) {
             const artifact = getArtifactById('adrenaline_rush');
@@ -84,8 +98,6 @@ export class CustomerManager {
         }
 
         this.state.sanity -= sanityCost;
-
-        const attrs = getFoodAttributes(itemObj);
 
         this.callbacks.onLog(`=== TASTING '${item.toUpperCase()}' ===`, "system");
 
@@ -128,12 +140,20 @@ export class CustomerManager {
             this.callbacks.onLog(`The taste damages your sanity! (-${sanityDamage} additional)`, "error");
         }
 
-        // Caffeine Addiction: Coffee restores sanity
-        if (this.callbacks.hasArtifact('caffeine_addiction') && item.toLowerCase().includes('coffee')) {
+        // Caffeine Addiction: Caffeinated items restore sanity and are consumed
+        const hasCaffeine = attrs.caffeine && attrs.caffeine > 0;
+        if (this.callbacks.hasArtifact('caffeine_addiction') && hasCaffeine) {
             const artifact = getArtifactById('caffeine_addiction');
             const sanityBonus = artifact.effect.value;
             this.callbacks.restoreSanity(sanityBonus);
-            this.callbacks.onLog(`CAFFEINE ADDICTION: Coffee restores ${sanityBonus} sanity!`, "system");
+            this.callbacks.onLog(`CAFFEINE ADDICTION: Caffeine restores ${sanityBonus} sanity!`, "system");
+
+            // Consume the caffeinated item
+            if (artifact.effect.consume) {
+                this.state.countertop.splice(this.state.selectedIndices[0], 1);
+                this.callbacks.onClearSelection();
+                this.callbacks.onLog(`The caffeinated item is consumed.`, "system");
+            }
         }
 
         if (this.state.sanity <= 0) {

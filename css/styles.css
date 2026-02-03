@@ -448,16 +448,14 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
 
 /* GitHub Button */
 .github-btn {
-    display: block;
     width: 100%;
-    text-align: center;
-    text-decoration: none;
-    margin-bottom: 0;
+    margin: 0 0 15px 0;
+    font-size: 1em;
 }
 
 /* Exit Button */
 .exit-btn {
-    margin-top: 20px;
+    margin: 20px 0 0 0;
     width: 100%;
     font-size: 1em;
 }
@@ -465,7 +463,7 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
 /* Recipe Book View */
 .recipe-book-btn {
     width: 100%;
-    margin-bottom: 15px;
+    margin: 0 0 15px 0;
     font-size: 1em;
 }
 

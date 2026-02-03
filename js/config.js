@@ -21,7 +21,7 @@ export const DISTANCE_ATTRIBUTES = [
 export const FEEDBACK_CATEGORIES = {
     "FLAVOR": ['savory', 'sweet', 'salty', 'sour', 'bitter', 'spicy'],
     "TEXTURE": ['temperature', 'moisture', 'grease', 'crunch', 'chew', 'soft'],
-    "EFFECT": ['filling', 'energizing', 'calming', 'health'],
+    "EFFECT": ['filling', 'energizing', 'caffeine', 'calming', 'health'],
     "COSMIC": ['sanity', 'sadness', 'fear', 'sentience', 'radioactivity', 'voidLevel'],
     "FLAGS": ['isBurnt', 'isRaw', 'isVegetarian', 'isVegan', 'containsGluten', 'containsBone'],
 };
@@ -42,6 +42,7 @@ export const ATTR_DESCRIPTIONS = {
     soft: val => val >= 8 ? "soft" : null,
     filling: val => val >= 7 ? "filling" : val <= 3 ? "light" : null,
     energizing: val => val >= 6 ? "energizing" : null,
+    caffeine: val => val >= 8 ? "HIGH CAFFEINE" : val >= 4 ? "caffeinated" : null,
     calming: val => val >= 5 ? "calming" : val < 0 ? "stressful" : null,
     health: val => val >= 7 ? "healthy" : val <= 0 ? "toxic" : null,
     sanity: val => val <= -5 ? "SANITY-DRAINING" : val >= 3 ? "sanity-restoring" : null,
