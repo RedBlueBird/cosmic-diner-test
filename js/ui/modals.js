@@ -79,7 +79,7 @@ export function showGameOver(reason, day, customersServed) {
         DAYS SURVIVED: ${day}<br>
         CUSTOMERS SERVED: ${customersServed}<br>
         =============================<br>
-        <button class="btn" onclick="location.reload()">RESTART</button>
+        <button class="btn" onclick="window.restartGame()">RESTART</button>
     `;
     panel.appendChild(gameOverDiv);
 }
@@ -108,7 +108,8 @@ export function showVictory(day, money, sanity) {
         AND ELDRITCH HORRORS!<br>
         =============================<br>
         <br>
-        <button class="btn" onclick="location.reload()">RESTART GAME</button>
+        <button class="btn" onclick="window.game.continueEndlessMode()">CONTINUE TO ENDLESS MODE</button>
+        <button class="btn" onclick="window.restartGame()">RESTART GAME</button>
     `;
     panel.appendChild(victoryDiv);
 }

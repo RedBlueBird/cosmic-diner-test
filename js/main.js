@@ -36,6 +36,48 @@ async function init() {
     window.game = game;
 }
 
+// Restart game without page refresh
+function restartGame() {
+    console.log('Restarting game...');
+
+    // Clear the log panel
+    const logPanel = document.getElementById('log-panel');
+    logPanel.innerHTML = '';
+
+    // Remove any game-over or victory screens
+    document.querySelectorAll('.game-over').forEach(el => el.remove());
+
+    // Hide any open modals
+    document.getElementById('fridge-modal').classList.add('hidden');
+    document.getElementById('artifact-modal').classList.add('hidden');
+
+    // Create a fresh game instance
+    game = new Game();
+    game.initializeArtifactPool();
+
+    // Update window reference
+    window.game = game;
+
+    console.log('Game restarted successfully!');
+}
+
+// Show settings modal
+function showSettings() {
+    const modal = document.getElementById('settings-modal');
+    modal.classList.remove('hidden');
+}
+
+// Hide settings modal
+function hideSettings() {
+    const modal = document.getElementById('settings-modal');
+    modal.classList.add('hidden');
+}
+
+// Expose functions to window
+window.restartGame = restartGame;
+window.showSettings = showSettings;
+window.hideSettings = hideSettings;
+
 // Start initialization when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

@@ -18,7 +18,8 @@ export class CustomerManager {
         if (!this.state.isDayActive) return;
 
         // Check if this is the final customer of Day 5 (Gordon G boss fight)
-        if (this.state.day === 5 && this.state.customersServedCount === this.state.customersPerDay - 1) {
+        // Gordon G only appears on Day 5 and not in endless mode
+        if (this.state.day === 5 && !this.state.endlessMode && this.state.customersServedCount === this.state.customersPerDay - 1) {
             this.spawnGordonG();
             return;
         }

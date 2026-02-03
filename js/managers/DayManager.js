@@ -56,8 +56,8 @@ export class DayManager {
             return;
         }
 
-        // Show artifact selection if before day 5 and pool has artifacts
-        if (this.state.day < 5 && this.state.artifactPool.length > 0) {
+        // Show artifact selection if (before day 5 OR in endless mode) and pool has artifacts
+        if ((this.state.day < 5 || this.state.endlessMode) && this.state.artifactPool.length > 0) {
             setTimeout(() => this.callbacks.showArtifactSelection(), 2000);
         } else {
             setTimeout(() => this.startNextDay(), 3000);

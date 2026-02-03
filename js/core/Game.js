@@ -23,6 +23,7 @@ export class Game {
         this.customersPerDay = 3;
         this.customersServedCount = 0;
         this.isDayActive = true;
+        this.endlessMode = false;
 
         this.countertop = [];
         this.selectedIndices = [];
@@ -262,6 +263,20 @@ export class Game {
 
     gameOver(reason) {
         this.days.gameOver(reason);
+    }
+
+    continueEndlessMode() {
+        this.endlessMode = true;
+        this.log("=== ENTERING ENDLESS MODE ===", "system");
+        this.log("Gordon G is satisfied. The diner continues...", "system");
+        this.log("Endless customers await!", "design");
+
+        // Hide victory modal
+        const victoryElements = document.querySelectorAll('.game-over');
+        victoryElements.forEach(el => el.remove());
+
+        // Continue to next day
+        this.days.startNextDay();
     }
 
     // --- UI Helpers ---
