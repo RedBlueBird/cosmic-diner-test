@@ -5,14 +5,14 @@ import * as UI from '../ui.js';
 
 // Base prices for consumables by rarity
 const CONSUMABLE_BASE_PRICES = {
-    common: 5,
-    uncommon: 10,
+    common: 10,
+    uncommon: 15,
     rare: 20,
-    legendary: 35
+    legendary: 30
 };
 
 // Base price for foods
-const FOOD_BASE_PRICE = 3;
+const FOOD_BASE_PRICE = 15;
 
 export class MerchantManager {
     constructor(gameState, callbacks) {
