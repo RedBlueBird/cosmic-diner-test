@@ -75,27 +75,32 @@ export function render(gameState) {
 
     const list = document.getElementById('countertop-list');
     list.innerHTML = "";
-    countertop.forEach((itemObj, index) => {
-        const itemName = getItemName(itemObj);
-        const modifiers = getItemModifiers(itemObj);
 
-        const div = document.createElement('div');
-        div.className = "item-slot" + (selectedIndices.includes(index) ? " selected" : "");
+    if (countertop.length === 0) {
+        list.innerHTML = '<div style="color: #888; text-align: left;">Get food from Fridge</div>';
+    } else {
+        countertop.forEach((itemObj, index) => {
+            const itemName = getItemName(itemObj);
+            const modifiers = getItemModifiers(itemObj);
 
-        // Show ✦ if item has modifiers (e.g., spice vial applied)
-        const indicator = Object.keys(modifiers).length > 0 ? " ✦" : "";
-        div.textContent = `[${index + 1}] ${itemName}${indicator}`;
+            const div = document.createElement('div');
+            div.className = "item-slot" + (selectedIndices.includes(index) ? " selected" : "");
 
-        div.onclick = () => gameState.onToggleSelection(index);
+            // Show ✦ if item has modifiers (e.g., spice vial applied)
+            const indicator = Object.keys(modifiers).length > 0 ? " ✦" : "";
+            div.textContent = `[${index + 1}] ${itemName}${indicator}`;
 
-        // Add tooltip if item has modifiers
-        if (Object.keys(modifiers).length > 0) {
-            const modifierDescription = formatModifiers(modifiers);
-            createTooltip(div, "Modifiers", modifierDescription);
-        }
+            div.onclick = () => gameState.onToggleSelection(index);
 
-        list.appendChild(div);
-    });
+            // Add tooltip if item has modifiers
+            if (Object.keys(modifiers).length > 0) {
+                const modifierDescription = formatModifiers(modifiers);
+                createTooltip(div, "Modifiers", modifierDescription);
+            }
+
+            list.appendChild(div);
+        });
+    }
 
     // Update artifacts display
     updateArtifactsDisplay(activeArtifacts || []);
