@@ -151,6 +151,13 @@ export class CustomerManager {
 
     serveCustomer() {
         if (!this.state.isDayActive) return;
+
+        // Check if merchant is active - can't serve the merchant!
+        if (this.callbacks.isMerchantActive && this.callbacks.isMerchantActive()) {
+            this.callbacks.onLog("The merchant doesn't need serving - they're here to serve YOU!", "error");
+            return;
+        }
+
         if (this.state.selectedIndices.length !== 1) {
             this.callbacks.onLog("Select 1 dish to serve.", "error");
             return;

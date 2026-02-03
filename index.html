@@ -73,7 +73,7 @@
     </div>
 
     <div id="right-panel">
-        <h3>CURRENT CUSTOMER</h3>
+        <h3 id="right-panel-title">CURRENT CUSTOMER</h3>
         <div id="customer-view">
             <pre id="customer-avatar">
    O
@@ -83,6 +83,19 @@
             <p id="customer-name" style="font-weight:bold;">Unknown</p>
             <p>"<span id="customer-quote">...</span>"</p>
             <p>ORDER: <span id="customer-order" style="color:#ffff00">???</span></p>
+        </div>
+        <div id="merchant-shop" class="hidden">
+            <p style="color: #aaffaa; margin-bottom: 10px;">Selling rare wares...</p>
+            <h4>CONSUMABLES</h4>
+            <div id="merchant-consumables" class="merchant-buttons">
+                <!-- Consumable buttons injected here -->
+            </div>
+            <h4>INGREDIENTS</h4>
+            <div id="merchant-foods" class="merchant-buttons">
+                <!-- Food buttons injected here -->
+            </div>
+            <br>
+            <button class="btn" onclick="game.dismissMerchant()">[LEAVE SHOP]</button>
         </div>
     </div>
 
@@ -107,6 +120,7 @@
             <!-- Artifact cards injected here -->
         </div>
     </div>
+
 </div>
 
 <script type="module" src="js/main.js"></script>

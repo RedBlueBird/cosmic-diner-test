@@ -140,6 +140,86 @@ export function updateGordonDisplay(customer) {
     document.getElementById('customer-order').textContent = `Course ${customer.currentCourse + 1}/3: ???`;
 }
 
+// Update merchant display in right panel
+export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) {
+    // Update panel title
+    document.getElementById('right-panel-title').textContent = 'MORNING MERCHANT';
+
+    // Update avatar and name
+    const merchantAvatar = `
+    $$$
+   (o o)
+  --|~|--
+   /| |\\`;
+    document.getElementById('customer-avatar').textContent = merchantAvatar;
+    document.getElementById('customer-name').textContent = 'Wandering Trader';
+
+    // Hide normal customer info, show shop
+    document.getElementById('customer-quote').parentElement.classList.add('hidden');
+    document.getElementById('customer-order').parentElement.classList.add('hidden');
+    document.getElementById('merchant-shop').classList.remove('hidden');
+
+    // Render consumables
+    const consumablesDiv = document.getElementById('merchant-consumables');
+    consumablesDiv.innerHTML = '';
+
+    stock.consumables.forEach(item => {
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.textContent = `${item.name} ($${item.price})`;
+
+        if (money < item.price) {
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+        } else {
+            btn.onclick = () => onBuyConsumable(item.id, item.price);
+        }
+
+        // Add tooltip
+        createTooltip(btn, item.name, `${item.description}\n\n(Click to purchase)`);
+
+        consumablesDiv.appendChild(btn);
+    });
+
+    if (stock.consumables.length === 0) {
+        consumablesDiv.innerHTML = '<div style="color: #555;">SOLD OUT</div>';
+    }
+
+    // Render foods
+    const foodsDiv = document.getElementById('merchant-foods');
+    foodsDiv.innerHTML = '';
+
+    stock.foods.forEach(item => {
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.textContent = `${item.name} ($${item.price})`;
+
+        if (money < item.price) {
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+        } else {
+            btn.onclick = () => onBuyFood(item.name, item.price);
+        }
+
+        // Add tooltip
+        createTooltip(btn, item.name, `Unlocks in Fridge for future use.\n\n(Click to purchase)`);
+
+        foodsDiv.appendChild(btn);
+    });
+
+    if (stock.foods.length === 0) {
+        foodsDiv.innerHTML = '<div style="color: #555;">SOLD OUT</div>';
+    }
+}
+
+// Hide merchant display and restore customer view
+export function hideMerchantDisplay() {
+    document.getElementById('right-panel-title').textContent = 'CURRENT CUSTOMER';
+    document.getElementById('customer-quote').parentElement.classList.remove('hidden');
+    document.getElementById('customer-order').parentElement.classList.remove('hidden');
+    document.getElementById('merchant-shop').classList.add('hidden');
+}
+
 // Update consumables display
 export function updateConsumablesDisplay(inventory, gameState) {
     const list = document.getElementById('consumables-list');

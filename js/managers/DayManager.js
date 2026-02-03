@@ -116,7 +116,13 @@ export class DayManager {
 
         this.state.isDayActive = true;
         this.callbacks.onRender();
-        this.callbacks.onNextCustomer();
+
+        // Show Morning Merchant on Day 2+, then spawn customers
+        if (this.state.day >= 2) {
+            this.callbacks.onShowMerchant();
+        } else {
+            this.callbacks.onNextCustomer();
+        }
     }
 
     gameOver(reason) {

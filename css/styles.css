@@ -294,6 +294,7 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     color: #aaffaa;
     font-size: 0.95em;
     line-height: 1.3;
+    white-space: pre-line;
 }
 
 /* Appliance Tooltip for Chef's Intuition */
@@ -339,4 +340,33 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     justify-content: center;
     gap: 5px;
     max-width: 100%;
+}
+
+/* Morning Merchant Styles (integrated in right panel) */
+#merchant-shop h4 {
+    margin: 8px 0 5px 0;
+    color: #ffff00;
+    font-size: 0.9em;
+    border-bottom: 1px solid #555;
+    padding-bottom: 3px;
+}
+
+.merchant-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.merchant-buttons .btn {
+    font-size: 0.8em;
+    padding: 4px 8px;
+    text-align: left;
+    position: relative;
+}
+
+.merchant-buttons .btn.sold-out {
+    opacity: 0.4;
+    cursor: not-allowed;
+    text-decoration: line-through;
 }

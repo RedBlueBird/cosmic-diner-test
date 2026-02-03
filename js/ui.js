@@ -9,6 +9,8 @@ export {
     updateArtifactsDisplay,
     updateCustomerDisplay,
     updateGordonDisplay,
+    updateMerchantDisplay,
+    hideMerchantDisplay,
     updateConsumablesDisplay
 } from './ui/ui.js';
 

@@ -9,6 +9,7 @@ import { ConsumableManager } from '../managers/ConsumableManager.js';
 import { ApplianceManager } from '../managers/ApplianceManager.js';
 import { CustomerManager } from '../managers/CustomerManager.js';
 import { DayManager } from '../managers/DayManager.js';
+import { MerchantManager } from '../managers/MerchantManager.js';
 
 export class Game {
     constructor() {
@@ -107,7 +108,8 @@ export class Game {
             onEndDay: () => this.days.endDay(),
             onGameOver: (reason) => this.days.gameOver(reason),
             hasArtifact: (id) => this.artifacts.hasArtifact(id),
-            restoreSanity: (amount) => this.artifacts.restoreSanity(amount)
+            restoreSanity: (amount) => this.artifacts.restoreSanity(amount),
+            isMerchantActive: () => this.merchant ? this.merchant.isMerchantActive() : false
         });
 
         // Day Manager
@@ -119,7 +121,16 @@ export class Game {
             hasArtifact: (id) => this.artifacts.hasArtifact(id),
             restoreSanity: (amount) => this.artifacts.restoreSanity(amount),
             getCountertopCapacity: () => this.artifacts.getCountertopCapacity(),
-            showArtifactSelection: () => this.artifacts.showArtifactSelection()
+            showArtifactSelection: () => this.artifacts.showArtifactSelection(),
+            onShowMerchant: () => this.merchant.showMerchant()
+        });
+
+        // Merchant Manager
+        this.merchant = new MerchantManager(state, {
+            onLog: (msg, type) => this.log(msg, type),
+            onRender: () => this.render(),
+            onNextCustomer: () => this.customers.nextCustomer(),
+            grantConsumable: (id, qty) => this.consumables.grantConsumable(id, qty)
         });
     }
 
@@ -228,6 +239,18 @@ export class Game {
 
     grantConsumable(consumableId, quantity = 1) {
         this.consumables.grantConsumable(consumableId, quantity);
+    }
+
+    showMerchant() {
+        this.merchant.showMerchant();
+    }
+
+    dismissMerchant() {
+        this.merchant.dismissMerchant();
+    }
+
+    isMerchantActive() {
+        return this.merchant.isMerchantActive();
     }
 
     endDay() {
