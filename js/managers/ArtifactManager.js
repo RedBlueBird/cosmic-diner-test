@@ -36,12 +36,6 @@ export class ArtifactManager {
     }
 
     getAtomCostWithArtifacts(item, baseCost) {
-        // Penny Pincher: All atoms cost fixed price
-        if (this.hasArtifact('penny_pincher')) {
-            const artifact = getArtifactById('penny_pincher');
-            return artifact.effect.value;
-        }
-
         // Price Gouger: Atoms cost extra
         if (this.hasArtifact('price_gouger')) {
             const artifact = getArtifactById('price_gouger');

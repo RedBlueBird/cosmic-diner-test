@@ -91,13 +91,6 @@
     "effect": { "type": "bulk_discount", "value": 3 }
   },
   {
-    "id": "penny_pincher",
-    "name": "Penny Pincher",
-    "description": "All atoms cost $0.50",
-    "category": "economic",
-    "effect": { "type": "atom_cost_fixed", "value": 0.5 }
-  },
-  {
     "id": "investment_portfolio",
     "name": "Investment Portfolio",
     "description": "Earn $1 per $10 saved at day end",

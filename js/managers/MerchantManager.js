@@ -38,6 +38,17 @@ export class MerchantManager {
     }
 
     /**
+     * Calculate usage cost (fridge withdrawal cost) based on day
+     * Day 2 = $2, Day 3 = $3, Day 4 = $4.5, Day 5 = $6.75
+     * This cost is locked in at purchase time
+     */
+    calculateUsageCost() {
+        const baseCost = 2;
+        const multiplier = Math.pow(1.5, this.state.day - 2);
+        return Math.ceil(baseCost * multiplier);
+    }
+
+    /**
      * Generate merchant stock: 3 random consumables + 3 random unlockable foods
      */
     generateMerchantStock() {
@@ -88,10 +99,13 @@ export class MerchantManager {
         const shuffled = [...notUnlocked].sort(() => Math.random() - 0.5);
         const selected = shuffled.slice(0, 3);
 
+        const usageCost = this.calculateUsageCost();
+
         return selected.map(name => ({
             name,
             basePrice: FOOD_BASE_PRICE,
-            price: this.calculatePrice(FOOD_BASE_PRICE)
+            price: this.calculatePrice(FOOD_BASE_PRICE),
+            usageCost: usageCost // Cost per use from fridge (locked in)
         }));
     }
 
@@ -114,7 +128,7 @@ export class MerchantManager {
             this.currentStock,
             this.state.money,
             (id, price) => this.buyConsumable(id, price),
-            (name, price) => this.buyFood(name, price)
+            (name, price, usageCost) => this.buyFood(name, price, usageCost)
         );
     }
 
@@ -153,7 +167,7 @@ export class MerchantManager {
     /**
      * Buy a food (unlock ingredient) from the merchant
      */
-    buyFood(foodName, price) {
+    buyFood(foodName, price, usageCost) {
         if (this.state.money < price) {
             const messages = [
                 "MERCHANT: \"You're too broke for this! Come back with more coin.\"",
@@ -172,8 +186,9 @@ export class MerchantManager {
         // Unlock the ingredient
         if (!this.state.availableIngredients.includes(foodName)) {
             this.state.availableIngredients.push(foodName);
-            this.state.ingredientCosts[foodName] = price;
-            this.callbacks.onLog(`Purchased ${foodName} for $${price}! Now available in Fridge!`, "system");
+            this.state.merchantUnlockPrices[foodName] = price; // Store unlock price
+            this.state.ingredientCosts[foodName] = usageCost; // Store usage cost (locked in)
+            this.callbacks.onLog(`Purchased ${foodName} for $${price}! Fridge cost: $${usageCost}/use`, "system");
 
             // Track in recipe book as merchant purchase
             this.callbacks.trackMerchantPurchase(foodName);

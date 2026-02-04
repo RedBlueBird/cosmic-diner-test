@@ -35,6 +35,7 @@ export class Game {
         // Ingredient deck
         this.availableIngredients = [];
         this.ingredientCosts = {};
+        this.merchantUnlockPrices = {}; // Track original merchant purchase prices
         this.initializeIngredientDeck();
 
         // Artifact system

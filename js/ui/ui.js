@@ -219,10 +219,11 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) 
         btn.textContent = `${item.name} ($${item.price})`;
 
         // Always allow clicking, merchant will handle insufficient funds
-        btn.onclick = () => onBuyFood(item.name, item.price);
+        btn.onclick = () => onBuyFood(item.name, item.price, item.usageCost);
 
-        // Add tooltip
-        createTooltip(btn, item.name, `Unlocks in Fridge for future use.\n\n(Click to purchase)`);
+        // Add tooltip with usage cost information
+        const tooltipText = `One-time recipe purchase,\nthen $${item.usageCost}/use from Fridge\n\n(Click to purchase)`;
+        createTooltip(btn, item.name, tooltipText);
 
         foodsDiv.appendChild(btn);
     });
