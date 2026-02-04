@@ -75,7 +75,7 @@ export class DayManager {
             this.state.rent = Math.floor(this.state.rent * 1.5);
         }
 
-        this.state.customersPerDay = 3 + Math.floor(this.state.day / 2);
+        this.state.customersPerDay = 5;
 
         this.callbacks.onLog(`=== STARTING DAY ${this.state.day} ===`, "system");
         this.callbacks.onLog(`Rent due at end of shift: $${this.state.rent}. Customer Quota: ${this.state.customersPerDay}`);
