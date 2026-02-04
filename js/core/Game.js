@@ -16,7 +16,7 @@ import RecipeBookManager from '../managers/RecipeBookManager.js';
 export class Game {
     constructor() {
         // Core game state
-        this.money = 500;
+        this.money = 50;
         this.sanity = 100;
         this.day = 1;
         this.rent = 30;
