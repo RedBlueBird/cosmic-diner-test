@@ -55,6 +55,14 @@ export function getAdditions() {
     return ADDITIONS;
 }
 
+export function getMutations() {
+    return MUTATIONS;
+}
+
+export function getAmplifications() {
+    return AMPLIFICATIONS;
+}
+
 export function getAtoms() {
     return ATOMS;
 }
@@ -95,7 +103,7 @@ export function getConsumableById(id) {
 export function getRecipeResult(ingredient1, ingredient2) {
     const key1 = ingredient1 + "+" + ingredient2;
     const key2 = ingredient2 + "+" + ingredient1;
-    return RECIPES[key1] || RECIPES[key2];
+    return ADDITIONS[key1] || ADDITIONS[key2];
 }
 
 // Helper to create food attributes with defaults

@@ -1,7 +1,7 @@
 // ApplianceManager.js - Kitchen appliance operations
 
 import { APPLIANCE_UNLOCK_DAYS } from '../config.js';
-import { getRecipes, getRecipeResult, getArtifactById } from '../data/DataStore.js';
+import { getRecipeResult, getAdditions, getMutations, getAmplifications, getArtifactById } from '../data/DataStore.js';
 import { createItemObject, getItemName, getItemModifiers, mergeModifiers } from '../utils/ItemUtils.js';
 import * as UI from '../ui.js';
 
@@ -139,7 +139,7 @@ export class ApplianceManager {
             return;
         }
 
-        const RECIPES = getRecipes();
+        const ADDITIONS = getAdditions();
         const itemObj = this.state.countertop[this.state.selectedIndices[0]];
         const item = getItemName(itemObj);
         const mods = getItemModifiers(itemObj);
@@ -149,8 +149,8 @@ export class ApplianceManager {
         const itemDisplayCost = this.callbacks.getAtomCostWithArtifacts(item, baseItemCost);
 
         let ingredients = null;
-        for (let [key, val] of Object.entries(RECIPES)) {
-            if (val === item && key.includes("+")) {
+        for (let [key, val] of Object.entries(ADDITIONS)) {
+            if (val === item) {
                 ingredients = key.split("+");
                 break;
             }
@@ -188,15 +188,15 @@ export class ApplianceManager {
             return;
         }
 
-        const RECIPES = getRecipes();
+        const AMPLIFICATIONS = getAmplifications();
         const itemObj = this.state.countertop[this.state.selectedIndices[0]];
         const item = getItemName(itemObj);
         const mods = getItemModifiers(itemObj);
         const baseItemCost = this.state.ingredientCosts[item] || 1;
         const itemDisplayCost = this.callbacks.getAtomCostWithArtifacts(item, baseItemCost);
 
-        if (RECIPES[item] && !item.includes("+")) {
-            const result = RECIPES[item];
+        if (AMPLIFICATIONS[item]) {
+            const result = AMPLIFICATIONS[item];
 
             // Result inherits base cost from source
             const resultFridgeCost = this.callbacks.getAtomCostWithArtifacts(result, baseItemCost);
@@ -221,42 +221,35 @@ export class ApplianceManager {
             return;
         }
 
-        const RECIPES = getRecipes();
+        const MUTATIONS = getMutations();
         const itemObj = this.state.countertop[this.state.selectedIndices[0]];
         const item = getItemName(itemObj);
         const mods = getItemModifiers(itemObj);
         const baseItemCost = this.state.ingredientCosts[item] || 1;
         const itemDisplayCost = this.callbacks.getAtomCostWithArtifacts(item, baseItemCost);
-        const chance = Math.random();
 
         this.state.countertop.splice(this.state.selectedIndices[0], 1);
 
         let result;
-        if (RECIPES[item] && (item === "Meat" || item === "Fish" || item === "Egg" || item === "Potato" || item === "Cheese")) {
-            result = RECIPES[item];
+
+        // Check if a mutation recipe exists for this item
+        if (MUTATIONS[item]) {
+            result = MUTATIONS[item];
             const resultFridgeCost = this.callbacks.getAtomCostWithArtifacts(result, baseItemCost);
             this.callbacks.onLog(`Microwave mutated ${item} ($${itemDisplayCost}) into ${result} ($${resultFridgeCost})!`);
             this.state.countertop.push(createItemObject(result, mods));
             this.callbacks.unlockIngredient(result, baseItemCost, [itemObj], resultFridgeCost);
-            // Track Microwave recipe for recipe book
             this.callbacks.trackRecipe('Microwave', result, [itemObj]);
-        } else if (chance > 0.7) {
+        } else {
+            // 70% chance: Radioactive Slime
             result = "Radioactive Slime";
             const resultFridgeCost = this.callbacks.getAtomCostWithArtifacts(result, baseItemCost);
             this.callbacks.onLog(`Microwave mutated ${item} ($${itemDisplayCost}) into: RADIOACTIVE SLIME ($${resultFridgeCost})`, "error");
             this.state.countertop.push(createItemObject(result, mods));
             this.callbacks.unlockIngredient(result, baseItemCost, [itemObj], resultFridgeCost);
-            // Track Microwave recipe for recipe book
-            this.callbacks.trackRecipe('Microwave', result, [itemObj]);
-        } else {
-            result = "Hot " + item;
-            const resultFridgeCost = this.callbacks.getAtomCostWithArtifacts(result, baseItemCost);
-            this.callbacks.onLog(`Microwave made ${item} ($${itemDisplayCost}) really hot -> ${result} ($${resultFridgeCost})`);
-            this.state.countertop.push(createItemObject(result, mods));
-            this.callbacks.unlockIngredient(result, baseItemCost, [itemObj], resultFridgeCost);
-            // Track Microwave recipe for recipe book
             this.callbacks.trackRecipe('Microwave', result, [itemObj]);
         }
+
         this.callbacks.onClearSelection();
         this.callbacks.onRender();
     }

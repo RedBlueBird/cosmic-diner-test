@@ -1,15 +1,15 @@
 // RecipeService.js - Centralized recipe unlocking logic
 
-import { getRecipes, getAtoms } from '../data/DataStore.js';
+import { getAdditions, getAtoms } from '../data/DataStore.js';
 import { getItemModifiers } from '../utils/ItemUtils.js';
 
 // Check if a dish is a simple dish (made from only 2 atoms)
 export function isSimpleDish(itemName) {
-    const recipes = getRecipes();
+    const additions = getAdditions();
     const ATOMS = getAtoms();
 
-    // Check all possible 2-atom combinations
-    for (const [combo, result] of Object.entries(recipes)) {
+    // Check all possible 2-atom combinations in additions (pan recipes)
+    for (const [combo, result] of Object.entries(additions)) {
         if (result === itemName) {
             const parts = combo.split('+');
             // A simple dish is made from exactly 2 atoms (base ingredients)
