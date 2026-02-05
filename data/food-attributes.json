@@ -4317,6 +4317,907 @@
       "isVegan": 1,
       "energizing": 4.0,
       "spicy": 1.0
+    },
+    "Aberrant Bowl": {
+      "savory": 8,
+      "salty": 6,
+      "filling": 9,
+      "chew": 6,
+      "temperature": 8,
+      "health": -2,
+      "sentience": 3
+    },
+    "Absolute Zero": {
+      "temperature": -5,
+      "moisture": 0,
+      "health": -2
+    },
+    "Abyssal Soup": {
+      "savory": 5,
+      "salty": 3,
+      "moisture": 9,
+      "temperature": 8,
+      "voidLevel": 8,
+      "sanity": -5,
+      "fear": 5
+    },
+    "Alien Ice Cream": {
+      "sweet": 7,
+      "soft": 10,
+      "moisture": 7,
+      "temperature": 1,
+      "health": -1,
+      "sentience": 4,
+      "calming": 3
+    },
+    "Alien Milk": {
+      "sweet": 3,
+      "soft": 10,
+      "moisture": 9,
+      "health": -1,
+      "sentience": 4,
+      "calming": 2
+    },
+    "Beef Mountain": {
+      "savory": 9,
+      "filling": 10,
+      "chew": 7,
+      "temperature": 8
+    },
+    "Beefsteak Tomato": {
+      "sour": 6,
+      "sweet": 4,
+      "moisture": 8,
+      "soft": 7,
+      "health": 7,
+      "filling": 4
+    },
+    "Bioluminescent Tea": {
+      "bitter": 3,
+      "calming": 8,
+      "moisture": 9,
+      "temperature": 7,
+      "health": 6,
+      "radioactivity": 4
+    },
+    "Black Salt": {
+      "salty": 10,
+      "bitter": 4,
+      "crunch": 4,
+      "health": 0,
+      "voidLevel": 3
+    },
+    "Boba King": {
+      "filling": 5
+    },
+    "Bread Loaf": {
+      "filling": 8,
+      "soft": 7,
+      "containsGluten": 1
+    },
+    "Breakfast Plate": {
+      "filling": 5
+    },
+    "Caramel Cascade": {
+      "filling": 5
+    },
+    "Carnivorous Lettuce": {
+      "crunch": 9,
+      "moisture": 6,
+      "health": 4,
+      "sentience": 6,
+      "fear": 5
+    },
+    "Charred Steak": {
+      "filling": 5
+    },
+    "Cheese Fondue": {
+      "filling": 5
+    },
+    "Cheese Melt Supreme": {
+      "filling": 5
+    },
+    "Cheese Noodle Bowl": {
+      "filling": 5
+    },
+    "Cheese Wheel": {
+      "savory": 7,
+      "salty": 6,
+      "filling": 9,
+      "soft": 8,
+      "grease": 5
+    },
+    "Chili Bottle": {
+      "filling": 5
+    },
+    "Chocolate Bar": {
+      "sweet": 9,
+      "filling": 7,
+      "soft": 7,
+      "energizing": 3
+    },
+    "Chocolate Fountain": {
+      "filling": 5
+    },
+    "Chocolate River": {
+      "filling": 5
+    },
+    "Chowder": {
+      "filling": 5
+    },
+    "Club Sandwich": {
+      "filling": 5
+    },
+    "Coffee Pitcher": {
+      "filling": 5
+    },
+    "Coffee Pot": {
+      "bitter": 8,
+      "energizing": 10,
+      "caffeine": 12,
+      "moisture": 9,
+      "temperature": 8
+    },
+    "Crystal Sugar": {
+      "sweet": 10,
+      "energizing": 6,
+      "crunch": 9,
+      "health": 1,
+      "radioactivity": 2
+    },
+    "Crystalized Rice": {
+      "filling": 6,
+      "crunch": 9,
+      "temperature": 7,
+      "health": 4,
+      "radioactivity": 3
+    },
+    "Crystalline Fries": {
+      "salty": 5,
+      "crunch": 10,
+      "grease": 6,
+      "filling": 5,
+      "temperature": 8,
+      "radioactivity": 3
+    },
+    "Crystallized Meat": {
+      "savory": 7,
+      "sweet": 7,
+      "filling": 7,
+      "crunch": 6,
+      "chew": 5,
+      "temperature": 7,
+      "radioactivity": 3
+    },
+    "Cursed Cocoa": {
+      "sweet": 7,
+      "bitter": 4,
+      "soft": 9,
+      "temperature": 9,
+      "health": 0,
+      "voidLevel": 5,
+      "sanity": -3
+    },
+    "Cursed Steak": {
+      "savory": 9,
+      "salty": 5,
+      "spicy": 4,
+      "filling": 8,
+      "chew": 8,
+      "temperature": 8,
+      "health": -1,
+      "voidLevel": 4
+    },
+    "Dark Ice": {
+      "temperature": 0,
+      "moisture": 8,
+      "crunch": 7,
+      "health": -1,
+      "voidLevel": 5
+    },
+    "Dark Matter Milk": {
+      "sweet": 7,
+      "soft": 10,
+      "moisture": 8,
+      "calming": 4,
+      "voidLevel": 8,
+      "sanity": -4,
+      "energizing": 2
+    },
+    "Depression": {
+      "sadness": 10,
+      "sanity": -5,
+      "calming": -5,
+      "health": -3
+    },
+    "Double Cheeseburger": {
+      "filling": 5
+    },
+    "Egg Platter": {
+      "filling": 5
+    },
+    "Egg Rice Feast": {
+      "filling": 10,
+      "chew": 4,
+      "soft": 6
+    },
+    "Egg Salad Bowl": {
+      "filling": 5
+    },
+    "Eggs Custard": {
+      "filling": 5
+    },
+    "Emperor's Bowl": {
+      "filling": 5
+    },
+    "Espresso Shot": {
+      "bitter": 9,
+      "energizing": 10,
+      "caffeine": 12,
+      "temperature": 9,
+      "moisture": 2
+    },
+    "Ethereal Tea": {
+      "bitter": 2,
+      "calming": 10,
+      "moisture": 10,
+      "temperature": 8,
+      "health": 8,
+      "voidLevel": 3
+    },
+    "Evolved Cheese Sandwich": {
+      "savory": 7,
+      "salty": 6,
+      "filling": 7,
+      "temperature": 8,
+      "sentience": 5,
+      "containsGluten": 1
+    },
+    "Fire": {
+      "temperature": 14,
+      "spicy": 3,
+      "health": -3,
+      "isBurnt": 1
+    },
+    "Fish Platter": {
+      "filling": 5
+    },
+    "Fish Sub": {
+      "filling": 5
+    },
+    "Forbidden Chocolate": {
+      "sweet": 9,
+      "bitter": 4,
+      "soft": 7,
+      "health": -2,
+      "voidLevel": 4,
+      "energizing": 3
+    },
+    "Fried Feast": {
+      "filling": 10
+    },
+    "Fried Rice Feast": {
+      "filling": 10,
+      "chew": 4,
+      "soft": 6
+    },
+    "Fry Mountain": {
+      "filling": 9,
+      "crunch": 9,
+      "grease": 8,
+      "salty": 5
+    },
+    "Fungal Bread": {
+      "filling": 5,
+      "soft": 8,
+      "health": -2,
+      "sadness": 3,
+      "sentience": 2,
+      "containsGluten": 1
+    },
+    "Fungal Bruschetta": {
+      "crunch": 5,
+      "soft": 6,
+      "moisture": 6,
+      "temperature": 7,
+      "health": -3,
+      "sentience": 3,
+      "containsGluten": 1
+    },
+    "GMO Tomato": {
+      "sour": 6,
+      "sweet": 4,
+      "moisture": 7,
+      "soft": 7,
+      "health": 4,
+      "radioactivity": 3
+    },
+    "Garden Salad": {
+      "filling": 5
+    },
+    "Gelatinous Meat": {
+      "savory": 6,
+      "filling": 7,
+      "soft": 10,
+      "moisture": 9,
+      "chew": 2,
+      "health": 2
+    },
+    "Ghost Pepper": {
+      "spicy": 13,
+      "bitter": 3,
+      "health": 3
+    },
+    "Giant Potato": {
+      "filling": 10,
+      "chew": 5,
+      "soft": 6
+    },
+    "Glazed Roast": {
+      "filling": 5
+    },
+    "Glowing Egg": {
+      "savory": 4,
+      "filling": 5,
+      "soft": 7,
+      "radioactivity": 8,
+      "health": -2,
+      "isVegetarian": 1
+    },
+    "Glowing Egg Salad": {
+      "savory": 4,
+      "filling": 5,
+      "soft": 7,
+      "moisture": 6,
+      "radioactivity": 7,
+      "health": -2
+    },
+    "Glowing Rice": {
+      "savory": 5,
+      "filling": 7,
+      "soft": 6,
+      "chew": 4,
+      "temperature": 7,
+      "radioactivity": 7,
+      "health": -2
+    },
+    "Glowing Sandwich": {
+      "savory": 5,
+      "filling": 6,
+      "soft": 7,
+      "chew": 5,
+      "temperature": 7,
+      "radioactivity": 7,
+      "health": -2,
+      "containsGluten": 1
+    },
+    "Heavy Water": {
+      "moisture": 10,
+      "health": -2,
+      "radioactivity": 5,
+      "soft": 10
+    },
+    "Hellfire Noodles": {
+      "savory": 7,
+      "salty": 5,
+      "spicy": 13,
+      "filling": 6,
+      "chew": 7,
+      "temperature": 12,
+      "containsGluten": 1
+    },
+    "Ice Cream Sundae": {
+      "filling": 5
+    },
+    "Infernal Flesh": {
+      "savory": 8,
+      "spicy": 12,
+      "filling": 7,
+      "chew": 7,
+      "temperature": 13,
+      "health": 2
+    },
+    "Inferno Meat": {
+      "filling": 5
+    },
+    "Irradiated Egg": {
+      "savory": 4,
+      "soft": 9,
+      "moisture": 6,
+      "filling": 4,
+      "temperature": 7,
+      "radioactivity": 8,
+      "health": -4
+    },
+    "Lettuce Head": {
+      "crunch": 9,
+      "moisture": 7,
+      "health": 9,
+      "filling": 3
+    },
+    "Living Bread Noodles": {
+      "filling": 6,
+      "chew": 7,
+      "soft": 6,
+      "temperature": 7,
+      "sentience": 8,
+      "fear": 5,
+      "containsGluten": 1
+    },
+    "Living Cheese Sauce": {
+      "savory": 7,
+      "salty": 6,
+      "soft": 10,
+      "grease": 6,
+      "temperature": 9,
+      "sentience": 8,
+      "fear": 4
+    },
+    "Living Noodle Mass": {
+      "filling": 7,
+      "chew": 9,
+      "grease": 6,
+      "temperature": 8,
+      "sentience": 9,
+      "fear": 6,
+      "containsGluten": 1
+    },
+    "Living Noodles": {
+      "filling": 5,
+      "chew": 9,
+      "sentience": 7,
+      "health": -1,
+      "containsGluten": 1
+    },
+    "Luminous Milk": {
+      "sweet": 2,
+      "soft": 10,
+      "moisture": 9,
+      "calming": 6,
+      "temperature": 8,
+      "radioactivity": 5,
+      "health": 2
+    },
+    "Mac Attack": {
+      "filling": 5
+    },
+    "Marinara Vat": {
+      "savory": 6,
+      "sour": 5,
+      "moisture": 10,
+      "soft": 10,
+      "temperature": 8
+    },
+    "Mashed Potato Mountain": {
+      "filling": 10,
+      "soft": 8
+    },
+    "Meat Pot": {
+      "savory": 8,
+      "filling": 9,
+      "moisture": 9
+    },
+    "Mega Latte": {
+      "filling": 5
+    },
+    "Milk Jug": {
+      "filling": 8,
+      "moisture": 9
+    },
+    "Moldy Bread": {
+      "filling": 4,
+      "soft": 8,
+      "health": -3,
+      "sadness": 3,
+      "containsGluten": 1
+    },
+    "Moldy Toast": {
+      "crunch": 6,
+      "filling": 3,
+      "temperature": 6,
+      "health": -3,
+      "sadness": 3,
+      "containsGluten": 1
+    },
+    "Mutant Caprese": {
+      "savory": 6,
+      "salty": 5,
+      "sour": 5,
+      "soft": 7,
+      "moisture": 7,
+      "health": 2,
+      "radioactivity": 4
+    },
+    "Mutant Mac": {
+      "savory": 7,
+      "salty": 6,
+      "filling": 8,
+      "soft": 8,
+      "grease": 6,
+      "temperature": 8,
+      "sentience": 4,
+      "containsGluten": 1
+    },
+    "Mutant Marinara": {
+      "savory": 6,
+      "sour": 5,
+      "sweet": 3,
+      "moisture": 8,
+      "soft": 9,
+      "temperature": 8,
+      "radioactivity": 5,
+      "health": 2
+    },
+    "Mutant Pepper": {
+      "spicy": 8,
+      "bitter": 3,
+      "radioactivity": 4,
+      "health": 2
+    },
+    "Mutant Potato": {
+      "filling": 7,
+      "chew": 5,
+      "radioactivity": 6,
+      "health": -1,
+      "sentience": 3
+    },
+    "Mutant Potato Salad": {
+      "crunch": 4,
+      "moisture": 6,
+      "filling": 6,
+      "health": -1,
+      "radioactivity": 5,
+      "sentience": 3
+    },
+    "Mutant Soup": {
+      "savory": 5,
+      "sour": 5,
+      "moisture": 9,
+      "soft": 9,
+      "temperature": 8,
+      "radioactivity": 6,
+      "health": -1
+    },
+    "Mutated Egg": {
+      "savory": 5,
+      "filling": 5,
+      "soft": 7,
+      "grease": 4,
+      "temperature": 8,
+      "radioactivity": 7,
+      "health": -2
+    },
+    "Mystery Burger": {
+      "savory": 7,
+      "filling": 8,
+      "chew": 6,
+      "health": -1,
+      "sentience": 3,
+      "containsGluten": 1
+    },
+    "Mystery Meat": {
+      "savory": 6,
+      "filling": 7,
+      "chew": 7,
+      "health": -1,
+      "sentience": 2,
+      "containsBone": 0.3
+    },
+    "Necrotic Steak": {
+      "savory": 8,
+      "filling": 8,
+      "chew": 9,
+      "temperature": 6,
+      "health": -6,
+      "sadness": 5
+    },
+    "Noodle Feast": {
+      "filling": 10,
+      "chew": 8,
+      "containsGluten": 1
+    },
+    "Noodle Inferno": {
+      "filling": 5
+    },
+    "Noodle Tower": {
+      "filling": 10,
+      "chew": 8,
+      "containsGluten": 1
+    },
+    "Ocean": {
+      "moisture": 10,
+      "salty": 8,
+      "health": 3,
+      "soft": 10
+    },
+    "Oil Barrel": {
+      "grease": 10,
+      "moisture": 9,
+      "soft": 10
+    },
+    "Ostrich Egg": {
+      "savory": 5,
+      "filling": 9,
+      "soft": 7,
+      "isVegetarian": 1
+    },
+    "Pasta Bowl": {
+      "filling": 5
+    },
+    "Pastry Tower": {
+      "filling": 10
+    },
+    "Pepper Crusted Steak": {
+      "filling": 5
+    },
+    "Plasma": {
+      "temperature": 15,
+      "health": -5,
+      "energizing": 8
+    },
+    "Plasma Cheese": {
+      "savory": 7,
+      "salty": 6,
+      "soft": 10,
+      "grease": 6,
+      "temperature": 15,
+      "health": -3,
+      "energizing": 6
+    },
+    "Plutonium Roll": {
+      "savory": 6,
+      "filling": 5,
+      "soft": 6,
+      "moisture": 4,
+      "radioactivity": 10,
+      "health": -5,
+      "containsBone": 0.5
+    },
+    "Porridge Pot": {
+      "filling": 9,
+      "soft": 10,
+      "moisture": 9,
+      "calming": 5
+    },
+    "Potato Feast": {
+      "filling": 10,
+      "soft": 8
+    },
+    "Predatory Salad": {
+      "crunch": 9,
+      "moisture": 6,
+      "health": 5,
+      "sentience": 7,
+      "fear": 6
+    },
+    "Prime Cut": {
+      "savory": 10,
+      "filling": 9,
+      "chew": 8,
+      "health": 8,
+      "grease": 2
+    },
+    "Pure Sugar": {
+      "sweet": 10,
+      "energizing": 7,
+      "crunch": 5,
+      "health": 1
+    },
+    "Quantum Coffee": {
+      "bitter": 8,
+      "energizing": 12,
+      "caffeine": 13,
+      "health": 3,
+      "sanity": -2
+    },
+    "Quantum Iced Coffee": {
+      "bitter": 6,
+      "sweet": 2,
+      "moisture": 9,
+      "temperature": 2,
+      "energizing": 8,
+      "caffeine": 9,
+      "sanity": -3
+    },
+    "Quantum Ramen": {
+      "savory": 8,
+      "salty": 6,
+      "filling": 8,
+      "moisture": 8,
+      "temperature": 9,
+      "sanity": -3,
+      "caffeine": 3,
+      "containsGluten": 1
+    },
+    "Radioactive Oil": {
+      "grease": 10,
+      "moisture": 8,
+      "soft": 10,
+      "health": -4,
+      "radioactivity": 9,
+      "temperature": 6
+    },
+    "Radioactive Rice": {
+      "filling": 6,
+      "radioactivity": 8,
+      "health": -3,
+      "soft": 6
+    },
+    "Ramen King": {
+      "filling": 5
+    },
+    "Rice Crackers": {
+      "filling": 5
+    },
+    "Rice Mountain": {
+      "filling": 10,
+      "chew": 4,
+      "soft": 6
+    },
+    "Salt Crystal": {
+      "salty": 10,
+      "crunch": 8,
+      "health": 1
+    },
+    "Seafood Platter": {
+      "filling": 5
+    },
+    "Sentient Cheese": {
+      "savory": 6,
+      "salty": 5,
+      "soft": 8,
+      "sentience": 8,
+      "fear": 4,
+      "grease": 4
+    },
+    "Sentient Potato": {
+      "filling": 8,
+      "soft": 8,
+      "temperature": 8,
+      "sentience": 8,
+      "fear": 4,
+      "health": 3
+    },
+    "Soup Pot": {
+      "filling": 8,
+      "moisture": 9
+    },
+    "Stuffed Potato": {
+      "filling": 5
+    },
+    "Superheated Steam": {
+      "temperature": 14,
+      "moisture": 10,
+      "health": -4
+    },
+    "Sushi Platter": {
+      "filling": 5
+    },
+    "Tea Concentrate": {
+      "bitter": 5,
+      "calming": 10,
+      "moisture": 8,
+      "temperature": 8,
+      "health": 8
+    },
+    "Tea Pot": {
+      "calming": 9,
+      "moisture": 10,
+      "temperature": 8,
+      "health": 7
+    },
+    "Terror": {
+      "fear": 10,
+      "sanity": -7,
+      "energizing": 5,
+      "health": -4
+    },
+    "Three-Eyed Fish": {
+      "savory": 5,
+      "filling": 5,
+      "health": -2,
+      "radioactivity": 7,
+      "containsBone": 1,
+      "sentience": 2
+    },
+    "Three-Eyed Meal": {
+      "savory": 7,
+      "salty": 4,
+      "filling": 8,
+      "crunch": 8,
+      "grease": 7,
+      "temperature": 8,
+      "radioactivity": 7,
+      "health": -3,
+      "containsBone": 1
+    },
+    "Toast Rack": {
+      "filling": 5
+    },
+    "Toxic Caramel": {
+      "sweet": 9,
+      "soft": 9,
+      "temperature": 9,
+      "health": -3,
+      "radioactivity": 4
+    },
+    "Toxic Fish Sandwich": {
+      "savory": 5,
+      "salty": 3,
+      "filling": 6,
+      "chew": 5,
+      "temperature": 7,
+      "health": -4,
+      "radioactivity": 5,
+      "containsGluten": 1,
+      "containsBone": 0.3
+    },
+    "Toxic Seafood": {
+      "savory": 5,
+      "salty": 3,
+      "filling": 5,
+      "moisture": 7,
+      "health": -5,
+      "radioactivity": 6,
+      "containsBone": 0.5
+    },
+    "Toxic Sludge": {
+      "grease": 10,
+      "moisture": 9,
+      "health": -7,
+      "radioactivity": 8,
+      "sadness": 4
+    },
+    "Toxic Tea": {
+      "bitter": 5,
+      "calming": 5,
+      "moisture": 9,
+      "temperature": 8,
+      "health": -4,
+      "radioactivity": 5
+    },
+    "Transcendent Bowl": {
+      "savory": 9,
+      "salty": 7,
+      "filling": 10,
+      "chew": 6,
+      "temperature": 9,
+      "health": 8,
+      "sanity": 3,
+      "energizing": 5
+    },
+    "Ultimate Burger": {
+      "filling": 5
+    },
+    "Void Latte": {
+      "bitter": 5,
+      "sweet": 2,
+      "moisture": 8,
+      "temperature": 7,
+      "voidLevel": 6,
+      "sanity": -4,
+      "caffeine": 6
+    },
+    "Void Loaf": {
+      "filling": 8
+    },
+    "Void Mountain": {
+      "filling": 10
+    },
+    "Void Porridge": {
+      "filling": 7,
+      "soft": 10,
+      "moisture": 9,
+      "calming": 3,
+      "voidLevel": 7,
+      "sanity": -5
+    },
+    "Whole Fish": {
+      "savory": 6,
+      "salty": 3,
+      "filling": 8,
+      "health": 6,
+      "containsBone": 1
     }
   }
 }
