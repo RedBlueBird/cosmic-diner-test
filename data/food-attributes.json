@@ -3480,16 +3480,6 @@
       "calming": 2.5,
       "health": 6
     },
-    "Burger and Steak": {
-      "savory": 8,
-      "salty": 4.5,
-      "temperature": 7.5,
-      "grease": 3.5,
-      "chew": 7,
-      "filling": 8,
-      "health": 6,
-      "containsGluten": 1
-    },
     "Burger and Sushi": {
       "savory": 6.5,
       "salty": 4,
@@ -3610,15 +3600,6 @@
       "sour": 2.5,
       "isRaw": 1
     },
-    "Bread Potato": {
-      "crunch": 1.0,
-      "soft": 5.5,
-      "isVegetarian": 1,
-      "chew": 4.5,
-      "isVegan": 1,
-      "filling": 6.0,
-      "containsGluten": 1
-    },
     "Breakfast Burger": {
       "soft": 5.5,
       "grease": 2.0,
@@ -3692,18 +3673,6 @@
       "isRaw": 1,
       "spicy": 1.5
     },
-    "Burnt Rice Crust": {
-      "soft": 5.5,
-      "moisture": 4.5,
-      "health": 0.0,
-      "temperature": 10.0,
-      "chew": 4.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "filling": 3.0,
-      "fear": 1.0,
-      "spicy": 1.5
-    },
     "Burnt Sugar": {
       "crunch": 2.0,
       "temperature": 10.0,
@@ -3773,19 +3742,6 @@
       "calming": 1.0,
       "salty": 4.5
     },
-    "Cheese Meat": {
-      "soft": 6.0,
-      "grease": 2.0,
-      "health": 4.0,
-      "isVegetarian": 1,
-      "chew": 6.0,
-      "containsBone": 1,
-      "savory": 6.0,
-      "isRaw": 1,
-      "filling": 5.5,
-      "calming": 1.0,
-      "salty": 2.5
-    },
     "Cheese Pretzel": {
       "crunch": 3.0,
       "soft": 6.0,
@@ -3797,17 +3753,6 @@
       "containsGluten": 1,
       "calming": 1.0,
       "salty": 6.0
-    },
-    "Cheese Sandwich": {
-      "crunch": 1.0,
-      "soft": 6.5,
-      "grease": 2.0,
-      "isVegetarian": 1,
-      "savory": 3.0,
-      "filling": 4.5,
-      "containsGluten": 1,
-      "calming": 1.0,
-      "salty": 2.5
     },
     "Cheese Sushi Fusion": {
       "soft": 7.5,
@@ -3866,18 +3811,6 @@
       "sweet": 8.5,
       "calming": 4.0
     },
-    "Chocolate Milk Drink": {
-      "bitter": 1.5,
-      "soft": 8.0,
-      "moisture": 7.0,
-      "health": 5.5,
-      "isVegetarian": 1,
-      "savory": 1.0,
-      "filling": 1.5,
-      "energizing": 1.0,
-      "sweet": 5.0,
-      "calming": 3.5
-    },
     "Chocolate Rice Dessert": {
       "bitter": 1.5,
       "soft": 6.0,
@@ -3888,33 +3821,6 @@
       "energizing": 1.0,
       "sweet": 7.5,
       "calming": 1.5
-    },
-    "Chocolate Sugar": {
-      "crunch": 2.0,
-      "bitter": 1.5,
-      "soft": 5.5,
-      "health": 3.5,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "savory": 1.0,
-      "energizing": 3.5,
-      "filling": 1.5,
-      "sweet": 9.0,
-      "calming": 1.5
-    },
-    "Chocolate Tea Blend": {
-      "bitter": 3.0,
-      "soft": 5.5,
-      "moisture": 7.0,
-      "health": 6.0,
-      "temperature": 6.5,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "savory": 1.0,
-      "filling": 1.5,
-      "energizing": 1.0,
-      "sweet": 4.0,
-      "calming": 5.5
     },
     "Classic Egg Salad": {
       "crunch": 3.5,
@@ -3956,17 +3862,6 @@
       "sweet": 4.5,
       "calming": 2.5
     },
-    "Coffee Milk": {
-      "bitter": 3.5,
-      "soft": 7.5,
-      "moisture": 5.5,
-      "caffeine": 5.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "energizing": 4.0,
-      "sweet": 1.0,
-      "calming": 2.0
-    },
     "Coffee and Toast": {
       "crunch": 4.0,
       "bitter": 3.5,
@@ -3991,25 +3886,6 @@
       "energizing": 4.5,
       "sweet": 1.0,
       "calming": 2.0
-    },
-    "Cold Coffee": {
-      "bitter": 3.5,
-      "crunch": 3.0,
-      "health": 3.5,
-      "caffeine": 5.0,
-      "isVegetarian": 1,
-      "temperature": 2.5,
-      "isVegan": 1,
-      "energizing": 4.0
-    },
-    "Cold Tea": {
-      "bitter": 1.5,
-      "crunch": 3.0,
-      "moisture": 8.5,
-      "temperature": 4.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "calming": 4.0
     },
     "Cool Milk": {
       "crunch": 3.0,
@@ -4060,82 +3936,6 @@
       "calming": 1.5,
       "sanity": -5.0
     },
-    "Cursed Meat": {
-      "moisture": 2.5,
-      "health": 0.0,
-      "voidLevel": 4.0,
-      "chew": 6.0,
-      "temperature": 2.5,
-      "containsBone": 1,
-      "savory": 3.0,
-      "filling": 2.5,
-      "fear": 1.5,
-      "sanity": -2.5,
-      "isRaw": 1
-    },
-    "Depression Coffee": {
-      "bitter": 3.5,
-      "moisture": 3.5,
-      "temperature": 4.0,
-      "health": 1.5,
-      "caffeine": 5.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "energizing": 4.0,
-      "sadness": 4.0,
-      "calming": -1.5,
-      "sanity": -1.5
-    },
-    "Double Rice": {
-      "soft": 6.0,
-      "moisture": 4.0,
-      "chew": 3.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "filling": 6.0
-    },
-    "Egg Cheese": {
-      "soft": 6.5,
-      "grease": 2.0,
-      "isVegetarian": 1,
-      "salty": 2.5,
-      "savory": 5.0,
-      "filling": 4.0,
-      "calming": 1.0,
-      "isRaw": 1
-    },
-    "Egg Fish": {
-      "soft": 5.5,
-      "health": 4.0,
-      "isVegetarian": 1,
-      "containsBone": 1,
-      "savory": 4.5,
-      "salty": 1.0,
-      "filling": 4.5,
-      "isRaw": 1
-    },
-    "Egg Meat": {
-      "soft": 5.5,
-      "health": 4.0,
-      "isVegetarian": 1,
-      "chew": 6.0,
-      "containsBone": 1,
-      "savory": 5.0,
-      "filling": 5.5,
-      "isRaw": 1
-    },
-    "Egg Tomato Scramble": {
-      "soft": 6.0,
-      "moisture": 6.0,
-      "health": 5.5,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "savory": 2.0,
-      "filling": 2.0,
-      "sweet": 1.5,
-      "sour": 2.5,
-      "isRaw": 1
-    },
     "Eggs Benedict Base": {
       "crunch": 4.0,
       "soft": 6.5,
@@ -4146,19 +3946,6 @@
       "savory": 2.0,
       "filling": 3.5,
       "containsGluten": 1
-    },
-    "Fish Bowl": {
-      "soft": 5.5,
-      "moisture": 4.5,
-      "health": 4.0,
-      "chew": 4.0,
-      "isVegetarian": 1,
-      "containsBone": 1,
-      "savory": 2.5,
-      "isRaw": 1,
-      "filling": 5.5,
-      "isVegan": 1,
-      "salty": 1.0
     },
     "Fish Marinara": {
       "soft": 7.0,
@@ -4187,18 +3974,6 @@
       "filling": 5.5,
       "containsGluten": 1,
       "salty": 2.0
-    },
-    "Fish Noodles": {
-      "soft": 4.5,
-      "health": 4.0,
-      "chew": 6.0,
-      "isVegetarian": 1,
-      "containsBone": 1,
-      "savory": 2.5,
-      "salty": 1.0,
-      "filling": 5.0,
-      "containsGluten": 1,
-      "isRaw": 1
     },
     "Fish Potato": {
       "soft": 6.0,
@@ -4237,21 +4012,6 @@
       "isRaw": 1,
       "filling": 4.5,
       "salty": 2.0
-    },
-    "Frozen Choco": {
-      "bitter": 1.5,
-      "crunch": 3.0,
-      "soft": 5.5,
-      "moisture": 6.5,
-      "temperature": 2.5,
-      "health": 4.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "savory": 1.0,
-      "filling": 1.5,
-      "energizing": 1.0,
-      "sweet": 4.0,
-      "calming": 1.5
     },
     "Glazed Steak": {
       "crunch": 2.0,
@@ -4324,19 +4084,6 @@
       "containsGluten": 1,
       "salty": 2.5
     },
-    "Lettuce Cheese Salad": {
-      "crunch": 4.0,
-      "soft": 6.0,
-      "grease": 2.0,
-      "moisture": 5.5,
-      "health": 6.5,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "savory": 3.0,
-      "filling": 3.0,
-      "calming": 1.0,
-      "salty": 2.5
-    },
     "Loaded Baked Potato": {
       "soft": 7.0,
       "grease": 2.0,
@@ -4348,29 +4095,6 @@
       "filling": 6.0,
       "calming": 2.5,
       "salty": 2.5
-    },
-    "Meat Lettuce": {
-      "crunch": 4.0,
-      "moisture": 5.5,
-      "health": 5.5,
-      "isVegetarian": 1,
-      "chew": 6.0,
-      "isVegan": 1,
-      "containsBone": 1,
-      "savory": 3.0,
-      "filling": 4.5,
-      "isRaw": 1
-    },
-    "Meat Noodles Bowl": {
-      "soft": 4.5,
-      "health": 4.0,
-      "chew": 7.0,
-      "isVegetarian": 1,
-      "containsBone": 1,
-      "savory": 3.0,
-      "filling": 6.0,
-      "containsGluten": 1,
-      "isRaw": 1
     },
     "Meat Ramen": {
       "moisture": 6.5,
@@ -4384,31 +4108,6 @@
       "containsGluten": 1,
       "calming": 2.0,
       "salty": 2.5
-    },
-    "Mocha Coffee": {
-      "bitter": 5.0,
-      "soft": 5.5,
-      "moisture": 3.5,
-      "health": 4.5,
-      "caffeine": 5.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "savory": 1.0,
-      "energizing": 5.0,
-      "filling": 1.5,
-      "sweet": 4.0,
-      "calming": 1.5
-    },
-    "Nightmare Milk": {
-      "soft": 7.5,
-      "moisture": 7.0,
-      "health": 2.0,
-      "isVegetarian": 1,
-      "energizing": 1.5,
-      "fear": 4.0,
-      "sweet": 1.0,
-      "calming": 2.0,
-      "sanity": -2.0
     },
     "Pad Thai": {
       "soft": 5.5,
@@ -4450,66 +4149,6 @@
       "sour": 2.5,
       "salty": 2.5
     },
-    "Potato Cheese": {
-      "soft": 6.0,
-      "grease": 2.0,
-      "isVegetarian": 1,
-      "chew": 4.5,
-      "isVegan": 1,
-      "savory": 3.0,
-      "filling": 5.5,
-      "calming": 1.0,
-      "salty": 2.5
-    },
-    "Potato Egg Hash": {
-      "soft": 5.5,
-      "isVegetarian": 1,
-      "chew": 4.5,
-      "isVegan": 1,
-      "savory": 2.0,
-      "filling": 5.5,
-      "isRaw": 1
-    },
-    "Potato Fish": {
-      "health": 4.0,
-      "isVegetarian": 1,
-      "chew": 4.5,
-      "isVegan": 1,
-      "containsBone": 1,
-      "savory": 2.5,
-      "filling": 6.0,
-      "salty": 1.0,
-      "isRaw": 1
-    },
-    "Potato Meat Bowl": {
-      "health": 4.0,
-      "isVegetarian": 1,
-      "chew": 5.5,
-      "isVegan": 1,
-      "containsBone": 1,
-      "savory": 3.0,
-      "filling": 7.0,
-      "isRaw": 1
-    },
-    "Potato Rice Bowl": {
-      "soft": 5.5,
-      "moisture": 4.5,
-      "isVegetarian": 1,
-      "chew": 3.5,
-      "isVegan": 1,
-      "filling": 6.5
-    },
-    "Potato Tomato": {
-      "soft": 5.5,
-      "moisture": 6.0,
-      "health": 5.5,
-      "isVegetarian": 1,
-      "chew": 4.5,
-      "isVegan": 1,
-      "filling": 3.5,
-      "sweet": 1.5,
-      "sour": 2.5
-    },
     "Rice Candy": {
       "crunch": 6.0,
       "temperature": 6.5,
@@ -4519,40 +4158,6 @@
       "filling": 2.5,
       "energizing": 2.5,
       "sweet": 5.0
-    },
-    "Salt and Pepper": {
-      "crunch": 3.0,
-      "bitter": 1.0,
-      "health": 3.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "salty": 5.0,
-      "spicy": 3.0
-    },
-    "Salted Chocolate Bar": {
-      "crunch": 1.5,
-      "bitter": 1.5,
-      "soft": 5.5,
-      "health": 3.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "savory": 1.0,
-      "filling": 1.5,
-      "energizing": 1.0,
-      "sweet": 4.0,
-      "calming": 1.5,
-      "salty": 5.0
-    },
-    "Salted Coffee Brew": {
-      "crunch": 1.5,
-      "bitter": 3.5,
-      "moisture": 3.5,
-      "health": 2.5,
-      "caffeine": 5.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "energizing": 4.0,
-      "salty": 5.0
     },
     "Salted Sushi": {
       "crunch": 1.5,
@@ -4567,26 +4172,6 @@
       "filling": 2.5,
       "isVegan": 1,
       "salty": 6.5
-    },
-    "Salted Tea Brew": {
-      "crunch": 1.5,
-      "bitter": 1.5,
-      "moisture": 7.0,
-      "health": 4.0,
-      "temperature": 6.5,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "calming": 4.0,
-      "salty": 5.0
-    },
-    "Salty Ice": {
-      "crunch": 4.5,
-      "moisture": 6.5,
-      "health": 2.0,
-      "temperature": 2.5,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "salty": 5.0
     },
     "Seafood Pasta": {
       "temperature": 6.5,
@@ -4615,19 +4200,6 @@
       "sweet": 1.5,
       "calming": 2.0,
       "sour": 2.5
-    },
-    "Spicy Cheese": {
-      "bitter": 1.0,
-      "crunch": 1.5,
-      "soft": 6.0,
-      "grease": 2.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "savory": 3.0,
-      "filling": 2.0,
-      "calming": 1.0,
-      "salty": 2.5,
-      "spicy": 3.0
     },
     "Spicy Fried Rice": {
       "bitter": 1.0,
@@ -4674,16 +4246,6 @@
       "fear": 1.0,
       "spicy": 1.5
     },
-    "Sugar Ice": {
-      "crunch": 5.0,
-      "moisture": 6.5,
-      "health": 2.5,
-      "temperature": 2.5,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "energizing": 2.5,
-      "sweet": 5.0
-    },
     "Sugar Toast": {
       "crunch": 6.0,
       "moisture": 3.0,
@@ -4695,29 +4257,6 @@
       "containsGluten": 1,
       "energizing": 2.5,
       "sweet": 5.0
-    },
-    "Sweetened Coffee": {
-      "crunch": 2.0,
-      "bitter": 3.5,
-      "moisture": 3.5,
-      "health": 3.0,
-      "caffeine": 5.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "energizing": 6.5,
-      "sweet": 5.0
-    },
-    "Sweetened Tea": {
-      "crunch": 2.0,
-      "bitter": 1.5,
-      "moisture": 7.0,
-      "health": 4.5,
-      "temperature": 6.5,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "energizing": 2.5,
-      "sweet": 5.0,
-      "calming": 4.0
     },
     "Tamago Sushi": {
       "soft": 6.0,
@@ -4731,17 +4270,6 @@
       "filling": 4.5,
       "salty": 1.5
     },
-    "Tea Coffee Mix": {
-      "bitter": 5.0,
-      "moisture": 5.5,
-      "health": 5.5,
-      "temperature": 6.5,
-      "isVegetarian": 1,
-      "caffeine": 5.0,
-      "isVegan": 1,
-      "energizing": 4.0,
-      "calming": 4.0
-    },
     "Toast with Salad": {
       "crunch": 7.5,
       "moisture": 3.0,
@@ -4752,20 +4280,6 @@
       "filling": 3.0,
       "containsGluten": 1,
       "sour": 1.5
-    },
-    "Tomato Cheese": {
-      "soft": 6.5,
-      "grease": 2.0,
-      "moisture": 6.0,
-      "health": 5.5,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "savory": 3.0,
-      "filling": 2.0,
-      "sweet": 1.5,
-      "calming": 1.0,
-      "sour": 2.5,
-      "salty": 2.5
     },
     "Tomato Toast": {
       "crunch": 4.0,
@@ -4779,32 +4293,6 @@
       "containsGluten": 1,
       "sweet": 1.5,
       "sour": 2.5
-    },
-    "Vinaigrette": {
-      "soft": 8.0,
-      "grease": 5.0,
-      "moisture": 7.5,
-      "health": 4.0,
-      "isVegetarian": 1,
-      "isVegan": 1,
-      "sweet": 1.5,
-      "sour": 2.5
-    },
-    "Void Choco": {
-      "bitter": 1.5,
-      "soft": 5.5,
-      "moisture": 2.5,
-      "voidLevel": 4.0,
-      "temperature": 2.5,
-      "health": 1.0,
-      "isVegetarian": 1,
-      "savory": 1.0,
-      "filling": 0.5,
-      "fear": 1.5,
-      "energizing": 1.0,
-      "sweet": 4.0,
-      "calming": 1.5,
-      "sanity": -2.5
     },
     "Void Ice Cream": {
       "soft": 7.5,

@@ -24,6 +24,24 @@ export class ApplianceManager {
             displayCosts[item] = this.callbacks.getAtomCostWithArtifacts(item, baseCost);
         });
 
+        // Softlock check: if broke with no items, trigger divine intervention
+        const cheapestCost = Math.min(...Object.values(displayCosts));
+
+        if (this.state.money < cheapestCost && this.state.countertop.length === 0) {
+            // Calculate sanity loss (20% rounded, minimum keeps sanity at 1)
+            const sanityLoss = Math.round(this.state.sanity * 0.2);
+            const actualSanityLoss = Math.min(sanityLoss, this.state.sanity - 1);
+
+            this.state.money += cheapestCost;
+            this.state.sanity -= actualSanityLoss;
+
+            this.callbacks.onLog(">> ELDRITCH INTERVENTION <<", "system");
+            this.callbacks.onLog(`Reality warps. Something vast and incomprehensible stirs in the void.`, "system");
+            this.callbacks.onLog(`It finds your poverty... amusing. Emergency funds materialize: +$${cheapestCost}`, "system");
+            this.callbacks.onLog(`The encounter fractures your psyche: -${actualSanityLoss} sanity`, "error");
+            this.callbacks.onRender();
+        }
+
         UI.showFridgeModal(
             this.state.availableIngredients,
             displayCosts,
