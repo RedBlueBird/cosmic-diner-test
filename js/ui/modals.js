@@ -140,7 +140,7 @@ export function showGameOver(reason, day, customersServed) {
 }
 
 // Show victory screen
-export function showVictory(day, money, sanity) {
+export function showVictory(day, money, sanity, bossName = "THE BOSS") {
     const panel = document.getElementById('log-panel');
     const victoryDiv = document.createElement('div');
     victoryDiv.className = "game-over";
@@ -149,8 +149,8 @@ export function showVictory(day, money, sanity) {
         =============================<br>
         VICTORY!<br>
         =============================<br>
-        YOU DEFEATED GORDON G!<br>
-        THE FOOD CRITIC HAS BEEN SATISFIED!<br>
+        YOU DEFEATED ${bossName.toUpperCase()}!<br>
+        THE BOSS HAS BEEN SATISFIED!<br>
         <br>
         FINAL STATS:<br>
         Days Survived: ${day}<br>

@@ -1,7 +1,7 @@
 // CustomerManager.js - Customer and serving logic
 
-import { FEEDBACK_CATEGORIES, GORDON_G_CONFIG, TASTE_TEST_SANITY_COST, TERRIBLE_SERVICE_SANITY_PENALTY, POOR_SERVICE_SANITY_PENALTY, GORDON_BASE_BONUS, GORDON_VICTORY_BONUS, GORDON_BOSS_DAY, GORDON_PERFECT_DISTANCE, GORDON_EXCELLENT_DISTANCE, GORDON_PERFECT_BONUS, GORDON_EXCELLENT_BONUS, GORDON_ACCEPTABLE_BONUS } from '../config.js';
-import { getCustomerTypes } from '../data/DataStore.js';
+import { FEEDBACK_CATEGORIES, TASTE_TEST_SANITY_COST, TERRIBLE_SERVICE_SANITY_PENALTY, POOR_SERVICE_SANITY_PENALTY } from '../config.js';
+import { getCustomerTypes, getBossForDay } from '../data/DataStore.js';
 import { getItemName, getFoodAttributes } from '../utils/ItemUtils.js';
 import { getTasteFeedback, getDemandHints } from '../services/FeedbackService.js';
 import { calculateDistance, calculatePayment, getSatisfactionRating } from '../services/PaymentService.js';
@@ -28,11 +28,12 @@ export class CustomerManager {
 
     nextCustomer() {
         if (!this.state.isDayActive) return;
+        if (this.state.customer && this.state.customer.isBoss) return;
 
-        // Check if this is the final customer of Day 5 (Gordon G boss fight)
-        // Gordon G only appears on Day 5 and not in endless mode
-        if (this.state.day === GORDON_BOSS_DAY && !this.state.endlessMode && this.state.customersServedCount === this.state.customersPerDay - 1) {
-            this.spawnGordonG();
+        // Check if a boss should spawn as the final customer of the day
+        const boss = getBossForDay(this.state.day);
+        if (boss && !this.state.endlessMode && this.state.customersServedCount === this.state.customersPerDay - 1) {
+            this.spawnBoss(boss);
             return;
         }
 
@@ -51,26 +52,27 @@ export class CustomerManager {
         this.callbacks.onRender();
     }
 
-    spawnGordonG() {
+    spawnBoss(bossData) {
         this.state.customer = {
-            name: GORDON_G_CONFIG.name,
+            name: bossData.name,
             isBoss: true,
-            coursesRequired: GORDON_G_CONFIG.coursesRequired,
+            coursesRequired: bossData.orders.length,
             coursesServed: 0,
-            orders: GORDON_G_CONFIG.orders,
+            orders: bossData.orders,
             currentCourse: 0,
-            avatar: GORDON_G_CONFIG.avatar
+            avatar: bossData.avatar,
+            victoryBonus: bossData.victoryBonus || 0
         };
 
         this.callbacks.onLog("======================", "system");
         this.callbacks.onLog("BOSS CUSTOMER ARRIVED!", "system");
-        this.callbacks.onLog("GORDON G. SCOWLING - FOOD CRITIC", "system");
+        this.callbacks.onLog(`${bossData.name.toUpperCase()} - ${bossData.title}`, "system");
         this.callbacks.onLog("======================", "system");
-        this.callbacks.onLog("He demands a 3-COURSE MEAL!", "design");
-        this.callbacks.onLog("His standards are IMPOSSIBLY HIGH!", "design");
-        this.callbacks.onLog("Match his demands closely or face his WRATH!", "design");
+        this.callbacks.onLog(`They demand a ${bossData.orders.length}-COURSE MEAL!`, "design");
+        this.callbacks.onLog("Their standards are IMPOSSIBLY HIGH!", "design");
+        this.callbacks.onLog("Match their demands closely or face their WRATH!", "design");
 
-        this.callbacks.updateGordonDisplay(this.state.customer);
+        this.callbacks.updateBossDisplay(this.state.customer);
         this.callbacks.onRender();
     }
 
@@ -177,7 +179,7 @@ export class CustomerManager {
         const item = getItemName(itemObj);
 
         if (this.state.customer.isBoss) {
-            this.serveGordonG(itemObj);
+            this.serveBoss(itemObj);
             return;
         }
 
@@ -285,7 +287,7 @@ export class CustomerManager {
         this.advanceCustomer();
     }
 
-    serveGordonG(itemObj) {
+    serveBoss(itemObj) {
         const item = getItemName(itemObj);
         const currentOrder = this.state.customer.orders[this.state.customer.currentCourse];
 
@@ -300,17 +302,15 @@ export class CustomerManager {
         const orderHints = getDemandHints(demandVector);
         this.callbacks.onLog(`Order: ${orderHints}`);
 
-        this.callbacks.onLog(`Gordon G. scrutinizes the ${item} intensely...`);
+        this.callbacks.onLog(`${this.state.customer.name} scrutinizes the ${item} intensely...`);
 
         if (distance <= currentOrder.maxDistance) {
-            const baseBonus = GORDON_BASE_BONUS;
-            const perfectBonus = distance <= GORDON_PERFECT_DISTANCE ? GORDON_PERFECT_BONUS : (distance <= GORDON_EXCELLENT_DISTANCE ? GORDON_EXCELLENT_BONUS : GORDON_ACCEPTABLE_BONUS);
-            const totalBonus = baseBonus + perfectBonus;
+            const payment = calculatePayment(distance);
 
             let comment;
-            if (distance <= GORDON_PERFECT_DISTANCE) {
+            if (satisfaction.rating === "PERFECT") {
                 comment = `MAGNIFICENT! This ${currentOrder.name} is PERFECT!`;
-            } else if (distance <= GORDON_EXCELLENT_DISTANCE) {
+            } else if (satisfaction.rating === "EXCELLENT") {
                 comment = `Excellent work. This ${currentOrder.name} meets my high standards.`;
             } else {
                 comment = `Acceptable. This ${currentOrder.name} will do.`;
@@ -318,8 +318,8 @@ export class CustomerManager {
             this.callbacks.onLog(`Comment: "${comment}"`, "system");
 
             this.callbacks.onLog(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`);
-            this.state.money += totalBonus;
-            this.callbacks.onLog(`Received $${totalBonus}.`, "system");
+            this.state.money += Math.floor(payment);
+            this.callbacks.onLog(`Received $${Math.floor(payment)}.`, "system");
 
             this.state.customer.currentCourse++;
             this.state.customer.coursesServed++;
@@ -330,20 +330,20 @@ export class CustomerManager {
 
             if (this.state.customer.coursesServed >= this.state.customer.coursesRequired) {
                 setTimeout(() => {
-                    this.defeatGordonG();
+                    this.defeatBoss();
                 }, 1500);
             } else {
                 setTimeout(() => {
                     this.callbacks.onLog(`===================================`, "system");
                     this.callbacks.onLog(`Next course: ${this.state.customer.orders[this.state.customer.currentCourse].name}`, "system");
-                    this.callbacks.updateGordonDisplay(this.state.customer);
+                    this.callbacks.updateBossDisplay(this.state.customer);
                     this.callbacks.onRender();
                 }, 1500);
             }
         } else {
             this.callbacks.onLog(`Comment: "DISGRACEFUL! This is NOTHING like a proper ${currentOrder.name}!"`, "error");
             this.callbacks.onLog(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`, "error");
-            this.callbacks.onLog("Gordon G smashes his clipboard on the table!", "error");
+            this.callbacks.onLog(`${this.state.customer.name} is FURIOUS!`, "error");
             this.callbacks.onLog("CRITICAL FAILURE - BOSS BATTLE LOST!", "error");
 
             this.state.countertop.splice(this.state.selectedIndices[0], 1);
@@ -351,20 +351,25 @@ export class CustomerManager {
             this.callbacks.onRender();
 
             setTimeout(() => {
-                this.callbacks.onGameOver("GORDON G DEFEATED YOU");
+                this.callbacks.onGameOver(`${this.state.customer.name.toUpperCase()} DEFEATED YOU`);
             }, 2000);
         }
     }
 
-    defeatGordonG() {
+    defeatBoss() {
+        const bossName = this.state.customer.name;
+        const victoryBonus = this.state.customer.victoryBonus || 0;
+
         this.callbacks.onLog("======================", "system");
-        this.callbacks.onLog("GORDON G: 'Magnificent! A perfect 3-course meal!'", "system");
-        this.callbacks.onLog("GORDON G: 'Your cooking... it's RAW TALENT!'", "system");
+        this.callbacks.onLog(`${bossName}: 'Magnificent! A perfect ${this.state.customer.coursesRequired}-course meal!'`, "system");
+        this.callbacks.onLog(`${bossName}: 'Your cooking... it's RAW TALENT!'`, "system");
         this.callbacks.onLog("======================", "system");
         this.callbacks.onLog("BOSS DEFEATED!", "system");
 
-        this.state.money += GORDON_VICTORY_BONUS;
-        this.callbacks.onLog(`Received $${GORDON_VICTORY_BONUS} BOSS BONUS!`);
+        if (victoryBonus > 0) {
+            this.state.money += victoryBonus;
+            this.callbacks.onLog(`Received $${victoryBonus} BOSS BONUS!`);
+        }
 
         this.state.customersServedCount++;
         this.callbacks.onRender();
@@ -378,14 +383,14 @@ export class CustomerManager {
             // Only show victory if solvent
             if (!result.bankrupt) {
                 setTimeout(() => {
-                    this.showVictory();
+                    this.showVictory(bossName);
                 }, 1000);
             }
         }, 2000);
     }
 
-    showVictory() {
-        this.callbacks.onLog("=== YOU DEFEATED GORDON G! ===", "system");
-        this.callbacks.showVictory(this.state.day, this.state.money, this.state.sanity);
+    showVictory(bossName) {
+        this.callbacks.onLog(`=== YOU DEFEATED ${bossName.toUpperCase()}! ===`, "system");
+        this.callbacks.showVictory(this.state.day, this.state.money, this.state.sanity, bossName);
     }
 }

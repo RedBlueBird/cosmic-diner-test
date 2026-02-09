@@ -122,8 +122,8 @@ export class Game {
             isMerchantActive: () => this.merchant ? this.merchant.isMerchantActive() : false,
             onProcessEndOfDayEffects: () => this.days.processEndOfDayEffects(),
             updateCustomerDisplay: (customer) => UI.updateCustomerDisplay(customer),
-            updateGordonDisplay: (customer) => UI.updateGordonDisplay(customer),
-            showVictory: (day, money, sanity) => UI.showVictory(day, money, sanity)
+            updateBossDisplay: (customer) => UI.updateBossDisplay(customer),
+            showVictory: (day, money, sanity, bossName) => UI.showVictory(day, money, sanity, bossName)
         });
 
         // Day Manager
@@ -307,7 +307,7 @@ export class Game {
     continueEndlessMode() {
         this.endlessMode = true;
         this.log("=== ENTERING ENDLESS MODE ===", "system");
-        this.log("Gordon G is satisfied. The diner continues...", "system");
+        this.log("The boss is satisfied. The diner continues...", "system");
         this.log("Endless customers await!", "design");
 
         // Hide victory modal

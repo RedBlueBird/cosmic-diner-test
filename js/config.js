@@ -23,16 +23,6 @@ export const TASTE_TEST_SANITY_COST = 10;
 export const TERRIBLE_SERVICE_SANITY_PENALTY = 15;
 export const POOR_SERVICE_SANITY_PENALTY = 5;
 
-// Gordon G boss
-export const GORDON_BOSS_DAY = 5;
-export const GORDON_BASE_BONUS = 25;
-export const GORDON_VICTORY_BONUS = 50;
-export const GORDON_PERFECT_DISTANCE = 3;
-export const GORDON_EXCELLENT_DISTANCE = 5;
-export const GORDON_PERFECT_BONUS = 15;
-export const GORDON_EXCELLENT_BONUS = 10;
-export const GORDON_ACCEPTABLE_BONUS = 5;
-
 // Divine intervention (softlock prevention)
 export const DIVINE_INTERVENTION_SANITY_RATE = 0.2;
 
@@ -116,37 +106,4 @@ export const ATTR_DESCRIPTIONS = {
     isRaw: val => val >= 1 ? "RAW" : null,
     isBurnt: val => val >= 1 ? "burnt" : null,
     containsGluten: val => val >= 1 ? "with gluten" : null,
-};
-
-// Gordon G boss configuration
-export const GORDON_G_CONFIG = {
-    name: "Gordon G. Scowling",
-    coursesRequired: 3,
-    avatar: `  [G]
- <|||>
-  /|\\
-  / \\`,
-    orders: [
-        {
-            name: "Appetizer",
-            hint: "A PROPER salad! Fresh, crunchy, with oil dressing. HEALTHY!",
-            demand: { crunch: 6, sour: 4, grease: 4, health: 8, isVegan: 1 },
-            idealItem: "Dressed Salad",
-            maxDistance: 8,
-        },
-        {
-            name: "Main Course",
-            hint: "The ULTIMATE beef bowl! Savory, filling, with EGG! PERFECTION!",
-            demand: { savory: 9, salty: 6, filling: 10, temperature: 8, calming: 4 },
-            idealItem: "Deluxe Beef Bowl",
-            maxDistance: 8,
-        },
-        {
-            name: "Dessert",
-            hint: "A chocolate shake! COLD. SWEET. CREAMY. ICE COLD!",
-            demand: { sweet: 9, soft: 10, moisture: 8, temperature: 1, calming: 4 },
-            idealItem: "Chocolate Shake",
-            maxDistance: 8,
-        }
-    ]
 };

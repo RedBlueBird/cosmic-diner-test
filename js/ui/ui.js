@@ -165,14 +165,14 @@ export function updateCustomerDisplay(customer) {
     document.getElementById('customer-order').textContent = customer.orderHints || "???";
 }
 
-// Update Gordon G boss display
-export function updateGordonDisplay(customer) {
+// Update boss customer display
+export function updateBossDisplay(customer) {
     document.getElementById('customer-name').textContent = customer.name + " [BOSS]";
     document.getElementById('customer-avatar').textContent = customer.avatar;
 
     const currentOrder = customer.orders[customer.currentCourse];
     document.getElementById('customer-quote').textContent = currentOrder.hint;
-    document.getElementById('customer-order').textContent = `Course ${customer.currentCourse + 1}/3: ???`;
+    document.getElementById('customer-order').textContent = `Course ${customer.currentCourse + 1}/${customer.orders.length}: ???`;
 }
 
 // Update merchant display in right panel

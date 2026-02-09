@@ -8,7 +8,7 @@ export {
     updateApplianceButtons,
     updateArtifactsDisplay,
     updateCustomerDisplay,
-    updateGordonDisplay,
+    updateBossDisplay,
     updateMerchantDisplay,
     hideMerchantDisplay,
     updateConsumablesDisplay

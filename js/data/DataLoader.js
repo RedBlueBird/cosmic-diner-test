@@ -6,6 +6,7 @@ import {
     setFoodAttributes,
     setTasteFeedback,
     setCustomerTypes,
+    setBossCustomers,
     setArtifacts,
     setConsumables,
     createFoodAttr
@@ -104,7 +105,8 @@ export async function loadCustomers() {
     try {
         const response = await fetch('data/customers.json');
         const data = await response.json();
-        setCustomerTypes(data);
+        setCustomerTypes(data.customers);
+        setBossCustomers(data.bossCustomers || []);
         console.log('Customer data loaded successfully');
         return true;
     } catch (error) {

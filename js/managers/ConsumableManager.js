@@ -147,7 +147,7 @@ export class ConsumableManager {
         }
 
         if (this.state.customer.isBoss) {
-            this.callbacks.onLog("Cannot serve emergency rations to GORDON G!", "error");
+            this.callbacks.onLog("Cannot serve emergency rations to the boss!", "error");
             throw new Error("Cannot serve to boss");
         }
 
@@ -228,7 +228,7 @@ export class ConsumableManager {
         }
 
         if (this.state.customer.isBoss) {
-            this.callbacks.onLog("Cannot skip GORDON G!", "error");
+            this.callbacks.onLog("Cannot skip the boss!", "error");
             throw new Error("Cannot skip boss");
         }
 

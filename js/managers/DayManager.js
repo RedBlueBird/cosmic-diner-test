@@ -1,6 +1,6 @@
 // DayManager.js - Day progression and rent management
 
-import { APPLIANCE_UNLOCK_DAYS, CUSTOMERS_PER_DAY, RENT_MULTIPLIER, END_OF_DAY_SANITY_RESTORE, GORDON_BOSS_DAY, MERCHANT_START_DAY } from '../config.js';
+import { APPLIANCE_UNLOCK_DAYS, CUSTOMERS_PER_DAY, RENT_MULTIPLIER, END_OF_DAY_SANITY_RESTORE, MERCHANT_START_DAY } from '../config.js';
 import { runEffectHook } from '../effects/EffectHandlerRegistry.js';
 
 export class DayManager {
@@ -48,8 +48,9 @@ export class DayManager {
             return; // Game over already triggered
         }
 
-        // Show artifact selection if (before day 5 OR in endless mode) and pool has artifacts
-        if ((this.state.day < GORDON_BOSS_DAY || this.state.endlessMode) && this.state.artifactPool.length > 0) {
+        // Show artifact selection if pool has artifacts
+        // (Boss days handle their own end-of-day flow via defeatBoss, so endDay is only called on non-boss days)
+        if (this.state.artifactPool.length > 0) {
             setTimeout(() => this.callbacks.showArtifactSelection(), 2000);
         } else {
             setTimeout(() => this.startNextDay(), 3000);

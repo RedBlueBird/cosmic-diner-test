@@ -10,6 +10,7 @@ let DEFAULT_ATTRIBUTES = {};
 let FOOD_ATTRIBUTES = {};
 let TASTE_FEEDBACK = {};
 let CUSTOMER_TYPES = [];
+let BOSS_CUSTOMERS = [];
 let ARTIFACTS = [];
 let CONSUMABLES = [];
 
@@ -36,6 +37,10 @@ export function setTasteFeedback(data) {
 
 export function setCustomerTypes(data) {
     CUSTOMER_TYPES = data;
+}
+
+export function setBossCustomers(data) {
+    BOSS_CUSTOMERS = data;
 }
 
 export function setArtifacts(data) {
@@ -81,6 +86,14 @@ export function getTasteFeedbackData() {
 
 export function getCustomerTypes() {
     return CUSTOMER_TYPES;
+}
+
+export function getBossCustomers() {
+    return BOSS_CUSTOMERS;
+}
+
+export function getBossForDay(day) {
+    return BOSS_CUSTOMERS.find(boss => boss.spawnDay === day) || null;
 }
 
 export function getArtifacts() {
