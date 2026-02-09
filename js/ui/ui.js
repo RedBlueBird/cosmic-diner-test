@@ -200,7 +200,7 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) 
         btn.onclick = () => onBuyConsumable(item.id, item.price);
 
         // Add tooltip
-        createTooltip(btn, item.name, `${item.description}\n\n(Click to purchase)`);
+        createTooltip(btn, item.name, `${item.description}\n\n(Left Click to purchase)`);
 
         consumablesDiv.appendChild(btn);
     });
@@ -222,7 +222,7 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) 
         btn.onclick = () => onBuyFood(item.name, item.price, item.usageCost);
 
         // Add tooltip with usage cost information
-        const tooltipText = `One-time recipe purchase,\nthen $${item.usageCost}/use from Fridge\n\n(Click to purchase)`;
+        const tooltipText = `One-time recipe purchase,\nthen $${item.usageCost}/use from Fridge\n\n(Left Click to purchase)`;
         createTooltip(btn, item.name, tooltipText);
 
         foodsDiv.appendChild(btn);
@@ -266,8 +266,14 @@ export function updateConsumablesDisplay(inventory, gameState) {
         btn.textContent = `${consumable.name} (${quantity})`;
         btn.onclick = () => gameState.onUseConsumable(id);
 
-        // Add tooltip with consumable description
-        createTooltip(btn, consumable.description);
+        btn.oncontextmenu = (e) => {
+            e.preventDefault();
+            window.game.discardConsumable(id);
+        };
+
+        // Add tooltip with consumable description and discard hint
+        const tooltipText = `${consumable.description}\n\n(Right-click to discard)`;
+        createTooltip(btn, tooltipText);
 
         list.appendChild(btn);
     });

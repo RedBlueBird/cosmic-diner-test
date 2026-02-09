@@ -234,4 +234,25 @@ export class ConsumableManager {
             }, 1000);
         }
     }
+
+    discardConsumable(consumableId) {
+        const consumable = getConsumableById(consumableId);
+        const qty = this.state.consumableInventory[consumableId] || 0;
+
+        if (qty <= 0) {
+            this.callbacks.onLog(`You don't have any ${consumable.name} to discard!`, "error");
+            return;
+        }
+
+        // Remove one from inventory
+        this.state.consumableInventory[consumableId]--;
+
+        // Clear selection if this was the selected consumable
+        if (this.state.selectedConsumable === consumableId) {
+            this.state.selectedConsumable = null;
+        }
+
+        this.callbacks.onLog(`Discarded ${consumable.name}.`);
+        this.callbacks.onRender();
+    }
 }

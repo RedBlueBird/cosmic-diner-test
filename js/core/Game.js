@@ -259,6 +259,10 @@ export class Game {
         this.consumables.useConsumable();
     }
 
+    discardConsumable(consumableId) {
+        this.consumables.discardConsumable(consumableId);
+    }
+
     grantConsumable(consumableId, quantity = 1) {
         this.consumables.grantConsumable(consumableId, quantity);
     }
