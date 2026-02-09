@@ -1,5 +1,8 @@
 // Game configuration constants
 
+// Consumable system
+export const MAX_CONSUMABLES = 5;
+
 export const APPLIANCE_UNLOCK_DAYS = {
     fridge: 1,
     pan: 1,

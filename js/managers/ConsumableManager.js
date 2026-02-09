@@ -1,5 +1,6 @@
 // ConsumableManager.js - Consumables system management
 
+import { MAX_CONSUMABLES } from '../config.js';
 import { getConsumables, getConsumableById, getRecipes, getAtoms } from '../data/DataStore.js';
 import { createItemObject, getItemName, getItemModifiers, getFoodAttributes } from '../utils/ItemUtils.js';
 
@@ -12,16 +13,38 @@ export class ConsumableManager {
     grantRandomConsumable() {
         const consumables = getConsumables();
         const random = consumables[Math.floor(Math.random() * consumables.length)];
-        this.grantConsumable(random.id, 1);
-        this.callbacks.onLog(`STARTING BONUS: Received ${random.name}!`, "system");
+        const success = this.grantConsumable(random.id, 1);
+        if (success) {
+            this.callbacks.onLog(`STARTING BONUS: Received ${random.name}!`, "system");
+        } else {
+            // Extremely unlikely, but handle gracefully
+            this.callbacks.onLog(`STARTING BONUS: Could not grant consumable (inventory full)`, "error");
+        }
+    }
+
+    getTotalConsumables() {
+        return Object.keys(this.state.consumableInventory)
+            .reduce((sum, id) => sum + (this.state.consumableInventory[id] || 0), 0);
     }
 
     grantConsumable(consumableId, quantity = 1) {
+        // Calculate current total consumables (sum of all quantities)
+        const currentTotal = this.getTotalConsumables();
+
+        // Check if adding this quantity would exceed capacity
+        if (currentTotal + quantity > MAX_CONSUMABLES) {
+            const consumable = getConsumableById(consumableId);
+            this.callbacks.onLog(`Cannot carry more than ${MAX_CONSUMABLES} consumables! Discard some first.`, "error");
+            return false; // Indicate failure
+        }
+
+        // Grant the consumable
         if (!this.state.consumableInventory[consumableId]) {
             this.state.consumableInventory[consumableId] = 0;
         }
         this.state.consumableInventory[consumableId] += quantity;
         this.callbacks.onRender();
+        return true; // Indicate success
     }
 
     selectConsumable(consumableId) {

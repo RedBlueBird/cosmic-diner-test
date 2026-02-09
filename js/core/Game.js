@@ -264,7 +264,11 @@ export class Game {
     }
 
     grantConsumable(consumableId, quantity = 1) {
-        this.consumables.grantConsumable(consumableId, quantity);
+        return this.consumables.grantConsumable(consumableId, quantity);
+    }
+
+    getTotalConsumables() {
+        return this.consumables.getTotalConsumables();
     }
 
     showMerchant() {

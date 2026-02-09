@@ -151,13 +151,19 @@ export class MerchantManager {
 
         const consumable = getConsumableById(consumableId);
         this.state.money -= price;
-        this.callbacks.grantConsumable(consumableId, 1);
-        this.callbacks.onLog(`Purchased ${consumable.name} for $${price}!`, "system");
 
-        // Remove from stock
-        this.currentStock.consumables = this.currentStock.consumables.filter(
-            c => c.id !== consumableId
-        );
+        const success = this.callbacks.grantConsumable(consumableId, 1);
+        if (success) {
+            this.callbacks.onLog(`Purchased ${consumable.name} for $${price}!`, "system");
+
+            // Remove from stock
+            this.currentStock.consumables = this.currentStock.consumables.filter(
+                c => c.id !== consumableId
+            );
+        } else {
+            // Refund the money since purchase failed
+            this.state.money += price;
+        }
 
         // Update the UI with new stock and money
         this.updateMerchantUI();

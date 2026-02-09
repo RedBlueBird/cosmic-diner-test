@@ -250,6 +250,16 @@ export function updateConsumablesDisplay(inventory, gameState) {
 
     const consumableIds = Object.keys(inventory).filter(id => inventory[id] > 0);
 
+    // Calculate TOTAL quantity (not unique types)
+    const totalQuantity = consumableIds.reduce((sum, id) => sum + inventory[id], 0);
+
+    // Update consumables count in heading
+    const countElement = document.getElementById('consumables-count');
+    if (countElement) {
+        countElement.textContent = `(${totalQuantity}/5)`;
+        countElement.style.color = totalQuantity >= 5 ? '#ff3333' : '#ffff00'; // Red when full
+    }
+
     if (consumableIds.length === 0) {
         list.innerHTML = '<div style="color: #888; text-align: center;">No consumables available</div>';
         return;
