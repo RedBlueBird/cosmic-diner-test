@@ -24,11 +24,38 @@ export const TERRIBLE_SERVICE_SANITY_PENALTY = 15;
 export const POOR_SERVICE_SANITY_PENALTY = 5;
 
 // Gordon G boss
+export const GORDON_BOSS_DAY = 5;
 export const GORDON_BASE_BONUS = 25;
 export const GORDON_VICTORY_BONUS = 50;
+export const GORDON_PERFECT_DISTANCE = 3;
+export const GORDON_EXCELLENT_DISTANCE = 5;
+export const GORDON_PERFECT_BONUS = 15;
+export const GORDON_EXCELLENT_BONUS = 10;
+export const GORDON_ACCEPTABLE_BONUS = 5;
 
 // Divine intervention (softlock prevention)
 export const DIVINE_INTERVENTION_SANITY_RATE = 0.2;
+
+// Merchant system
+export const MERCHANT_CONSUMABLE_BASE_PRICES = { common: 5, uncommon: 8, rare: 12, legendary: 20 };
+export const MERCHANT_FOOD_BASE_PRICE = 15;
+export const MERCHANT_BASE_USAGE_COST = 2;
+export const MERCHANT_CONSUMABLE_PRICE_MULTIPLIER = 1.2;
+export const MERCHANT_FOOD_PRICE_MULTIPLIER = 1.2;
+export const MERCHANT_START_DAY = 2;
+export const MERCHANT_STOCK_COUNT = 3;
+
+// Payment formula: PAYMENT_BASE * PAYMENT_DECAY_BASE ^ (-distance ^ PAYMENT_DISTANCE_EXPONENT)
+export const PAYMENT_BASE = 30;
+export const PAYMENT_DECAY_BASE = 1.1;
+export const PAYMENT_DISTANCE_EXPONENT = 1.2;
+
+// Satisfaction distance thresholds: PERFECT, EXCELLENT, GOOD, OKAY, POOR
+export const SATISFACTION_THRESHOLDS = [2, 5, 8, 11, 14];
+
+// Demand hint thresholds (FeedbackService)
+export const DEMAND_HINT_STRONG_THRESHOLD = 5;
+export const DEMAND_HINT_MODERATE_THRESHOLD = 3;
 
 // Consumable system
 export const MAX_CONSUMABLES = 5;

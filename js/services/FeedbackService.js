@@ -1,7 +1,7 @@
 // FeedbackService.js - Taste feedback and demand hints
 
 import { getTasteFeedbackData } from '../data/DataStore.js';
-import { ATTR_DESCRIPTIONS } from '../config.js';
+import { ATTR_DESCRIPTIONS, DEMAND_HINT_STRONG_THRESHOLD, DEMAND_HINT_MODERATE_THRESHOLD } from '../config.js';
 
 // Get feedback message for an attribute value
 export function getTasteFeedback(attribute, value) {
@@ -27,9 +27,9 @@ export function getDemandHints(demand) {
             if (typeof desc === 'function') {
                 const result = desc(val);
                 if (result) hints.push(result);
-            } else if (val >= 5) {
+            } else if (val >= DEMAND_HINT_STRONG_THRESHOLD) {
                 hints.push(desc.toUpperCase());
-            } else if (val >= 3) {
+            } else if (val >= DEMAND_HINT_MODERATE_THRESHOLD) {
                 hints.push(desc);
             }
         }

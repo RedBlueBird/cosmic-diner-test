@@ -1,17 +1,7 @@
 // MerchantManager.js - Morning Merchant system
 
+import { MERCHANT_CONSUMABLE_BASE_PRICES, MERCHANT_FOOD_BASE_PRICE, MERCHANT_BASE_USAGE_COST, MERCHANT_CONSUMABLE_PRICE_MULTIPLIER, MERCHANT_FOOD_PRICE_MULTIPLIER, MERCHANT_START_DAY, MERCHANT_STOCK_COUNT } from '../config.js';
 import { getConsumables, getConsumableById, getAllFoods } from '../data/DataStore.js';
-
-// Base prices for consumables by rarity
-const CONSUMABLE_BASE_PRICES = {
-    common: 5,
-    uncommon: 8,
-    rare: 12,
-    legendary: 20
-};
-
-// Base price for foods
-const FOOD_BASE_PRICE = 15;
 
 export class MerchantManager {
     constructor(gameState, callbacks) {
@@ -31,8 +21,8 @@ export class MerchantManager {
      * Calculate price with day multiplier
      * Day 2 = 1x, Day 3 = 1.2x, Day 4 = 1.44x
      */
-    calculatePrice(basePrice) {
-        const multiplier = Math.pow(1.2, this.state.day - 2);
+    calculatePrice(basePrice, priceMultiplier) {
+        const multiplier = Math.pow(priceMultiplier, this.state.day - MERCHANT_START_DAY);
         return Math.ceil(basePrice * multiplier);
     }
 
@@ -42,9 +32,8 @@ export class MerchantManager {
      * This cost is locked in at purchase time
      */
     calculateUsageCost() {
-        const baseCost = 2;
-        const multiplier = Math.pow(1.2, this.state.day - 2);
-        return Math.ceil(baseCost * multiplier);
+        const multiplier = Math.pow(MERCHANT_FOOD_PRICE_MULTIPLIER, this.state.day - MERCHANT_START_DAY);
+        return Math.ceil(MERCHANT_BASE_USAGE_COST * multiplier);
     }
 
     /**
@@ -63,25 +52,25 @@ export class MerchantManager {
     }
 
     /**
-     * Get 3 random consumables (no duplicates)
+     * Get random consumables (no duplicates)
      */
     generateConsumableStock() {
         const allConsumables = getConsumables();
         const shuffled = [...allConsumables].sort(() => Math.random() - 0.5);
-        const selected = shuffled.slice(0, 3);
+        const selected = shuffled.slice(0, MERCHANT_STOCK_COUNT);
 
         return selected.map(c => ({
             id: c.id,
             name: c.name,
             description: c.description,
             rarity: c.rarity,
-            basePrice: CONSUMABLE_BASE_PRICES[c.rarity] || 10,
-            price: this.calculatePrice(CONSUMABLE_BASE_PRICES[c.rarity] || 10)
+            basePrice: MERCHANT_CONSUMABLE_BASE_PRICES[c.rarity] || 10,
+            price: this.calculatePrice(MERCHANT_CONSUMABLE_BASE_PRICES[c.rarity] || 10, MERCHANT_CONSUMABLE_PRICE_MULTIPLIER)
         }));
     }
 
     /**
-     * Get 3 random foods not already in availableIngredients
+     * Get random foods not already in availableIngredients
      */
     generateFoodStock() {
         const allFoods = getAllFoods();
@@ -91,16 +80,16 @@ export class MerchantManager {
             food => !this.state.availableIngredients.includes(food)
         );
 
-        // Shuffle and take up to 3
+        // Shuffle and take up to stock count
         const shuffled = [...notUnlocked].sort(() => Math.random() - 0.5);
-        const selected = shuffled.slice(0, 3);
+        const selected = shuffled.slice(0, MERCHANT_STOCK_COUNT);
 
         const usageCost = this.calculateUsageCost();
 
         return selected.map(name => ({
             name,
-            basePrice: FOOD_BASE_PRICE,
-            price: this.calculatePrice(FOOD_BASE_PRICE),
+            basePrice: MERCHANT_FOOD_BASE_PRICE,
+            price: this.calculatePrice(MERCHANT_FOOD_BASE_PRICE, MERCHANT_FOOD_PRICE_MULTIPLIER),
             usageCost: usageCost // Cost per use from fridge (locked in)
         }));
     }

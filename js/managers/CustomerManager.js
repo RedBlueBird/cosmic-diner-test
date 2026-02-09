@@ -1,6 +1,6 @@
 // CustomerManager.js - Customer and serving logic
 
-import { FEEDBACK_CATEGORIES, GORDON_G_CONFIG, TASTE_TEST_SANITY_COST, TERRIBLE_SERVICE_SANITY_PENALTY, POOR_SERVICE_SANITY_PENALTY, GORDON_BASE_BONUS, GORDON_VICTORY_BONUS } from '../config.js';
+import { FEEDBACK_CATEGORIES, GORDON_G_CONFIG, TASTE_TEST_SANITY_COST, TERRIBLE_SERVICE_SANITY_PENALTY, POOR_SERVICE_SANITY_PENALTY, GORDON_BASE_BONUS, GORDON_VICTORY_BONUS, GORDON_BOSS_DAY, GORDON_PERFECT_DISTANCE, GORDON_EXCELLENT_DISTANCE, GORDON_PERFECT_BONUS, GORDON_EXCELLENT_BONUS, GORDON_ACCEPTABLE_BONUS } from '../config.js';
 import { getCustomerTypes } from '../data/DataStore.js';
 import { getItemName, getFoodAttributes } from '../utils/ItemUtils.js';
 import { getTasteFeedback, getDemandHints } from '../services/FeedbackService.js';
@@ -31,7 +31,7 @@ export class CustomerManager {
 
         // Check if this is the final customer of Day 5 (Gordon G boss fight)
         // Gordon G only appears on Day 5 and not in endless mode
-        if (this.state.day === 5 && !this.state.endlessMode && this.state.customersServedCount === this.state.customersPerDay - 1) {
+        if (this.state.day === GORDON_BOSS_DAY && !this.state.endlessMode && this.state.customersServedCount === this.state.customersPerDay - 1) {
             this.spawnGordonG();
             return;
         }
@@ -94,7 +94,7 @@ export class CustomerManager {
 
         this.state.sanity -= sanityCost;
 
-        this.callbacks.onLog(`=== TASTING '${item.toUpperCase()}' ===`, "system");
+        this.callbacks.onLog(`=== TASTING '${item.toUpperCase()}' (-${sanityCost} sanity) ===`, "system");
 
         let hasOutput = false;
 
@@ -146,6 +146,7 @@ export class CustomerManager {
         });
 
         if (this.state.sanity <= 0) {
+            this.callbacks.onRender();
             this.callbacks.onGameOver("SANITY DEPLETED");
             return;
         }
@@ -303,13 +304,13 @@ export class CustomerManager {
 
         if (distance <= currentOrder.maxDistance) {
             const baseBonus = GORDON_BASE_BONUS;
-            const perfectBonus = distance <= 3 ? 15 : (distance <= 5 ? 10 : 5);
+            const perfectBonus = distance <= GORDON_PERFECT_DISTANCE ? GORDON_PERFECT_BONUS : (distance <= GORDON_EXCELLENT_DISTANCE ? GORDON_EXCELLENT_BONUS : GORDON_ACCEPTABLE_BONUS);
             const totalBonus = baseBonus + perfectBonus;
 
             let comment;
-            if (distance <= 3) {
+            if (distance <= GORDON_PERFECT_DISTANCE) {
                 comment = `MAGNIFICENT! This ${currentOrder.name} is PERFECT!`;
-            } else if (distance <= 5) {
+            } else if (distance <= GORDON_EXCELLENT_DISTANCE) {
                 comment = `Excellent work. This ${currentOrder.name} meets my high standards.`;
             } else {
                 comment = `Acceptable. This ${currentOrder.name} will do.`;

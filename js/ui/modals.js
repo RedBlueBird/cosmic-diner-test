@@ -121,6 +121,9 @@ export function hideArtifactModal() {
 
 // Show game over screen
 export function showGameOver(reason, day, customersServed) {
+    // Clear sanity visual effects so player can read the game over screen
+    document.body.style.filter = "none";
+
     const panel = document.getElementById('log-panel');
     const gameOverDiv = document.createElement('div');
     gameOverDiv.className = "game-over";

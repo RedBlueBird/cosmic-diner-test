@@ -1,6 +1,6 @@
 // PaymentService.js - Distance/payment calculations
 
-import { DISTANCE_ATTRIBUTES } from '../config.js';
+import { DISTANCE_ATTRIBUTES, PAYMENT_BASE, PAYMENT_DECAY_BASE, PAYMENT_DISTANCE_EXPONENT, SATISFACTION_THRESHOLDS } from '../config.js';
 
 // Calculate Euclidean distance between food attributes and customer demand
 export function calculateDistance(foodAttrs, demandVector) {
@@ -20,19 +20,27 @@ export function calculateDistance(foodAttrs, demandVector) {
     return Math.sqrt(sumSquares);
 }
 
-// Calculate payment based on distance: 30 * 1.1^(-distance^1.2)
+// Calculate payment based on distance
 // Close match = more money, far match = less money
 export function calculatePayment(distance) {
-    const payment = 30 * Math.pow(1.1, -Math.pow(distance, 1.2));
+    const payment = PAYMENT_BASE * Math.pow(PAYMENT_DECAY_BASE, -Math.pow(distance, PAYMENT_DISTANCE_EXPONENT));
     return Math.max(0, Math.round(payment * 100) / 100); // Round to cents, min $0
 }
 
+// Satisfaction rating definitions (matched by SATISFACTION_THRESHOLDS)
+const RATINGS = [
+    { rating: "PERFECT", emoji: "★★★★★", color: "#ffff00" },
+    { rating: "EXCELLENT", emoji: "★★★★☆", color: "#33ff33" },
+    { rating: "GOOD", emoji: "★★★☆☆", color: "#33ff33" },
+    { rating: "OKAY", emoji: "★★☆☆☆", color: "#aaffaa" },
+    { rating: "POOR", emoji: "★☆☆☆☆", color: "#ffaa00" },
+];
+const TERRIBLE_RATING = { rating: "TERRIBLE", emoji: "☆☆☆☆☆", color: "#ff3333" };
+
 // Get satisfaction rating based on distance
 export function getSatisfactionRating(distance) {
-    if (distance <= 2) return { rating: "PERFECT", emoji: "★★★★★", color: "#ffff00" };
-    if (distance <= 5) return { rating: "EXCELLENT", emoji: "★★★★☆", color: "#33ff33" };
-    if (distance <= 8) return { rating: "GOOD", emoji: "★★★☆☆", color: "#33ff33" };
-    if (distance <= 11) return { rating: "OKAY", emoji: "★★☆☆☆", color: "#aaffaa" };
-    if (distance <= 14) return { rating: "POOR", emoji: "★☆☆☆☆", color: "#ffaa00" };
-    return { rating: "TERRIBLE", emoji: "☆☆☆☆☆", color: "#ff3333" };
+    for (let i = 0; i < SATISFACTION_THRESHOLDS.length; i++) {
+        if (distance <= SATISFACTION_THRESHOLDS[i]) return RATINGS[i];
+    }
+    return TERRIBLE_RATING;
 }
