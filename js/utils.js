@@ -23,6 +23,7 @@ export {
     getConsumables,
     getConsumableById,
     getRecipeResult,
+    getAllFoods,
     createFoodAttr,
     getDefaultAttributes,
     getFoodAttributesData,

@@ -1,6 +1,7 @@
 import { loadFoodData, loadRecipes, loadFoodAttributes, loadTasteFeedback, loadCustomers, loadArtifacts, loadConsumables } from './utils.js';
 import { Game } from './core/Game.js';
 import { initApplianceTooltips } from './ui.js';
+import './effects/ArtifactHandlers.js';
 
 // Global game instance (needed for HTML onclick handlers)
 let game;

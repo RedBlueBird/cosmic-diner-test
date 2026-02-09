@@ -1,9 +1,7 @@
 // DayManager.js - Day progression and rent management
 
-import { APPLIANCE_UNLOCK_DAYS } from '../config.js';
-import { getRecipes, getAtoms, getArtifactById } from '../data/DataStore.js';
-import { createItemObject } from '../utils/ItemUtils.js';
-import * as UI from '../ui.js';
+import { APPLIANCE_UNLOCK_DAYS, CUSTOMERS_PER_DAY, RENT_MULTIPLIER, END_OF_DAY_SANITY_RESTORE } from '../config.js';
+import { runEffectHook } from '../effects/EffectHandlerRegistry.js';
 
 export class DayManager {
     constructor(gameState, callbacks) {
@@ -19,32 +17,15 @@ export class DayManager {
             this.state.countertop = [];
         }
 
-        const sanityRestore = 50;
-        this.callbacks.restoreSanity(sanityRestore);
-        this.callbacks.onLog(`Sanity restored by ${sanityRestore}%. Current: ${this.state.sanity}%`, "system");
+        this.callbacks.restoreSanity(END_OF_DAY_SANITY_RESTORE);
+        this.callbacks.onLog(`Sanity restored by ${END_OF_DAY_SANITY_RESTORE}%. Current: ${this.state.sanity}%`, "system");
 
-        // Night Owl: Restore sanity if money threshold met
-        if (this.callbacks.hasArtifact('night_owl')) {
-            const artifact = getArtifactById('night_owl');
-            const sanityBonus = artifact.effect.value;
-            const moneyThreshold = parseInt(artifact.effect.condition.split('_')[2]) || 50;
-            if (this.state.money >= moneyThreshold) {
-                this.callbacks.restoreSanity(sanityBonus);
-                this.callbacks.onLog(`NIGHT OWL: +${sanityBonus} sanity for having $${moneyThreshold}+!`, "system");
-            }
-        }
-
-        // Investment Portfolio: Earn interest
-        if (this.callbacks.hasArtifact('investment_portfolio')) {
-            const artifact = getArtifactById('investment_portfolio');
-            const rate = artifact.effect.rate;
-            const maxInterest = artifact.effect.max;
-            const interest = Math.min(maxInterest, Math.floor(this.state.money * rate));
-            if (interest > 0) {
-                this.state.money += interest;
-                this.callbacks.onLog(`INVESTMENT PORTFOLIO: Earned $${interest} interest!`, "system");
-            }
-        }
+        // End-of-day artifact effects (night_owl, investment_portfolio)
+        runEffectHook('endOfDay', this.state.activeArtifacts, {
+            state: this.state,
+            restoreSanity: (amount) => this.callbacks.restoreSanity(amount),
+            log: (msg, type) => this.callbacks.onLog(msg, type)
+        });
 
         this.callbacks.onLog(`Deducting Rent: -$${this.state.rent}`);
         this.state.money -= this.state.rent;
@@ -83,10 +64,10 @@ export class DayManager {
         if (this.state.day <= this.state.rentFrozenUntilDay) {
             this.callbacks.onLog(`RENT NEGOTIATOR: Rent increase frozen this day!`, "system");
         } else {
-            this.state.rent = Math.floor(this.state.rent * 1.333);
+            this.state.rent = Math.floor(this.state.rent * RENT_MULTIPLIER);
         }
 
-        this.state.customersPerDay = 5;
+        this.state.customersPerDay = CUSTOMERS_PER_DAY;
 
         this.callbacks.onLog(`=== STARTING DAY ${this.state.day} ===`, "system");
         this.callbacks.onLog(`Rent due at end of shift: $${this.state.rent}. Customer Quota: ${this.state.customersPerDay}`);
@@ -98,30 +79,12 @@ export class DayManager {
             }
         }
 
-        // Morning Prep: Add random items
-        if (this.callbacks.hasArtifact('morning_prep')) {
-            const artifact = getArtifactById('morning_prep');
-            const numItems = artifact.effect.value;
-            const RECIPES = getRecipes();
-            const atoms = getAtoms();
-            const recipeResults = [...new Set(Object.values(RECIPES))];
-            const allFoods = [...atoms, ...recipeResults];
-
-            let addedCount = 0;
-            for (let i = 0; i < numItems; i++) {
-                const randomItem = allFoods[Math.floor(Math.random() * allFoods.length)];
-                const success = this.callbacks.addToCountertop(randomItem, { temporary: 1 }, true);
-                if (success) {
-                    addedCount++;
-                } else {
-                    break; // Stop if countertop becomes full
-                }
-            }
-
-            if (addedCount > 0) {
-                this.callbacks.onLog(`MORNING PREP: Added ${addedCount} temporary ingredient(s) to countertop!`, "system");
-            }
-        }
+        // Start-of-day artifact effects (morning_prep)
+        runEffectHook('startOfDay', this.state.activeArtifacts, {
+            state: this.state,
+            addToCountertop: (item, mods, silent) => this.callbacks.addToCountertop(item, mods, silent),
+            log: (msg, type) => this.callbacks.onLog(msg, type)
+        });
 
         this.state.isDayActive = true;
         this.callbacks.onRender();
@@ -138,6 +101,6 @@ export class DayManager {
         this.state.isDayActive = false;
         this.callbacks.onLog(`GAME OVER: ${reason}`, "error");
         const totalServed = this.state.customersServedCount + (this.state.day - 1) * 3;
-        UI.showGameOver(reason, this.state.day, totalServed);
+        this.callbacks.showGameOver(reason, this.state.day, totalServed);
     }
 }

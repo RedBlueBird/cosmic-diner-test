@@ -5,7 +5,7 @@
 import PersistenceService from '../services/PersistenceService.js';
 import { getItemName, hasTemporaryModifier } from '../utils/ItemUtils.js';
 
-export default class RecipeBookManager {
+export class RecipeBookManager {
     constructor() {
         this.persistence = PersistenceService;
     }

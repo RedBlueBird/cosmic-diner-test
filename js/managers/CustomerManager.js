@@ -1,17 +1,29 @@
 // CustomerManager.js - Customer and serving logic
 
-import { FEEDBACK_CATEGORIES, GORDON_G_CONFIG } from '../config.js';
-import { getCustomerTypes, getArtifactById } from '../data/DataStore.js';
+import { FEEDBACK_CATEGORIES, GORDON_G_CONFIG, TASTE_TEST_SANITY_COST, TERRIBLE_SERVICE_SANITY_PENALTY, POOR_SERVICE_SANITY_PENALTY, GORDON_BASE_BONUS, GORDON_VICTORY_BONUS } from '../config.js';
+import { getCustomerTypes } from '../data/DataStore.js';
 import { getItemName, getFoodAttributes } from '../utils/ItemUtils.js';
 import { getTasteFeedback, getDemandHints } from '../services/FeedbackService.js';
 import { calculateDistance, calculatePayment, getSatisfactionRating } from '../services/PaymentService.js';
-import { isSimpleDish } from '../services/RecipeService.js';
-import * as UI from '../ui.js';
+import { runHook, runEffectHook } from '../effects/EffectHandlerRegistry.js';
 
 export class CustomerManager {
     constructor(gameState, callbacks) {
         this.state = gameState;
         this.callbacks = callbacks;
+    }
+
+    advanceCustomer(delay = 1500) {
+        this.state.customersServedCount++;
+        this.callbacks.onRender();
+
+        if (this.state.customersServedCount >= this.state.customersPerDay) {
+            this.callbacks.onEndDay();
+        } else {
+            setTimeout(() => {
+                this.nextCustomer();
+            }, delay);
+        }
     }
 
     nextCustomer() {
@@ -32,7 +44,7 @@ export class CustomerManager {
         const orderHints = getDemandHints(this.state.customer.demand);
         this.state.customer.orderHints = orderHints;
 
-        UI.updateCustomerDisplay(this.state.customer);
+        this.callbacks.updateCustomerDisplay(this.state.customer);
 
         this.callbacks.onLog(`CUSTOMER ARRIVED: ${this.state.customer.name}`);
         this.callbacks.onLog(`They want: ${orderHints}`);
@@ -58,7 +70,7 @@ export class CustomerManager {
         this.callbacks.onLog("His standards are IMPOSSIBLY HIGH!", "design");
         this.callbacks.onLog("Match his demands closely or face his WRATH!", "design");
 
-        UI.updateGordonDisplay(this.state.customer);
+        this.callbacks.updateGordonDisplay(this.state.customer);
         this.callbacks.onRender();
     }
 
@@ -71,31 +83,14 @@ export class CustomerManager {
         const itemObj = this.state.countertop[this.state.selectedIndices[0]];
         const item = getItemName(itemObj);
 
-        let sanityCost = 10;
-
         // Get food attributes to check for caffeine
         const attrs = getFoodAttributes(itemObj);
 
-        // Caffeine Addiction: No cost for caffeinated items, increased cost for non-caffeinated
-        if (this.callbacks.hasArtifact('caffeine_addiction')) {
-            const artifact = getArtifactById('caffeine_addiction');
-            const hasCaffeine = attrs.caffeine && attrs.caffeine > 0;
-            if (hasCaffeine) {
-                sanityCost = 0;  // Caffeinated items cost no sanity
-            } else {
-                sanityCost = artifact.effect.normalCost || 15;  // Non-caffeinated items cost more
-            }
-        }
-
-        // Adrenaline Rush: Cap taste cost when below threshold
-        if (this.callbacks.hasArtifact('adrenaline_rush')) {
-            const artifact = getArtifactById('adrenaline_rush');
-            const costCap = artifact.effect.value;
-            const sanityThreshold = parseInt(artifact.effect.condition.split('_')[2]) || 40;
-            if (this.state.sanity < sanityThreshold) {
-                sanityCost = Math.min(costCap, sanityCost);
-            }
-        }
+        let sanityCost = runHook('modifyTasteTestCost', this.state.activeArtifacts, {
+            defaultValue: TASTE_TEST_SANITY_COST,
+            attrs,
+            sanity: this.state.sanity
+        });
 
         this.state.sanity -= sanityCost;
 
@@ -140,21 +135,15 @@ export class CustomerManager {
             this.callbacks.onLog(`The taste damages your sanity! (-${sanityDamage} additional)`, "error");
         }
 
-        // Caffeine Addiction: Caffeinated items restore sanity and are consumed
-        const hasCaffeine = attrs.caffeine && attrs.caffeine > 0;
-        if (this.callbacks.hasArtifact('caffeine_addiction') && hasCaffeine) {
-            const artifact = getArtifactById('caffeine_addiction');
-            const sanityBonus = artifact.effect.value;
-            this.callbacks.restoreSanity(sanityBonus);
-            this.callbacks.onLog(`CAFFEINE ADDICTION: Caffeine restores ${sanityBonus} sanity!`, "system");
-
-            // Consume the caffeinated item
-            if (artifact.effect.consume) {
-                this.state.countertop.splice(this.state.selectedIndices[0], 1);
-                this.callbacks.onClearSelection();
-                this.callbacks.onLog(`The caffeinated item is consumed.`, "system");
-            }
-        }
+        // Post-taste artifact effects (e.g. caffeine consumption)
+        runEffectHook('postTasteTest', this.state.activeArtifacts, {
+            attrs,
+            state: this.state,
+            selectedIndex: this.state.selectedIndices[0],
+            restoreSanity: (amount) => this.callbacks.restoreSanity(amount),
+            log: (msg, type) => this.callbacks.onLog(msg, type),
+            clearSelection: () => this.callbacks.onClearSelection()
+        });
 
         if (this.state.sanity <= 0) {
             this.callbacks.onGameOver("SANITY DEPLETED");
@@ -233,11 +222,11 @@ export class CustomerManager {
 
         // Sanity penalty for poor service
         if (satisfaction.rating === "TERRIBLE") {
-            this.state.sanity -= 15;
-            this.callbacks.onLog("Customer's disgust damages your sanity! (-15 sanity)", "error");
+            this.state.sanity -= TERRIBLE_SERVICE_SANITY_PENALTY;
+            this.callbacks.onLog(`Customer's disgust damages your sanity! (-${TERRIBLE_SERVICE_SANITY_PENALTY} sanity)`, "error");
         } else if (satisfaction.rating === "POOR") {
-            this.state.sanity -= 5;
-            this.callbacks.onLog("Customer's disappointment weighs on you. (-5 sanity)", "error");
+            this.state.sanity -= POOR_SERVICE_SANITY_PENALTY;
+            this.callbacks.onLog(`Customer's disappointment weighs on you. (-${POOR_SERVICE_SANITY_PENALTY} sanity)`, "error");
         }
 
         // Check for sanity game over
@@ -250,45 +239,18 @@ export class CustomerManager {
         }
 
         // Apply payment bonus artifacts
-        let paymentMultiplier = 1;
-        const bonusReasons = [];
-
         const isExcellentOrPerfect = satisfaction.rating === "EXCELLENT" || satisfaction.rating === "PERFECT";
 
-        // Tip Jar
-        if (this.callbacks.hasArtifact('tip_jar') && isExcellentOrPerfect) {
-            const artifact = getArtifactById('tip_jar');
-            paymentMultiplier *= artifact.effect.value;
-            bonusReasons.push("Tip Jar");
-        }
+        const paymentResult = runHook('modifyPayment', this.state.activeArtifacts, {
+            defaultValue: { multiplier: 1, reasons: [] },
+            isExcellentOrPerfect,
+            foodAttrs,
+            itemName: item
+        });
 
-        // Generous Portions
-        if (this.callbacks.hasArtifact('generous_portions')) {
-            const artifact = getArtifactById('generous_portions');
-            const fillingThreshold = parseInt(artifact.effect.condition.split('_')[2]) || 4;
-            if (foodAttrs.filling >= fillingThreshold) {
-                paymentMultiplier *= artifact.effect.value;
-                bonusReasons.push("Generous Portions");
-            }
-        }
-
-        // Fast Food Service
-        if (this.callbacks.hasArtifact('fast_food_service') && isSimpleDish(item)) {
-            const artifact = getArtifactById('fast_food_service');
-            paymentMultiplier *= artifact.effect.value;
-            bonusReasons.push("Fast Food Service");
-        }
-
-        // Price Gouger
-        if (this.callbacks.hasArtifact('price_gouger')) {
-            const artifact = getArtifactById('price_gouger');
-            paymentMultiplier *= artifact.effect.paymentMultiplier;
-            bonusReasons.push("Price Gouger");
-        }
-
-        if (paymentMultiplier > 1) {
-            payment *= paymentMultiplier;
-            this.callbacks.onLog(`BONUS (${bonusReasons.join(" + ")}): ${paymentMultiplier}x payment!`, "system");
+        if (paymentResult.multiplier > 1) {
+            payment *= paymentResult.multiplier;
+            this.callbacks.onLog(`BONUS (${paymentResult.reasons.join(" + ")}): ${paymentResult.multiplier}x payment!`, "system");
         }
 
         // Apply Lucky Coin effect
@@ -307,29 +269,19 @@ export class CustomerManager {
             this.callbacks.onLog("Customer refused to pay.", "error");
         }
 
-        // Meditation Master
-        if (this.callbacks.hasArtifact('meditation_master') && isExcellentOrPerfect) {
-            const artifact = getArtifactById('meditation_master');
-            const sanityBonus = artifact.effect.value;
-            this.callbacks.restoreSanity(sanityBonus);
-            this.callbacks.onLog(`MEDITATION MASTER: +${sanityBonus} sanity from excellent service!`, "system");
-        }
+        // Post-serve artifact effects (e.g. meditation master)
+        runEffectHook('postServe', this.state.activeArtifacts, {
+            isExcellentOrPerfect,
+            restoreSanity: (amount) => this.callbacks.restoreSanity(amount),
+            log: (msg, type) => this.callbacks.onLog(msg, type)
+        });
 
         this.callbacks.onLog("===================================", "system");
 
         this.state.countertop.splice(this.state.selectedIndices[0], 1);
         this.callbacks.onClearSelection();
 
-        this.state.customersServedCount++;
-        this.callbacks.onRender();
-
-        if (this.state.customersServedCount >= this.state.customersPerDay) {
-            this.callbacks.onEndDay();
-        } else {
-            setTimeout(() => {
-                this.nextCustomer();
-            }, 1500);
-        }
+        this.advanceCustomer();
     }
 
     serveGordonG(itemObj) {
@@ -350,7 +302,7 @@ export class CustomerManager {
         this.callbacks.onLog(`Gordon G. scrutinizes the ${item} intensely...`);
 
         if (distance <= currentOrder.maxDistance) {
-            const baseBonus = 25;
+            const baseBonus = GORDON_BASE_BONUS;
             const perfectBonus = distance <= 3 ? 15 : (distance <= 5 ? 10 : 5);
             const totalBonus = baseBonus + perfectBonus;
 
@@ -383,7 +335,7 @@ export class CustomerManager {
                 setTimeout(() => {
                     this.callbacks.onLog(`===================================`, "system");
                     this.callbacks.onLog(`Next course: ${this.state.customer.orders[this.state.customer.currentCourse].name}`, "system");
-                    UI.updateGordonDisplay(this.state.customer);
+                    this.callbacks.updateGordonDisplay(this.state.customer);
                     this.callbacks.onRender();
                 }, 1500);
             }
@@ -410,8 +362,8 @@ export class CustomerManager {
         this.callbacks.onLog("======================", "system");
         this.callbacks.onLog("BOSS DEFEATED!", "system");
 
-        this.state.money += 50;
-        this.callbacks.onLog("Received $50 BOSS BONUS!");
+        this.state.money += GORDON_VICTORY_BONUS;
+        this.callbacks.onLog(`Received $${GORDON_VICTORY_BONUS} BOSS BONUS!`);
 
         this.state.customersServedCount++;
         this.callbacks.onRender();
@@ -433,6 +385,6 @@ export class CustomerManager {
 
     showVictory() {
         this.callbacks.onLog("=== YOU DEFEATED GORDON G! ===", "system");
-        UI.showVictory(this.state.day, this.state.money, this.state.sanity);
+        this.callbacks.showVictory(this.state.day, this.state.money, this.state.sanity);
     }
 }

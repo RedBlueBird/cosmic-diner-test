@@ -1,7 +1,7 @@
 // ConsumableManager.js - Consumables system management
 
 import { MAX_CONSUMABLES } from '../config.js';
-import { getConsumables, getConsumableById, getRecipes, getAtoms } from '../data/DataStore.js';
+import { getConsumables, getConsumableById, getAllFoods } from '../data/DataStore.js';
 import { createItemObject, getItemName, getItemModifiers, getFoodAttributes } from '../utils/ItemUtils.js';
 
 export class ConsumableManager {
@@ -155,15 +155,7 @@ export class ConsumableManager {
         this.state.money += payment;
         this.callbacks.onLog(`${consumable.name}: Customer accepts emergency rations and pays $${payment}!`, "system");
 
-        this.state.customersServedCount++;
-
-        if (this.state.customersServedCount >= this.state.customersPerDay) {
-            this.callbacks.onEndDay();
-        } else {
-            setTimeout(() => {
-                this.callbacks.onNextCustomer();
-            }, 1500);
-        }
+        this.callbacks.onAdvanceCustomer(1500);
     }
 
     duplicateSelectedItem() {
@@ -187,10 +179,7 @@ export class ConsumableManager {
     }
 
     unlockRandomIngredient(consumable) {
-        const RECIPES = getRecipes();
-        const atoms = getAtoms();
-        const recipeResults = [...new Set(Object.values(RECIPES))];
-        const allFoods = [...atoms, ...recipeResults];
+        const allFoods = getAllFoods();
 
         const notInFridge = allFoods.filter(food => !this.state.availableIngredients.includes(food));
 
@@ -244,15 +233,8 @@ export class ConsumableManager {
         }
 
         this.callbacks.onLog(`Wishing Well Penny: Skipped ${this.state.customer.name}!`, "system");
-        this.state.customersServedCount++;
 
-        if (this.state.customersServedCount >= this.state.customersPerDay) {
-            this.callbacks.onEndDay();
-        } else {
-            setTimeout(() => {
-                this.callbacks.onNextCustomer();
-            }, 1000);
-        }
+        this.callbacks.onAdvanceCustomer(1000);
     }
 
     discardConsumable(consumableId) {

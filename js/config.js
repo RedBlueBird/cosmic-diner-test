@@ -1,5 +1,35 @@
 // Game configuration constants
 
+// Starting values
+export const STARTING_MONEY = 30;
+export const STARTING_SANITY = 100;
+export const STARTING_RENT = 30;
+export const STARTING_CUSTOMERS_PER_DAY = 4;
+export const STARTING_ATOM_COUNT = 6;
+
+// Defaults (when no artifact modifies them)
+export const DEFAULT_MAX_SANITY = 100;
+export const DEFAULT_COUNTERTOP_CAPACITY = 8;
+
+// Day progression
+export const CUSTOMERS_PER_DAY = 5;       // Day 2+ customer count
+export const RENT_MULTIPLIER = 1.333;     // Rent increase per day
+export const END_OF_DAY_SANITY_RESTORE = 50;
+
+// Taste test
+export const TASTE_TEST_SANITY_COST = 10;
+
+// Sanity penalties for bad service
+export const TERRIBLE_SERVICE_SANITY_PENALTY = 15;
+export const POOR_SERVICE_SANITY_PENALTY = 5;
+
+// Gordon G boss
+export const GORDON_BASE_BONUS = 25;
+export const GORDON_VICTORY_BONUS = 50;
+
+// Divine intervention (softlock prevention)
+export const DIVINE_INTERVENTION_SANITY_RATE = 0.2;
+
 // Consumable system
 export const MAX_CONSUMABLES = 5;
 

@@ -1,7 +1,6 @@
 // MerchantManager.js - Morning Merchant system
 
-import { getConsumables, getConsumableById, getRecipes, getAtoms } from '../data/DataStore.js';
-import * as UI from '../ui.js';
+import { getConsumables, getConsumableById, getAllFoods } from '../data/DataStore.js';
 
 // Base prices for consumables by rarity
 const CONSUMABLE_BASE_PRICES = {
@@ -85,10 +84,7 @@ export class MerchantManager {
      * Get 3 random foods not already in availableIngredients
      */
     generateFoodStock() {
-        const RECIPES = getRecipes();
-        const atoms = getAtoms();
-        const recipeResults = [...new Set(Object.values(RECIPES))];
-        const allFoods = [...atoms, ...recipeResults];
+        const allFoods = getAllFoods();
 
         // Filter out already available ingredients
         const notUnlocked = allFoods.filter(
@@ -124,7 +120,7 @@ export class MerchantManager {
      * Update the merchant UI in the right panel
      */
     updateMerchantUI() {
-        UI.updateMerchantDisplay(
+        this.callbacks.updateMerchantDisplay(
             this.currentStock,
             this.state.money,
             (id, price) => this.buyConsumable(id, price),
@@ -132,20 +128,23 @@ export class MerchantManager {
         );
     }
 
+    showBrokeMessage() {
+        const messages = [
+            "MERCHANT: \"You're too broke for this! Come back with more coin.\"",
+            "MERCHANT: \"Sorry pal, your wallet's lighter than my pack mule.\"",
+            "MERCHANT: \"Not enough cash, friend. This ain't a charity!\"",
+            "MERCHANT: \"You can't afford that! Maybe try the dumpster out back?\"",
+            "MERCHANT: \"Got any more gold hiding? No? Then keep walking.\""
+        ];
+        this.callbacks.onLog(messages[Math.floor(Math.random() * messages.length)], "error");
+    }
+
     /**
      * Buy a consumable from the merchant
      */
     buyConsumable(consumableId, price) {
         if (this.state.money < price) {
-            const messages = [
-                "MERCHANT: \"You're too broke for this! Come back with more coin.\"",
-                "MERCHANT: \"Sorry pal, your wallet's lighter than my pack mule.\"",
-                "MERCHANT: \"Not enough cash, friend. This ain't a charity!\"",
-                "MERCHANT: \"You can't afford that! Maybe try the dumpster out back?\"",
-                "MERCHANT: \"Got any more gold hiding? No? Then keep walking.\""
-            ];
-            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-            this.callbacks.onLog(randomMessage, "error");
+            this.showBrokeMessage();
             return;
         }
 
@@ -175,15 +174,7 @@ export class MerchantManager {
      */
     buyFood(foodName, price, usageCost) {
         if (this.state.money < price) {
-            const messages = [
-                "MERCHANT: \"You're too broke for this! Come back with more coin.\"",
-                "MERCHANT: \"Sorry pal, your wallet's lighter than my pack mule.\"",
-                "MERCHANT: \"Not enough cash, friend. This ain't a charity!\"",
-                "MERCHANT: \"You can't afford that! Maybe try the dumpster out back?\"",
-                "MERCHANT: \"Got any more gold hiding? No? Then keep walking.\""
-            ];
-            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-            this.callbacks.onLog(randomMessage, "error");
+            this.showBrokeMessage();
             return;
         }
 
@@ -214,7 +205,7 @@ export class MerchantManager {
      * Dismiss the merchant and continue the day
      */
     dismissMerchant() {
-        UI.hideMerchantDisplay();
+        this.callbacks.hideMerchantDisplay();
         this.callbacks.onLog("The Morning Merchant departs...");
         this.currentStock = null;
 

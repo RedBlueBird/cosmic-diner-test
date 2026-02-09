@@ -1,9 +1,9 @@
 // ApplianceManager.js - Kitchen appliance operations
 
-import { APPLIANCE_UNLOCK_DAYS } from '../config.js';
-import { getRecipeResult, getAdditions, getMutations, getAmplifications, getArtifactById } from '../data/DataStore.js';
+import { APPLIANCE_UNLOCK_DAYS, DIVINE_INTERVENTION_SANITY_RATE } from '../config.js';
+import { getRecipeResult, getAdditions, getMutations, getAmplifications } from '../data/DataStore.js';
 import { createItemObject, getItemName, getItemModifiers, mergeModifiers } from '../utils/ItemUtils.js';
-import * as UI from '../ui.js';
+import { runHook } from '../effects/EffectHandlerRegistry.js';
 
 export class ApplianceManager {
     constructor(gameState, callbacks) {
@@ -29,7 +29,7 @@ export class ApplianceManager {
 
         if (this.state.money < cheapestCost && this.state.countertop.length === 0) {
             // Calculate sanity loss (20% rounded, minimum keeps sanity at 1)
-            const sanityLoss = Math.round(this.state.sanity * 0.2);
+            const sanityLoss = Math.round(this.state.sanity * DIVINE_INTERVENTION_SANITY_RATE);
             const actualSanityLoss = Math.min(sanityLoss, this.state.sanity - 1);
 
             this.state.money += cheapestCost;
@@ -42,7 +42,7 @@ export class ApplianceManager {
             this.callbacks.onRender();
         }
 
-        UI.showFridgeModal(
+        this.callbacks.showFridgeModal(
             this.state.availableIngredients,
             displayCosts,
             this.state.money,
@@ -51,7 +51,7 @@ export class ApplianceManager {
     }
 
     closeFridge() {
-        UI.hideFridgeModal();
+        this.callbacks.hideFridgeModal();
     }
 
     /**
@@ -160,18 +160,15 @@ export class ApplianceManager {
 
         const baseCost1 = this.state.ingredientCosts[item1] || 1;
         const baseCost2 = this.state.ingredientCosts[item2] || 1;
-        let cost1 = this.callbacks.getAtomCostWithArtifacts(item1, baseCost1);
-        let cost2 = this.callbacks.getAtomCostWithArtifacts(item2, baseCost2);
-
-        // Pan Perfectionist: Reduce ingredient costs
-        if (this.callbacks.hasArtifact('pan_perfectionist')) {
-            const artifact = getArtifactById('pan_perfectionist');
-            const reduction = artifact.effect.value;
-            cost1 = Math.max(1, Math.ceil(cost1 * reduction));
-            cost2 = Math.max(1, Math.ceil(cost2 * reduction));
-            const percent = Math.round((1 - reduction) * 100);
-            this.callbacks.onLog(`PAN PERFECTIONIST: Ingredient costs reduced by ${percent}%!`, "system");
-        }
+        const baseCostResult = runHook('modifyPanIngredientCost', this.state.activeArtifacts, {
+            defaultValue: {
+                cost1: this.callbacks.getAtomCostWithArtifacts(item1, baseCost1),
+                cost2: this.callbacks.getAtomCostWithArtifacts(item2, baseCost2)
+            },
+            log: (msg, type) => this.callbacks.onLog(msg, type)
+        });
+        let cost1 = baseCostResult.cost1;
+        let cost2 = baseCostResult.cost2;
 
         // Get the recipe result first
         let result = getRecipeResult(item1, item2);
@@ -354,13 +351,10 @@ export class ApplianceManager {
             const item = this.state.countertop[idx];
             this.callbacks.onLog(`Trashed ${getItemName(item)}`);
 
-            if (this.callbacks.hasArtifact('the_recycler')) {
-                const artifact = getArtifactById('the_recycler');
-                const refundRate = artifact.effect.value;
-                const itemCost = this.state.ingredientCosts[getItemName(item)] || 1;
-                const refund = Math.ceil(itemCost * refundRate);
-                totalRefund += refund;
-            }
+            totalRefund = runHook('trashRefund', this.state.activeArtifacts, {
+                defaultValue: totalRefund,
+                itemCost: this.state.ingredientCosts[getItemName(item)] || 1
+            });
 
             this.state.countertop.splice(idx, 1);
         });

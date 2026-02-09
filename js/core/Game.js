@@ -1,6 +1,6 @@
 // Game.js - Slim orchestrator that delegates to managers
 
-import { APPLIANCE_UNLOCK_DAYS } from '../config.js';
+import { APPLIANCE_UNLOCK_DAYS, STARTING_MONEY, STARTING_SANITY, STARTING_RENT, STARTING_CUSTOMERS_PER_DAY, STARTING_ATOM_COUNT } from '../config.js';
 import { getAtoms } from '../data/DataStore.js';
 import { tryUnlockRecipe } from '../services/RecipeService.js';
 import * as UI from '../ui.js';
@@ -11,17 +11,17 @@ import { ApplianceManager } from '../managers/ApplianceManager.js';
 import { CustomerManager } from '../managers/CustomerManager.js';
 import { DayManager } from '../managers/DayManager.js';
 import { MerchantManager } from '../managers/MerchantManager.js';
-import RecipeBookManager from '../managers/RecipeBookManager.js';
+import { RecipeBookManager } from '../managers/RecipeBookManager.js';
 
 export class Game {
     constructor() {
         // Core game state
-        this.money = 30;
-        this.sanity = 100;
+        this.money = STARTING_MONEY;
+        this.sanity = STARTING_SANITY;
         this.day = 1;
-        this.rent = 30;
+        this.rent = STARTING_RENT;
 
-        this.customersPerDay = 4;
+        this.customersPerDay = STARTING_CUSTOMERS_PER_DAY;
         this.customersServedCount = 0;
         this.isDayActive = true;
         this.endlessMode = false;
@@ -79,7 +79,9 @@ export class Game {
         this.artifacts = new ArtifactManager(state, {
             onLog: (msg, type) => this.log(msg, type),
             onRender: () => this.render(),
-            onStartNextDay: () => this.days.startNextDay()
+            onStartNextDay: () => this.days.startNextDay(),
+            showArtifactModal: (ids, cb) => UI.showArtifactModal(ids, cb),
+            hideArtifactModal: () => UI.hideArtifactModal()
         });
 
         // Consumable Manager
@@ -88,8 +90,7 @@ export class Game {
             onRender: () => this.render(),
             onClearSelection: () => this.clearSelection(),
             onRestoreSanity: (amount) => this.artifacts.restoreSanity(amount),
-            onEndDay: () => this.days.endDay(),
-            onNextCustomer: () => this.customers.nextCustomer(),
+            onAdvanceCustomer: (delay) => this.customers.advanceCustomer(delay),
             onGrantArtifact: () => this.artifacts.grantArtifactFromConsumable(),
             getCountertopCapacity: () => this.artifacts.getCountertopCapacity(),
             addToCountertop: (item, mods, silent) => this.appliances.addToCountertop(item, mods, silent)
@@ -103,10 +104,11 @@ export class Game {
             getAtomCostWithArtifacts: (item, baseCost) => this.artifacts.getAtomCostWithArtifacts(item, baseCost),
             applyBulkDiscount: (item, cost) => this.artifacts.applyBulkDiscount(item, cost),
             getCountertopCapacity: () => this.artifacts.getCountertopCapacity(),
-            hasArtifact: (id) => this.artifacts.hasArtifact(id),
             unlockIngredient: (item, cost, inputItems = [], displayCost = null) => this.unlockIngredient(item, cost, inputItems, displayCost),
             trackRecipe: (method, result, inputItems) => this.recipeBook.trackRecipe(method, result, inputItems),
-            trackAtom: (atom) => this.recipeBook.trackAtom(atom)
+            trackAtom: (atom) => this.recipeBook.trackAtom(atom),
+            showFridgeModal: (ingredients, costs, money, cb) => UI.showFridgeModal(ingredients, costs, money, cb),
+            hideFridgeModal: () => UI.hideFridgeModal()
         });
 
         // Customer Manager
@@ -116,10 +118,12 @@ export class Game {
             onClearSelection: () => this.clearSelection(),
             onEndDay: () => this.days.endDay(),
             onGameOver: (reason) => this.days.gameOver(reason),
-            hasArtifact: (id) => this.artifacts.hasArtifact(id),
             restoreSanity: (amount) => this.artifacts.restoreSanity(amount),
             isMerchantActive: () => this.merchant ? this.merchant.isMerchantActive() : false,
-            onProcessEndOfDayEffects: () => this.days.processEndOfDayEffects()
+            onProcessEndOfDayEffects: () => this.days.processEndOfDayEffects(),
+            updateCustomerDisplay: (customer) => UI.updateCustomerDisplay(customer),
+            updateGordonDisplay: (customer) => UI.updateGordonDisplay(customer),
+            showVictory: (day, money, sanity) => UI.showVictory(day, money, sanity)
         });
 
         // Day Manager
@@ -128,12 +132,12 @@ export class Game {
             onRender: () => this.render(),
             onGameOver: (reason) => this.gameOver(reason),
             onNextCustomer: () => this.customers.nextCustomer(),
-            hasArtifact: (id) => this.artifacts.hasArtifact(id),
             restoreSanity: (amount) => this.artifacts.restoreSanity(amount),
             getCountertopCapacity: () => this.artifacts.getCountertopCapacity(),
             showArtifactSelection: () => this.artifacts.showArtifactSelection(),
             onShowMerchant: () => this.merchant.showMerchant(),
-            addToCountertop: (item, mods, silent) => this.appliances.addToCountertop(item, mods, silent)
+            addToCountertop: (item, mods, silent) => this.appliances.addToCountertop(item, mods, silent),
+            showGameOver: (reason, day, totalServed) => UI.showGameOver(reason, day, totalServed)
         });
 
         // Merchant Manager
@@ -142,14 +146,16 @@ export class Game {
             onRender: () => this.render(),
             onNextCustomer: () => this.customers.nextCustomer(),
             grantConsumable: (id, qty) => this.consumables.grantConsumable(id, qty),
-            trackMerchantPurchase: (foodName) => this.recipeBook.trackMerchantPurchase(foodName)
+            trackMerchantPurchase: (foodName) => this.recipeBook.trackMerchantPurchase(foodName),
+            updateMerchantDisplay: (stock, money, buyCb, buyFoodCb) => UI.updateMerchantDisplay(stock, money, buyCb, buyFoodCb),
+            hideMerchantDisplay: () => UI.hideMerchantDisplay()
         });
     }
 
     initializeIngredientDeck() {
         const atoms = getAtoms();
         const shuffled = [...atoms].sort(() => Math.random() - 0.5);
-        this.availableIngredients = shuffled.slice(0, 6);
+        this.availableIngredients = shuffled.slice(0, STARTING_ATOM_COUNT);
         this.availableIngredients.forEach(atom => {
             this.ingredientCosts[atom] = 1;
             // Track starting atoms in recipe book immediately

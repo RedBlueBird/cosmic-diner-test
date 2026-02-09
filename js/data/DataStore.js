@@ -106,6 +106,12 @@ export function getRecipeResult(ingredient1, ingredient2) {
     return ADDITIONS[key1] || ADDITIONS[key2];
 }
 
+// Get all known food names (atoms + unique recipe results)
+export function getAllFoods() {
+    const recipeResults = [...new Set(Object.values(RECIPES))];
+    return [...ATOMS, ...recipeResults];
+}
+
 // Helper to create food attributes with defaults
 export function createFoodAttr(overrides) {
     return { ...DEFAULT_ATTRIBUTES, ...overrides };

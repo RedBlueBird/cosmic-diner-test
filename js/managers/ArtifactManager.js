@@ -1,8 +1,8 @@
 // ArtifactManager.js - Artifact system management
 
-import { getArtifacts, getArtifactById, getRecipeResult } from '../data/DataStore.js';
-import { getItemName } from '../utils/ItemUtils.js';
-import * as UI from '../ui.js';
+import { DEFAULT_MAX_SANITY, DEFAULT_COUNTERTOP_CAPACITY } from '../config.js';
+import { getArtifacts, getArtifactById } from '../data/DataStore.js';
+import { runHook, runEffectHook } from '../effects/EffectHandlerRegistry.js';
 
 export class ArtifactManager {
     constructor(gameState, callbacks) {
@@ -20,58 +20,27 @@ export class ArtifactManager {
     }
 
     getMaxSanity() {
-        if (this.hasArtifact('stoics_resolve')) {
-            const artifact = getArtifactById('stoics_resolve');
-            return artifact.effect.value;
-        }
-        return 100;
+        return runHook('getMaxSanity', this.state.activeArtifacts, { defaultValue: DEFAULT_MAX_SANITY });
     }
 
     getCountertopCapacity() {
-        if (this.hasArtifact('expanded_countertop')) {
-            const artifact = getArtifactById('expanded_countertop');
-            return artifact.effect.value;
-        }
-        return 8;
+        return runHook('getCountertopCapacity', this.state.activeArtifacts, { defaultValue: DEFAULT_COUNTERTOP_CAPACITY });
     }
 
     getAtomCostWithArtifacts(item, baseCost) {
-        // Price Gouger: Atoms cost extra
-        if (this.hasArtifact('price_gouger')) {
-            const artifact = getArtifactById('price_gouger');
-            return baseCost + artifact.effect.costIncrease;
-        }
-
-        return baseCost;
+        return runHook('modifyAtomCost', this.state.activeArtifacts, {
+            defaultValue: baseCost,
+            item
+        });
     }
 
     applyBulkDiscount(item, cost) {
-        if (!this.hasArtifact('bulk_buyer')) {
-            return cost;
-        }
-
-        const artifact = getArtifactById('bulk_buyer');
-        const freeEveryNth = artifact.effect.value;
-
-        // Track purchase history
-        if (!this.state.purchaseHistory[item]) {
-            this.state.purchaseHistory[item] = 0;
-        }
-        this.state.purchaseHistory[item]++;
-
-        // Every Nth purchase is free
-        if (this.state.purchaseHistory[item] % freeEveryNth === 0) {
-            this.callbacks.onLog(`BULK BUYER: ${item} is FREE! (${freeEveryNth}${this.getOrdinalSuffix(freeEveryNth)} purchase)`, "system");
-            return 0;
-        }
-
-        return cost;
-    }
-
-    getOrdinalSuffix(n) {
-        const s = ["th", "st", "nd", "rd"];
-        const v = n % 100;
-        return s[(v - 20) % 10] || s[v] || s[0];
+        return runHook('applyBulkDiscount', this.state.activeArtifacts, {
+            defaultValue: cost,
+            item,
+            state: this.state,
+            log: (msg, type) => this.callbacks.onLog(msg, type)
+        });
     }
 
     // Initialize Chef's Intuition hover behavior on PAN button
@@ -82,18 +51,24 @@ export class ArtifactManager {
         panButton.style.position = 'relative';
 
         panButton.addEventListener('mouseenter', () => {
-            if (!this.hasArtifact('chefs_intuition')) return;
             if (this.state.selectedIndices.length !== 2) return;
 
             const item1 = this.state.countertop[this.state.selectedIndices[0]];
             const item2 = this.state.countertop[this.state.selectedIndices[1]];
-            const result = getRecipeResult(getItemName(item1), getItemName(item2));
+
+            const hintResult = runHook('panHoverHint', this.state.activeArtifacts, {
+                defaultValue: null,
+                item1,
+                item2
+            });
+
+            if (hintResult === null) return;
 
             const tooltip = document.createElement('div');
             tooltip.className = 'appliance-tooltip';
             tooltip.id = 'chef-intuition-tooltip';
 
-            if (result) {
+            if (hintResult === 'success') {
                 tooltip.classList.add('success');
                 tooltip.textContent = 'This might work...';
             } else {
@@ -126,26 +101,13 @@ export class ArtifactManager {
 
         this.callbacks.onLog("Choose an artifact to enhance your abilities!", "system");
 
-        UI.showArtifactModal(selectedArtifactIds, (artifactId) => this.selectArtifact(artifactId));
+        this.callbacks.showArtifactModal(selectedArtifactIds, (artifactId) => this.selectArtifact(artifactId));
     }
 
     selectArtifact(artifactId) {
-        const artifact = getArtifactById(artifactId);
-        if (!artifact) return;
+        this.activateArtifact(artifactId);
 
-        this.state.activeArtifacts.push(artifactId);
-        this.state.artifactPool = this.state.artifactPool.filter(id => id !== artifactId);
-
-        this.callbacks.onLog(`ARTIFACT ACQUIRED: ${artifact.name}!`, "system");
-        this.callbacks.onLog(`${artifact.description}`, "design");
-
-        // Special handling for Rent Negotiator
-        if (artifactId === 'rent_negotiator') {
-            this.state.rentFrozenUntilDay = this.state.day + 1;
-            this.callbacks.onLog("Rent increase frozen for the next day!", "system");
-        }
-
-        UI.hideArtifactModal();
+        this.callbacks.hideArtifactModal();
         this.callbacks.onRender();
 
         setTimeout(() => this.callbacks.onStartNextDay(), 2000);
@@ -162,22 +124,30 @@ export class ArtifactManager {
 
         const randomIndex = Math.floor(Math.random() * this.state.artifactPool.length);
         const artifactId = this.state.artifactPool[randomIndex];
+
+        this.callbacks.onLog("=== WISHING WELL PENNY ===", "system");
+        this.activateArtifact(artifactId);
+        this.callbacks.onLog("===========================", "system");
+
+        this.callbacks.onRender();
+    }
+
+    // Shared artifact activation logic
+    activateArtifact(artifactId) {
         const artifact = getArtifactById(artifactId);
+        if (!artifact) return;
 
         this.state.activeArtifacts.push(artifactId);
         this.state.artifactPool = this.state.artifactPool.filter(id => id !== artifactId);
 
-        this.callbacks.onLog("=== WISHING WELL PENNY ===", "system");
         this.callbacks.onLog(`ARTIFACT ACQUIRED: ${artifact.name}!`, "system");
         this.callbacks.onLog(`${artifact.description}`, "design");
-        this.callbacks.onLog("===========================", "system");
 
-        if (artifactId === 'rent_negotiator') {
-            this.state.rentFrozenUntilDay = this.state.day + 1;
-            this.callbacks.onLog("Rent increase frozen for the next day!", "system");
-        }
-
-        this.callbacks.onRender();
+        // Run onArtifactAcquired hooks for the newly acquired artifact only
+        runEffectHook('onArtifactAcquired', [artifactId], {
+            state: this.state,
+            log: (msg, type) => this.callbacks.onLog(msg, type)
+        });
     }
 
     // Restore sanity with cap
