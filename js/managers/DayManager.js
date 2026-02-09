@@ -72,7 +72,7 @@ export class DayManager {
         if (this.state.day <= this.state.rentFrozenUntilDay) {
             this.callbacks.onLog(`RENT NEGOTIATOR: Rent increase frozen this day!`, "system");
         } else {
-            this.state.rent = Math.floor(this.state.rent * 1.5);
+            this.state.rent = Math.floor(this.state.rent * 1.333);
         }
 
         this.state.customersPerDay = 5;

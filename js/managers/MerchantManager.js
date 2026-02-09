@@ -30,21 +30,21 @@ export class MerchantManager {
 
     /**
      * Calculate price with day multiplier
-     * Day 2 = 1x, Day 3 = 1.5x, Day 4 = 2.25x, Day 5 = 3.375x
+     * Day 2 = 1x, Day 3 = 1.2x, Day 4 = 1.44x
      */
     calculatePrice(basePrice) {
-        const multiplier = Math.pow(1.5, this.state.day - 2);
+        const multiplier = Math.pow(1.2, this.state.day - 2);
         return Math.ceil(basePrice * multiplier);
     }
 
     /**
      * Calculate usage cost (fridge withdrawal cost) based on day
-     * Day 2 = $2, Day 3 = $3, Day 4 = $4.5, Day 5 = $6.75
+     * Day 2 = $2, Day 3 = $3, Day 4 = $3, Day 5 = $4, etc.
      * This cost is locked in at purchase time
      */
     calculateUsageCost() {
         const baseCost = 2;
-        const multiplier = Math.pow(1.5, this.state.day - 2);
+        const multiplier = Math.pow(1.2, this.state.day - 2);
         return Math.ceil(baseCost * multiplier);
     }
 
