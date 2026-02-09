@@ -99,8 +99,8 @@ export class MerchantManager {
      */
     showMerchant() {
         this.generateMerchantStock();
-        this.callbacks.onLog("MORNING MERCHANT ARRIVES");
-        this.callbacks.onLog("A traveling merchant offers wares before the day begins...");
+        this.callbacks.onLog("Morning Merchant arrives.", "merchant");
+        this.callbacks.onLog("A traveling merchant offers wares before the day begins...", "merchant");
 
         this.updateMerchantUI();
     }
@@ -125,7 +125,7 @@ export class MerchantManager {
             "MERCHANT: \"You can't afford that! Maybe try the dumpster out back?\"",
             "MERCHANT: \"Got any more gold hiding? No? Then keep walking.\""
         ];
-        this.callbacks.onLog(messages[Math.floor(Math.random() * messages.length)], "error");
+        this.callbacks.onLog(messages[Math.floor(Math.random() * messages.length)], "merchant");
     }
 
     /**
@@ -142,7 +142,7 @@ export class MerchantManager {
 
         const success = this.callbacks.grantConsumable(consumableId, 1);
         if (success) {
-            this.callbacks.onLog(`Purchased ${consumable.name} for $${price}!`, "system");
+            this.callbacks.onLog(`Purchased ${consumable.name} for $${price}!`, "merchant");
 
             // Remove from stock
             this.currentStock.consumables = this.currentStock.consumables.filter(
@@ -174,7 +174,7 @@ export class MerchantManager {
             this.state.availableIngredients.push(foodName);
             this.state.merchantUnlockPrices[foodName] = price; // Store unlock price
             this.state.ingredientCosts[foodName] = usageCost; // Store usage cost (locked in)
-            this.callbacks.onLog(`Purchased ${foodName} for $${price}! Fridge cost: $${usageCost}/use`, "system");
+            this.callbacks.onLog(`Purchased ${foodName} for $${price}! Fridge cost: $${usageCost}/use`, "merchant");
 
             // Track in recipe book as merchant purchase
             this.callbacks.trackMerchantPurchase(foodName);
@@ -195,7 +195,7 @@ export class MerchantManager {
      */
     dismissMerchant() {
         this.callbacks.hideMerchantDisplay();
-        this.callbacks.onLog("The Morning Merchant departs...");
+        this.callbacks.onLog("The Morning Merchant departs...", "merchant");
         this.currentStock = null;
 
         // Merchant counts as 1 customer served

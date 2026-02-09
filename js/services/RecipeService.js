@@ -48,7 +48,7 @@ export function tryUnlockRecipe(result, cost, availableIngredients, ingredientCo
         availableIngredients.push(result);
         ingredientCosts[result] = cost;
         if (log) {
-            log(`NEW RECIPE UNLOCKED: ${result} ($${costToShow}) now available in Fridge!`, "system");
+            log(`New recipe unlocked: ${result} ($${costToShow}) now available in Fridge!`, "system");
         }
         return true;
     } else if (cost < ingredientCosts[result]) {
@@ -57,7 +57,7 @@ export function tryUnlockRecipe(result, cost, availableIngredients, ingredientCo
         const newCostMsg = displayCost !== null ? displayCost : cost;
         ingredientCosts[result] = cost;
         if (log) {
-            log(`CHEAPER RECIPE FOR ${result.toUpperCase()} UNLOCKED! $${oldCostMsg} -> $${newCostMsg}`, "system");
+            log(`Cheaper recipe for ${result} unlocked! $${oldCostMsg} -> $${newCostMsg}`, "system");
         }
         return true;
     }

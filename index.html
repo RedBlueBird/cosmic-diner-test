@@ -17,7 +17,12 @@
                 </button>
                 <span>COSMIC DINER v0.3</span>
             </div>
-            <span>DAY: <span id="day-display">1</span> | RENT DUE: $<span id="rent-display">20</span></span>
+            <div class="header-right">
+                <span>DAY: <span id="day-display">1</span> | RENT DUE: $<span id="rent-display">20</span></span>
+                <button id="feedback-btn" class="feedback-btn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdgbIcJ9WAKpupUfn_u9wrx_eZXS_xxQEdLbvE8eQz2rNU9uw/viewform', '_blank')">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 11H11V5H13M13 15H11V13H13M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z" /></svg>
+                </button>
+            </div>
         </div>
         <div id="progress-container">
             <div id="progress-bar"></div>
@@ -149,10 +154,50 @@
         <div id="settings-view">
             <h2>SETTINGS</h2>
             <div class="settings-content">
+                <button class="recipe-book-btn btn" onclick="showAboutView()">WHAT IS THIS?</button>
                 <button class="recipe-book-btn btn" onclick="showRecipeBookView()">RECIPES BOOK</button>
                 <button class="github-btn btn" onclick="window.open('https://github.com/RedBlueBird/cosmic-diner-test', '_blank')">GITHUB PAGE</button>
+                <button class="recipe-book-btn btn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdgbIcJ9WAKpupUfn_u9wrx_eZXS_xxQEdLbvE8eQz2rNU9uw/viewform', '_blank')">FEEDBACK FORM</button>
             </div>
             <button class="btn exit-btn" onclick="hideSettings()">EXIT</button>
+        </div>
+
+        <!-- About Game View -->
+        <div id="about-view" class="hidden">
+            <h2>ABOUT GAME</h2>
+            <div class="about-content">
+                <p><strong>Welcome to Cosmic Diner!</strong></p>
+
+                <p>You've inherited a small cosmic diner on the edge of the galaxy, and it's your job to serve a variety of customers - from tired salarymen to eldritch beings beyond comprehension.</p>
+
+                <p><strong>The Challenge:</strong><br>
+                Each day, you must earn enough money to pay your ever-increasing rent while maintaining your sanity. Serve customers by combining ingredients in your kitchen, matching their unique taste preferences to maximize satisfaction (and tips!).</p>
+
+                <p><strong>Gameplay:</strong><br>
+                • Combine ingredients using kitchen appliances (Pan, Board, Amplifier, Microwave)<br>
+                • Match food attributes (savory, sweet, filling, temperature, etc.) to customer demands<br>
+                • Discover new recipes and build your cookbook<br>
+                • Choose powerful artifacts at the end of each day<br>
+                • Use consumables strategically to survive<br>
+                • Shop from the Morning Merchant for rare ingredients and items</p>
+
+                <p><strong>Win Condition:</strong><br>
+                Defeat the final boss customer on Day 5 by perfectly satisfying their multi-course demands. After victory, continue in Endless Mode for as long as you can survive!</p>
+
+                <p><strong>Lose Conditions:</strong><br>
+                • Go bankrupt (can't pay rent)<br>
+                • Lose all sanity (some customers drain your mental health!)</p>
+
+                <p><strong>Tips:</strong><br>
+                • Use [TASTE] to preview how well a dish matches customer preferences<br>
+                • Better matches = higher payments<br>
+                • Artifacts can dramatically change your strategy<br>
+                • The Morning Merchant appears from Day 2 onwards<br>
+                • Some recipes are only discoverable through experimentation!</p>
+
+                <p style="text-align: center; color: #ffff00; margin-top: 20px;">Good luck, chef! The cosmos is hungry.</p>
+            </div>
+            <button class="btn exit-btn" onclick="showSettingsView()">BACK TO SETTINGS</button>
         </div>
 
         <!-- Recipe Book View -->

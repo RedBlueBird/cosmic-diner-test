@@ -21,14 +21,20 @@ function formatModifiers(modifiers) {
     }).join('\n');
 }
 
+// Log type to CSS class mapping
+const LOG_CLASSES = {
+    action: 'log-action', customer: 'log-customer', system: 'log-system',
+    artifact: 'log-artifact', consumable: 'log-consumable', merchant: 'log-merchant',
+    error: 'log-error', narrative: 'log-narrative'
+};
+
 // Log a message to the log panel
-export function log(msg, type = "neutral") {
+export function log(msg, type = "action") {
     const panel = document.getElementById('log-panel');
     const div = document.createElement('div');
     div.textContent = "> " + msg;
-    if (type === "error") div.style.color = "#ff3333";
-    if (type === "design") div.className = "design-alert";
-    if (type === "system") div.style.color = "#ffff00";
+    const cssClass = LOG_CLASSES[type];
+    if (cssClass) div.className = cssClass;
     panel.appendChild(div);
     panel.scrollTop = panel.scrollHeight;
 }

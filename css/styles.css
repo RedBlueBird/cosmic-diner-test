@@ -18,7 +18,7 @@ body {
     background-color: #000;
     display: grid;
     grid-template-columns: 275px 1fr 275px;
-    grid-template-rows: 80px 1fr 150px;
+    grid-template-rows: 80px 1fr 125px;
     gap: 10px;
     padding: 10px;
     box-shadow: 0 0 20px rgba(51, 255, 51, 0.2);
@@ -158,6 +158,11 @@ header {
     text-transform: uppercase;
     font-size: 0.85em;
 }
+a.btn {
+    text-decoration: none;
+    font-weight: normal;
+    display: inline-block;
+}
 .btn:hover {
     background: #33ff33;
     color: #000;
@@ -192,10 +197,15 @@ header {
 
 h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
 
-.design-alert {
-    color: #ff3333;
-    font-weight: bold;
-}
+/* Log message types */
+.log-action     { color: #aaffaa; }
+.log-customer   { color: #77ddff; }
+.log-system     { color: #ffff00; }
+.log-artifact   { color: #ffaa00; }
+.log-consumable { color: #cc99ff; }
+.log-merchant   { color: #ffdd44; }
+.log-error      { color: #ff5555; }
+.log-narrative  { color: #ff6699; }
 
 .game-over {
     color: #ff3333;
@@ -456,6 +466,43 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     fill: #000;
 }
 
+/* Feedback Button */
+.feedback-btn {
+    background: transparent;
+    border: 0px solid #33ff33;
+    color: #33ff33;
+    padding: 6px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    transition: all 0.2s;
+}
+
+.feedback-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: #33ff33;
+}
+
+.feedback-btn:hover {
+    background: #33ff33;
+    border-color: #33ff33;
+}
+
+.feedback-btn:hover svg {
+    fill: #000;
+}
+
+/* Header Right Container */
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
 /* Settings Modal */
 #settings-modal {
     width: 400px;
@@ -499,6 +546,25 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     text-align: left;
     margin: 20px 0;
     padding-right: 10px;
+}
+
+/* About View */
+.about-content {
+    max-height: 350px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-align: left;
+    margin: 20px 0;
+    padding-right: 10px;
+    line-height: 1.6;
+}
+
+.about-content p {
+    margin-bottom: 15px;
+}
+
+.about-content strong {
+    color: #33ff33;
 }
 
 .recipe-list {

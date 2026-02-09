@@ -125,9 +125,8 @@ export class ArtifactManager {
         const randomIndex = Math.floor(Math.random() * this.state.artifactPool.length);
         const artifactId = this.state.artifactPool[randomIndex];
 
-        this.callbacks.onLog("=== WISHING WELL PENNY ===", "system");
+        this.callbacks.onLog("=== WISHING WELL PENNY ===", "consumable");
         this.activateArtifact(artifactId);
-        this.callbacks.onLog("===========================", "system");
 
         this.callbacks.onRender();
     }
@@ -140,8 +139,8 @@ export class ArtifactManager {
         this.state.activeArtifacts.push(artifactId);
         this.state.artifactPool = this.state.artifactPool.filter(id => id !== artifactId);
 
-        this.callbacks.onLog(`ARTIFACT ACQUIRED: ${artifact.name}!`, "system");
-        this.callbacks.onLog(`${artifact.description}`, "design");
+        this.callbacks.onLog(`ARTIFACT ACQUIRED: ${artifact.name}!`, "artifact");
+        this.callbacks.onLog(`${artifact.description}`, "artifact");
 
         // Run onArtifactAcquired hooks for the newly acquired artifact only
         runEffectHook('onArtifactAcquired', [artifactId], {

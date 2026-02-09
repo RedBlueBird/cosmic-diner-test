@@ -58,7 +58,7 @@ registerHandler('applyBulkDiscount', 'bulk_buyer', (context, currentCost) => {
 
     // Every Nth purchase is free
     if (state.purchaseHistory[item] % freeEveryNth === 0) {
-        log(`BULK BUYER: ${item} is FREE! (${freeEveryNth}${getOrdinalSuffix(freeEveryNth)} purchase)`, "system");
+        log(`BULK BUYER: ${item} is FREE! (${freeEveryNth}${getOrdinalSuffix(freeEveryNth)} purchase)`, "artifact");
         return 0;
     }
 
@@ -85,7 +85,7 @@ registerHandler('modifyPanIngredientCost', 'pan_perfectionist', (context, curren
     const cost1 = Math.max(1, Math.ceil(currentCosts.cost1 * reduction));
     const cost2 = Math.max(1, Math.ceil(currentCosts.cost2 * reduction));
     const percent = Math.round((1 - reduction) * 100);
-    context.log(`PAN PERFECTIONIST: Ingredient costs reduced by ${percent}%!`, "system");
+    context.log(`PAN PERFECTIONIST: Ingredient costs reduced by ${percent}%!`, "artifact");
     return { cost1, cost2 };
 });
 
@@ -137,13 +137,13 @@ registerHandler('postTasteTest', 'caffeine_addiction', (context) => {
     const artifact = getArtifactById('caffeine_addiction');
     const sanityBonus = artifact.effect.value;
     restoreSanity(sanityBonus);
-    log(`CAFFEINE ADDICTION: Caffeine restores ${sanityBonus} sanity!`, "system");
+    log(`CAFFEINE ADDICTION: Caffeine restores ${sanityBonus} sanity!`, "artifact");
 
     // Consume the caffeinated item
     if (artifact.effect.consume) {
         state.countertop.splice(context.selectedIndex, 1);
         clearSelection();
-        log(`The caffeinated item is consumed.`, "system");
+        log(`The caffeinated item is consumed.`, "artifact");
     }
 });
 
@@ -198,7 +198,7 @@ registerHandler('postServe', 'meditation_master', (context) => {
     const artifact = getArtifactById('meditation_master');
     const sanityBonus = artifact.effect.value;
     context.restoreSanity(sanityBonus);
-    context.log(`MEDITATION MASTER: +${sanityBonus} sanity from excellent service!`, "system");
+    context.log(`MEDITATION MASTER: +${sanityBonus} sanity from excellent service!`, "artifact");
 });
 
 // =============================================================================
@@ -211,7 +211,7 @@ registerHandler('endOfDay', 'night_owl', (context) => {
     const moneyThreshold = parseInt(artifact.effect.condition.split('_')[2]) || 50;
     if (context.state.money >= moneyThreshold) {
         context.restoreSanity(sanityBonus);
-        context.log(`NIGHT OWL: +${sanityBonus} sanity for having $${moneyThreshold}+!`, "system");
+        context.log(`NIGHT OWL: +${sanityBonus} sanity for having $${moneyThreshold}+!`, "artifact");
     }
 });
 
@@ -222,7 +222,7 @@ registerHandler('endOfDay', 'investment_portfolio', (context) => {
     const interest = Math.min(maxInterest, Math.floor(context.state.money * rate));
     if (interest > 0) {
         context.state.money += interest;
-        context.log(`INVESTMENT PORTFOLIO: Earned $${interest} interest!`, "system");
+        context.log(`INVESTMENT PORTFOLIO: Earned $${interest} interest!`, "artifact");
     }
 });
 
@@ -247,7 +247,7 @@ registerHandler('startOfDay', 'morning_prep', (context) => {
     }
 
     if (addedCount > 0) {
-        context.log(`MORNING PREP: Added ${addedCount} temporary ingredient(s) to countertop!`, "system");
+        context.log(`MORNING PREP: Added ${addedCount} temporary ingredient(s) to countertop!`, "artifact");
     }
 });
 
@@ -257,5 +257,5 @@ registerHandler('startOfDay', 'morning_prep', (context) => {
 
 registerHandler('onArtifactAcquired', 'rent_negotiator', (context) => {
     context.state.rentFrozenUntilDay = context.state.day + 1;
-    context.log("Rent increase frozen for the next day!", "system");
+    context.log("Rent increase frozen for the next day!", "artifact");
 });

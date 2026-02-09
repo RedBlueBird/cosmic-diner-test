@@ -47,8 +47,8 @@ export class CustomerManager {
 
         this.callbacks.updateCustomerDisplay(this.state.customer);
 
-        this.callbacks.onLog(`CUSTOMER ARRIVED: ${this.state.customer.name}`);
-        this.callbacks.onLog(`They want: ${orderHints}`);
+        this.callbacks.onLog(`Customer arrived: ${this.state.customer.name}`, "customer");
+        this.callbacks.onLog(`They want: ${orderHints}`, "customer");
         this.callbacks.onRender();
     }
 
@@ -64,13 +64,11 @@ export class CustomerManager {
             victoryBonus: bossData.victoryBonus || 0
         };
 
-        this.callbacks.onLog("======================", "system");
-        this.callbacks.onLog("BOSS CUSTOMER ARRIVED!", "system");
-        this.callbacks.onLog(`${bossData.name.toUpperCase()} - ${bossData.title}`, "system");
-        this.callbacks.onLog("======================", "system");
-        this.callbacks.onLog(`They demand a ${bossData.orders.length}-COURSE MEAL!`, "design");
-        this.callbacks.onLog("Their standards are IMPOSSIBLY HIGH!", "design");
-        this.callbacks.onLog("Match their demands closely or face their WRATH!", "design");
+        this.callbacks.onLog("=== BOSS ARRIVED ===", "narrative");
+        this.callbacks.onLog(`${bossData.name.toUpperCase()} - ${bossData.title}`, "narrative");
+        this.callbacks.onLog(`They demand a ${bossData.orders.length}-course meal!`, "narrative");
+        this.callbacks.onLog("Their standards are IMPOSSIBLY HIGH!", "narrative");
+        this.callbacks.onLog("Match their demands closely or face their WRATH!", "narrative");
 
         this.callbacks.updateBossDisplay(this.state.customer);
         this.callbacks.onRender();
@@ -114,10 +112,10 @@ export class CustomerManager {
             }
 
             if (messages.length > 0) {
-                let logType = "neutral";
-                if (category === "COSMIC") logType = "design";
+                let logType = "action";
+                if (category === "COSMIC") logType = "narrative";
                 if (category === "EFFECT" && messages.some(m => m.includes("TOXIC") || m.includes("SANITY"))) {
-                    logType = "error";
+                    logType = "narrative";
                 }
 
                 this.callbacks.onLog(`${category}: ${messages.join(" ")}`, logType);
@@ -129,12 +127,10 @@ export class CustomerManager {
             this.callbacks.onLog("ANALYSIS: Unremarkable. No distinctive traits detected.");
         }
 
-        this.callbacks.onLog("===================================", "system");
-
         if (attrs.sanity < 0) {
             const sanityDamage = Math.abs(Math.floor(attrs.sanity));
             this.state.sanity -= sanityDamage;
-            this.callbacks.onLog(`The taste damages your sanity! (-${sanityDamage} additional)`, "error");
+            this.callbacks.onLog(`The taste damages your sanity! (-${sanityDamage} additional)`, "narrative");
         }
 
         // Post-taste artifact effects (e.g. caffeine consumption)
@@ -154,9 +150,9 @@ export class CustomerManager {
         }
 
         if (this.state.sanity <= 30) {
-            this.callbacks.onLog("Reality distorting... (Sanity Critical!)", "design");
+            this.callbacks.onLog("Reality distorting... (Sanity Critical!)", "narrative");
         } else if (this.state.sanity <= 50) {
-            this.callbacks.onLog("Vision blurring... (Sanity Low)", "design");
+            this.callbacks.onLog("Vision blurring... (Sanity Low)", "narrative");
         }
 
         this.callbacks.onRender();
@@ -190,7 +186,7 @@ export class CustomerManager {
         }
 
         // Minimal console log
-        this.callbacks.onLog(`Serving ${item} to ${this.state.customer.name}...`, "system");
+        this.callbacks.onLog(`Serving ${item} to ${this.state.customer.name}...`, "customer");
 
         const foodAttrs = getFoodAttributes(itemObj);
         const demandVector = this.state.customer.demand;
@@ -296,7 +292,7 @@ export class CustomerManager {
         const currentOrder = this.state.customer.orders[this.state.customer.currentCourse];
 
         // Minimal console log
-        this.callbacks.onLog(`Serving ${item} as ${currentOrder.name}...`, "system");
+        this.callbacks.onLog(`Serving ${item} as ${currentOrder.name}...`, "customer");
 
         const foodAttrs = getFoodAttributes(itemObj);
         const demandVector = currentOrder.demand;
@@ -385,12 +381,12 @@ export class CustomerManager {
             // Apply payment
             if (feedback.payment > 0) {
                 this.state.money += feedback.payment;
-                this.callbacks.onLog(`Received $${feedback.payment} for ${feedback.courseName}.`, "system");
+                this.callbacks.onLog(`Received $${feedback.payment} for ${feedback.courseName}.`, "customer");
             }
 
             // Check if this was a failure
             if (feedback.buttonText === "ACCEPT DEFEAT") {
-                this.callbacks.onLog("CRITICAL FAILURE - BOSS BATTLE LOST!", "error");
+                this.callbacks.onLog("CRITICAL FAILURE - BOSS BATTLE LOST!", "narrative");
                 this.state.pendingFeedback.active = false;
                 this.callbacks.hideFeedbackDisplay();
                 this.callbacks.onRender();
@@ -416,7 +412,7 @@ export class CustomerManager {
             this.state.customer.coursesServed++;
             this.state.pendingFeedback.active = false;
             this.callbacks.hideFeedbackDisplay();
-            this.callbacks.onLog(`Next course: ${this.state.customer.orders[this.state.customer.currentCourse].name}`, "system");
+            this.callbacks.onLog(`Next course: ${this.state.customer.orders[this.state.customer.currentCourse].name}`, "customer");
             this.callbacks.updateBossDisplay(this.state.customer);
             this.callbacks.onRender();
             return;
@@ -443,11 +439,11 @@ export class CustomerManager {
         // Apply payment
         if (feedback.payment >= 1) {
             this.state.money += feedback.payment;
-            this.callbacks.onLog(`Received $${feedback.payment}. ${feedback.customerName} leaves.`, "system");
+            this.callbacks.onLog(`Received $${feedback.payment}. ${feedback.customerName} leaves.`, "customer");
         } else if (feedback.payment > 0) {
-            this.callbacks.onLog(`Customer left a few cents. ($${feedback.payment.toFixed(2)})`);
+            this.callbacks.onLog(`Customer left a few cents. ($${feedback.payment.toFixed(2)})`, "customer");
         } else {
-            this.callbacks.onLog("Customer refused to pay and left.", "error");
+            this.callbacks.onLog("Customer refused to pay and left.", "narrative");
         }
 
         // Run post-serve effects (Meditation Master artifact)
@@ -472,15 +468,13 @@ export class CustomerManager {
         const bossName = this.state.customer.name;
         const victoryBonus = this.state.customer.victoryBonus || 0;
 
-        this.callbacks.onLog("======================", "system");
-        this.callbacks.onLog(`${bossName}: 'Magnificent! A perfect ${this.state.customer.coursesRequired}-course meal!'`, "system");
-        this.callbacks.onLog(`${bossName}: 'Your cooking... it's RAW TALENT!'`, "system");
-        this.callbacks.onLog("======================", "system");
-        this.callbacks.onLog("BOSS DEFEATED!", "system");
+        this.callbacks.onLog(`${bossName}: 'Magnificent! A perfect ${this.state.customer.coursesRequired}-course meal!'`, "narrative");
+        this.callbacks.onLog(`${bossName}: 'Your cooking... it's RAW TALENT!'`, "narrative");
+        this.callbacks.onLog("=== BOSS DEFEATED ===", "narrative");
 
         if (victoryBonus > 0) {
             this.state.money += victoryBonus;
-            this.callbacks.onLog(`Received $${victoryBonus} BOSS BONUS!`);
+            this.callbacks.onLog(`Received $${victoryBonus} BOSS BONUS!`, "customer");
         }
 
         this.state.customersServedCount++;

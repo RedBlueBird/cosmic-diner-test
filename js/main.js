@@ -88,6 +88,13 @@ function showRecipeBookView() {
     });
 }
 
+// Show about view
+function showAboutView() {
+    import('./ui/modals.js').then(module => {
+        module.showAboutView();
+    });
+}
+
 // Show settings view
 function showSettingsView() {
     import('./ui/modals.js').then(module => {
@@ -100,6 +107,7 @@ window.restartGame = restartGame;
 window.showSettings = showSettings;
 window.hideSettings = hideSettings;
 window.showRecipeBookView = showRecipeBookView;
+window.showAboutView = showAboutView;
 window.showSettingsView = showSettingsView;
 
 // Start initialization when DOM is ready

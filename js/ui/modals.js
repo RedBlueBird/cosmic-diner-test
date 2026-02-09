@@ -135,6 +135,7 @@ export function showGameOver(reason, day, customersServed) {
         CUSTOMERS SERVED: ${customersServed}<br>
         =============================<br>
         <button class="btn" onclick="window.restartGame()">RESTART</button>
+        <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdgbIcJ9WAKpupUfn_u9wrx_eZXS_xxQEdLbvE8eQz2rNU9uw/viewform" target="_blank">FEEDBACK FORM</a>
     `;
     panel.appendChild(gameOverDiv);
 }
@@ -165,6 +166,7 @@ export function showVictory(day, money, sanity, bossName = "THE BOSS") {
         <br>
         <button class="btn" onclick="window.game.continueEndlessMode()">CONTINUE TO ENDLESS MODE</button>
         <button class="btn" onclick="window.restartGame()">RESTART GAME</button>
+        <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdgbIcJ9WAKpupUfn_u9wrx_eZXS_xxQEdLbvE8eQz2rNU9uw/viewform" target="_blank">FEEDBACK FORM</a>
     `;
     panel.appendChild(victoryDiv);
 }
@@ -249,11 +251,21 @@ function createRecipeTooltip(element, title, description) {
     return tooltip;
 }
 
+// Show about view
+export function showAboutView() {
+    // Clean up any recipe tooltips
+    cleanupRecipeTooltips();
+    document.getElementById('settings-view').classList.add('hidden');
+    document.getElementById('recipe-book-view').classList.add('hidden');
+    document.getElementById('about-view').classList.remove('hidden');
+}
+
 // Show settings view
 export function showSettingsView() {
     // Clean up any recipe tooltips
     cleanupRecipeTooltips();
     document.getElementById('recipe-book-view').classList.add('hidden');
+    document.getElementById('about-view').classList.add('hidden');
     document.getElementById('settings-view').classList.remove('hidden');
 }
 

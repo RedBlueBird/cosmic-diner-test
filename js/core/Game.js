@@ -79,8 +79,8 @@ export class Game {
         // Grant starting consumable (Commented out for testing)
         // this.consumables.grantRandomConsumable(); 
 
-        this.log("DAY 1 INITIALIZED.");
-        this.log("RENT DUE END OF SHIFT: $" + this.rent);
+        this.log("=== STARTING DAY 1 ===", "system");
+        this.log(`Rent due at end of shift: $${this.rent}`);
 
         this.customers.nextCustomer();
 
@@ -181,7 +181,7 @@ export class Game {
             this.recipeBook.trackAtom(atom);
         });
         const stockList = this.availableIngredients.map(a => `${a} ($1)`).join(", ");
-        this.log("FRIDGE STOCKED WITH: " + stockList, "system");
+        this.log("Fridge stocked with: " + stockList, "system");
     }
 
     getIngredientCost(item) {
@@ -215,7 +215,7 @@ export class Game {
         return this.day >= APPLIANCE_UNLOCK_DAYS[appliance];
     }
 
-    log(msg, type = "neutral") {
+    log(msg, type = "action") {
         UI.log(msg, type);
     }
 
@@ -330,8 +330,8 @@ export class Game {
     continueEndlessMode() {
         this.endlessMode = true;
         this.log("=== ENTERING ENDLESS MODE ===", "system");
-        this.log("The boss is satisfied. The diner continues...", "system");
-        this.log("Endless customers await!", "design");
+        this.log("The boss is satisfied. The diner continues...", "narrative");
+        this.log("Endless customers await!", "narrative");
 
         // Hide victory modal
         const victoryElements = document.querySelectorAll('.game-over');

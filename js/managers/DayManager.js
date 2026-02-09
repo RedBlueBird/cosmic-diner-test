@@ -63,7 +63,7 @@ export class DayManager {
 
         // Rent Negotiator: Freeze rent increase if artifact is active and within freeze period
         if (this.state.day <= this.state.rentFrozenUntilDay) {
-            this.callbacks.onLog(`RENT NEGOTIATOR: Rent increase frozen this day!`, "system");
+            this.callbacks.onLog(`RENT NEGOTIATOR: Rent increase frozen this day!`, "artifact");
         } else {
             this.state.rent = Math.floor(this.state.rent * RENT_MULTIPLIER);
         }
@@ -76,7 +76,7 @@ export class DayManager {
         const applianceNames = { board: 'BOARD', amp: 'AMPLIFIER', micro: 'MICROWAVE' };
         for (const [appliance, unlockDay] of Object.entries(APPLIANCE_UNLOCK_DAYS)) {
             if (unlockDay === this.state.day && applianceNames[appliance]) {
-                this.callbacks.onLog(`NEW APPLIANCE UNLOCKED: [${applianceNames[appliance]}]!`, "system");
+                this.callbacks.onLog(`New appliance unlocked: [${applianceNames[appliance]}]!`, "system");
             }
         }
 
@@ -100,7 +100,7 @@ export class DayManager {
 
     gameOver(reason) {
         this.state.isDayActive = false;
-        this.callbacks.onLog(`GAME OVER: ${reason}`, "error");
+        this.callbacks.onLog(`GAME OVER: ${reason}`, "narrative");
         const totalServed = this.state.customersServedCount + (this.state.day - 1) * 3;
         this.callbacks.showGameOver(reason, this.state.day, totalServed);
     }

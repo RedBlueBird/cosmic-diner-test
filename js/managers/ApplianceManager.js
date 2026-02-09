@@ -42,10 +42,10 @@ export class ApplianceManager {
             this.state.money += cheapestCost;
             this.state.sanity -= actualSanityLoss;
 
-            this.callbacks.onLog(">> ELDRITCH INTERVENTION <<", "system");
-            this.callbacks.onLog(`Reality warps. Something vast and incomprehensible stirs in the void.`, "system");
-            this.callbacks.onLog(`It finds your poverty... amusing. Emergency funds materialize: +$${cheapestCost}`, "system");
-            this.callbacks.onLog(`The encounter fractures your psyche: -${actualSanityLoss} sanity`, "error");
+            this.callbacks.onLog(">> ELDRITCH INTERVENTION <<", "narrative");
+            this.callbacks.onLog(`Reality warps. Something vast and incomprehensible stirs in the void.`, "narrative");
+            this.callbacks.onLog(`It finds your poverty... amusing. Emergency funds materialize: +$${cheapestCost}`, "narrative");
+            this.callbacks.onLog(`The encounter fractures your psyche: -${actualSanityLoss} sanity`, "narrative");
             this.callbacks.onRender();
         }
 
@@ -121,7 +121,7 @@ export class ApplianceManager {
         // Apply free withdrawal effect
         if (this.state.activeEffects.freeWithdrawals > 0) {
             this.state.activeEffects.freeWithdrawals--;
-            this.callbacks.onLog(`QUANTUM FRIDGE: ${item} is FREE! (${this.state.activeEffects.freeWithdrawals} left)`, "system");
+            this.callbacks.onLog(`QUANTUM FRIDGE: ${item} is FREE! (${this.state.activeEffects.freeWithdrawals} left)`, "consumable");
             cost = 0;
         }
 
@@ -185,7 +185,7 @@ export class ApplianceManager {
 
         if (!result) {
             result = "Burnt Slop";
-            this.callbacks.onLog(`Failed Combo: ${item1} + ${item2} = ${result}`, "error");
+            this.callbacks.onLog(`Failed combo: ${item1} + ${item2} = ${result}`);
         } else {
             this.callbacks.onLog(`Cooking: ${item1} ($${cost1}) + ${item2} ($${cost2}) -> ${result} ($${resultFridgeCost})`);
             this.callbacks.unlockIngredient(result, baseCostForStorage, [item1Obj, item2Obj], resultFridgeCost);
@@ -334,7 +334,7 @@ export class ApplianceManager {
             // 70% chance: Radioactive Slime
             result = "Radioactive Slime";
             const resultFridgeCost = this.callbacks.getAtomCostWithArtifacts(result, baseItemCost);
-            this.callbacks.onLog(`Microwave mutated ${item} ($${itemDisplayCost}) into: RADIOACTIVE SLIME ($${resultFridgeCost})`, "error");
+            this.callbacks.onLog(`Microwave mutated ${item} ($${itemDisplayCost}) into: Radioactive Slime ($${resultFridgeCost})`);
             this.addToCountertop(createItemObject(result, mods), {}, true); // silent=true
             this.callbacks.unlockIngredient(result, baseItemCost, [itemObj], resultFridgeCost);
             this.callbacks.trackRecipe('Microwave', result, [itemObj]);
@@ -365,7 +365,7 @@ export class ApplianceManager {
 
         if (totalRefund > 0) {
             this.state.money += totalRefund;
-            this.callbacks.onLog(`THE RECYCLER: Refunded $${totalRefund}!`, "system");
+            this.callbacks.onLog(`THE RECYCLER: Refunded $${totalRefund}!`, "artifact");
         }
 
         this.callbacks.onClearSelection();

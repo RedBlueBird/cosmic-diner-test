@@ -57,4 +57,10 @@ export function initApplianceTooltips() {
             createTooltip(button, text);
         }
     });
+
+    // Feedback button with title and description
+    const feedbackBtn = document.getElementById('feedback-btn');
+    if (feedbackBtn) {
+        createTooltip(feedbackBtn, 'Give Cosmic Diner Game Feedback \n\n(Opens a Google Form)');
+    }
 }

@@ -15,10 +15,10 @@ export class ConsumableManager {
         const random = consumables[Math.floor(Math.random() * consumables.length)];
         const success = this.grantConsumable(random.id, 1);
         if (success) {
-            this.callbacks.onLog(`STARTING BONUS: Received ${random.name}!`, "system");
+            this.callbacks.onLog(`Starting bonus: Received ${random.name}!`, "consumable");
         } else {
             // Extremely unlikely, but handle gracefully
-            this.callbacks.onLog(`STARTING BONUS: Could not grant consumable (inventory full)`, "error");
+            this.callbacks.onLog(`Starting bonus: Could not grant consumable (inventory full)`, "error");
         }
     }
 
@@ -50,11 +50,11 @@ export class ConsumableManager {
     selectConsumable(consumableId) {
         if (this.state.selectedConsumable === consumableId) {
             this.state.selectedConsumable = null;
-            this.callbacks.onLog("Consumable deselected.");
+            this.callbacks.onLog("Consumable deselected.", "consumable");
         } else {
             const consumable = getConsumableById(consumableId);
             this.state.selectedConsumable = consumableId;
-            this.callbacks.onLog(`Selected: ${consumable.name}. ${consumable.description}`);
+            this.callbacks.onLog(`Selected: ${consumable.name}. ${consumable.description}`, "consumable");
         }
         this.callbacks.onRender();
     }
@@ -82,7 +82,7 @@ export class ConsumableManager {
                 this.applySanityRestore(consumable);
             } else if (effectType === 'payment_multiplier') {
                 this.state.activeEffects.luckyCoins += consumable.effect.duration;
-                this.callbacks.onLog(`${consumable.name}: Next customer pays ${consumable.effect.value}x!`, "system");
+                this.callbacks.onLog(`${consumable.name}: Next customer pays ${consumable.effect.value}x!`, "consumable");
             } else if (effectType === 'serve_emergency_food') {
                 this.serveEmergencyFood(consumable);
             } else if (effectType === 'duplicate_item') {
@@ -91,7 +91,7 @@ export class ConsumableManager {
                 this.unlockRandomIngredient(consumable);
             } else if (effectType === 'force_rating') {
                 this.state.activeEffects.goldenPlate = true;
-                this.callbacks.onLog(`${consumable.name}: Next dish gets PERFECT rating!`, "system");
+                this.callbacks.onLog(`${consumable.name}: Next dish gets PERFECT rating!`, "consumable");
             } else if (effectType === 'cursed_boost') {
                 this.applyCursedBoost(consumable);
             } else if (effectType === 'grant_artifact') {
@@ -100,7 +100,7 @@ export class ConsumableManager {
                 this.skipCurrentCustomer();
             } else if (effectType === 'free_withdrawals') {
                 this.state.activeEffects.freeWithdrawals += consumable.effect.count;
-                this.callbacks.onLog(`${consumable.name}: Next ${consumable.effect.count} fridge uses are free!`, "system");
+                this.callbacks.onLog(`${consumable.name}: Next ${consumable.effect.count} fridge uses are free!`, "consumable");
             }
 
             // Consume the item
@@ -131,13 +131,13 @@ export class ConsumableManager {
         const modList = Object.entries(modifiers)
             .map(([k, v]) => `${k} ${v > 0 ? '+' : ''}${v}`)
             .join(', ');
-        this.callbacks.onLog(`Applied ${consumable.name} to ${itemObj.name}! (${modList})`);
+        this.callbacks.onLog(`Applied ${consumable.name} to ${itemObj.name}! (${modList})`, "consumable");
     }
 
     applySanityRestore(consumable) {
         const restoreAmount = consumable.effect.value;
         this.callbacks.onRestoreSanity(restoreAmount);
-        this.callbacks.onLog(`${consumable.name}: Restored ${restoreAmount} sanity!`, "system");
+        this.callbacks.onLog(`${consumable.name}: Restored ${restoreAmount} sanity!`, "consumable");
     }
 
     serveEmergencyFood(consumable) {
@@ -153,7 +153,7 @@ export class ConsumableManager {
 
         const payment = consumable.effect.payment;
         this.state.money += payment;
-        this.callbacks.onLog(`${consumable.name}: Customer accepts emergency rations and pays $${payment}!`, "system");
+        this.callbacks.onLog(`${consumable.name}: Customer accepts emergency rations and pays $${payment}!`, "consumable");
 
         this.callbacks.onAdvanceCustomer(1500);
     }
@@ -175,7 +175,7 @@ export class ConsumableManager {
             throw new Error("Countertop full");
         }
 
-        this.callbacks.onLog(`Mirror Shard: Duplicated ${itemName}${Object.keys(modifiers).length > 0 ? ' (with modifiers)' : ''}!`, "system");
+        this.callbacks.onLog(`Mirror Shard: Duplicated ${itemName}${Object.keys(modifiers).length > 0 ? ' (with modifiers)' : ''}!`, "consumable");
     }
 
     unlockRandomIngredient(consumable) {
@@ -184,7 +184,7 @@ export class ConsumableManager {
         const notInFridge = allFoods.filter(food => !this.state.availableIngredients.includes(food));
 
         if (notInFridge.length === 0) {
-            this.callbacks.onLog("All ingredients already unlocked!", "system");
+            this.callbacks.onLog("All ingredients already unlocked!", "consumable");
             return;
         }
 
@@ -194,7 +194,7 @@ export class ConsumableManager {
         this.state.availableIngredients.push(randomFood);
         this.state.ingredientCosts[randomFood] = cost;
 
-        this.callbacks.onLog(`${consumable.name}: Unlocked ${randomFood} ($${cost}) in your fridge!`, "system");
+        this.callbacks.onLog(`${consumable.name}: Unlocked ${randomFood} ($${cost}) in your fridge!`, "consumable");
     }
 
     applyCursedBoost(consumable) {
@@ -218,7 +218,7 @@ export class ConsumableManager {
 
         itemObj.modifiers.void = (itemObj.modifiers.void || 0) + voidBoost;
 
-        this.callbacks.onLog(`${consumable.name}: ${itemObj.name} is now EXTREMELY POWERFUL (+${boost} all, +${voidBoost} void)!`, "error");
+        this.callbacks.onLog(`${consumable.name}: ${itemObj.name} is now EXTREMELY POWERFUL (+${boost} all, +${voidBoost} void)!`, "consumable");
     }
 
     skipCurrentCustomer() {
@@ -232,7 +232,7 @@ export class ConsumableManager {
             throw new Error("Cannot skip boss");
         }
 
-        this.callbacks.onLog(`Wishing Well Penny: Skipped ${this.state.customer.name}!`, "system");
+        this.callbacks.onLog(`Wishing Well Penny: Skipped ${this.state.customer.name}!`, "consumable");
 
         this.callbacks.onAdvanceCustomer(1000);
     }
@@ -254,7 +254,7 @@ export class ConsumableManager {
             this.state.selectedConsumable = null;
         }
 
-        this.callbacks.onLog(`Discarded ${consumable.name}.`);
+        this.callbacks.onLog(`Discarded ${consumable.name}.`, "consumable");
         this.callbacks.onRender();
     }
 }
