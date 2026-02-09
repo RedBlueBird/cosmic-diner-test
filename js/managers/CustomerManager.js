@@ -171,6 +171,12 @@ export class CustomerManager {
             return;
         }
 
+        // Guard: can't serve if feedback is pending collection
+        if (this.state.pendingFeedback.active) {
+            this.callbacks.onLog("Collect payment from current customer first!", "error");
+            return;
+        }
+
         if (this.state.selectedIndices.length !== 1) {
             this.callbacks.onLog("Select 1 dish to serve.", "error");
             return;
@@ -183,7 +189,8 @@ export class CustomerManager {
             return;
         }
 
-        this.callbacks.onLog(`=== SERVING ${item.toUpperCase()} ===`, "system");
+        // Minimal console log
+        this.callbacks.onLog(`Serving ${item} to ${this.state.customer.name}...`, "system");
 
         const foodAttrs = getFoodAttributes(itemObj);
         const demandVector = this.state.customer.demand;
@@ -193,18 +200,16 @@ export class CustomerManager {
         let satisfaction = getSatisfactionRating(distance);
 
         // Apply Golden Plate effect
-        if (this.state.activeEffects.goldenPlate) {
+        const usedGoldenPlate = this.state.activeEffects.goldenPlate;
+        if (usedGoldenPlate) {
             satisfaction = { rating: "PERFECT", emoji: "★★★★★", color: "#ffff00" };
             payment = calculatePayment(0);
-            this.callbacks.onLog("GOLDEN PLATE: Automatic PERFECT rating!", "system");
             this.state.activeEffects.goldenPlate = false;
         }
 
         const orderHints = getDemandHints(demandVector);
-        this.callbacks.onLog(`Order: ${orderHints}`);
 
-        this.callbacks.onLog(`${this.state.customer.name} examines the ${item}...`);
-
+        // Generate comment based on satisfaction
         let comment;
         if (satisfaction.rating === "PERFECT") {
             comment = "PERFECT! This is EXACTLY what I wanted!";
@@ -219,26 +224,13 @@ export class CustomerManager {
         } else {
             comment = "What IS this?! This is NOTHING like what I wanted!";
         }
-        this.callbacks.onLog(`Comment: "${comment}"`);
 
-        this.callbacks.onLog(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`);
-
-        // Sanity penalty for poor service
+        // Calculate sanity cost but DON'T apply it yet
+        let sanityCost = 0;
         if (satisfaction.rating === "TERRIBLE") {
-            this.state.sanity -= TERRIBLE_SERVICE_SANITY_PENALTY;
-            this.callbacks.onLog(`Customer's disgust damages your sanity! (-${TERRIBLE_SERVICE_SANITY_PENALTY} sanity)`, "error");
+            sanityCost = TERRIBLE_SERVICE_SANITY_PENALTY;
         } else if (satisfaction.rating === "POOR") {
-            this.state.sanity -= POOR_SERVICE_SANITY_PENALTY;
-            this.callbacks.onLog(`Customer's disappointment weighs on you. (-${POOR_SERVICE_SANITY_PENALTY} sanity)`, "error");
-        }
-
-        // Check for sanity game over
-        if (this.state.sanity <= 0) {
-            this.callbacks.onRender();
-            setTimeout(() => {
-                this.callbacks.onGameOver("SANITY DEPLETED");
-            }, 1000);
-            return;
+            sanityCost = POOR_SERVICE_SANITY_PENALTY;
         }
 
         // Apply payment bonus artifacts
@@ -251,47 +243,60 @@ export class CustomerManager {
             itemName: item
         });
 
+        const appliedBonuses = [];
         if (paymentResult.multiplier > 1) {
             payment *= paymentResult.multiplier;
-            this.callbacks.onLog(`BONUS (${paymentResult.reasons.join(" + ")}): ${paymentResult.multiplier}x payment!`, "system");
+            appliedBonuses.push(`${paymentResult.reasons.join(" + ")}: ${paymentResult.multiplier}x`);
         }
 
         // Apply Lucky Coin effect
         if (this.state.activeEffects.luckyCoins > 0) {
             payment *= 2;
-            this.callbacks.onLog("LUCKY COIN: Payment doubled!", "system");
+            appliedBonuses.push("Lucky Coin: 2x");
             this.state.activeEffects.luckyCoins--;
         }
 
-        if (payment >= 1) {
-            this.state.money += Math.floor(payment);
-            this.callbacks.onLog(`Received $${Math.floor(payment)}.`, "system");
-        } else if (payment > 0) {
-            this.callbacks.onLog(`Customer left a few cents. ($${payment.toFixed(2)})`);
-        } else {
-            this.callbacks.onLog("Customer refused to pay.", "error");
+        // Apply Golden Plate bonus message if used
+        if (usedGoldenPlate) {
+            appliedBonuses.unshift("Golden Plate: PERFECT rating");
         }
 
-        // Post-serve artifact effects (e.g. meditation master)
-        runEffectHook('postServe', this.state.activeArtifacts, {
-            isExcellentOrPerfect,
-            restoreSanity: (amount) => this.callbacks.restoreSanity(amount),
-            log: (msg, type) => this.callbacks.onLog(msg, type)
-        });
+        // Store feedback instead of applying payment/sanity
+        this.state.pendingFeedback = {
+            active: true,
+            isBoss: false,
+            dishName: item,
+            comment: comment,
+            rating: satisfaction,
+            payment: Math.floor(payment),
+            orderHints: orderHints,
+            appliedBonuses: appliedBonuses,
+            sanityCost: sanityCost,           // STORED, not applied
+            customerName: this.state.customer.name,
+            customerAvatar: this.state.customer.avatar,
+            buttonText: "COLLECT",
+            courseName: ""
+        };
 
-        this.callbacks.onLog("===================================", "system");
-
+        // Remove item, show feedback UI, DON'T advance
         this.state.countertop.splice(this.state.selectedIndices[0], 1);
         this.callbacks.onClearSelection();
-
-        this.advanceCustomer();
+        this.callbacks.showFeedbackDisplay(this.state.pendingFeedback);
+        this.callbacks.onRender();
     }
 
     serveBoss(itemObj) {
+        // Guard: can't serve if feedback is pending collection
+        if (this.state.pendingFeedback.active) {
+            this.callbacks.onLog("Complete current course first!", "error");
+            return;
+        }
+
         const item = getItemName(itemObj);
         const currentOrder = this.state.customer.orders[this.state.customer.currentCourse];
 
-        this.callbacks.onLog(`=== SERVING ${item.toUpperCase()} AS ${currentOrder.name.toUpperCase()} ===`, "system");
+        // Minimal console log
+        this.callbacks.onLog(`Serving ${item} as ${currentOrder.name}...`, "system");
 
         const foodAttrs = getFoodAttributes(itemObj);
         const demandVector = currentOrder.demand;
@@ -300,10 +305,8 @@ export class CustomerManager {
         const satisfaction = getSatisfactionRating(distance);
 
         const orderHints = getDemandHints(demandVector);
-        this.callbacks.onLog(`Order: ${orderHints}`);
 
-        this.callbacks.onLog(`${this.state.customer.name} scrutinizes the ${item} intensely...`);
-
+        // SUCCESS: dish meets boss standards
         if (distance <= currentOrder.maxDistance) {
             const payment = calculatePayment(distance);
 
@@ -315,45 +318,154 @@ export class CustomerManager {
             } else {
                 comment = `Acceptable. This ${currentOrder.name} will do.`;
             }
-            this.callbacks.onLog(`Comment: "${comment}"`, "system");
 
-            this.callbacks.onLog(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`);
-            this.state.money += Math.floor(payment);
-            this.callbacks.onLog(`Received $${Math.floor(payment)}.`, "system");
+            const isLastCourse = (this.state.customer.currentCourse + 1) >= this.state.customer.coursesRequired;
+            const buttonText = isLastCourse ? "VICTORY" : "NEXT COURSE";
 
-            this.state.customer.currentCourse++;
-            this.state.customer.coursesServed++;
+            // Store feedback for successful course
+            this.state.pendingFeedback = {
+                active: true,
+                isBoss: true,
+                dishName: item,
+                comment: comment,
+                rating: satisfaction,
+                payment: Math.floor(payment),
+                orderHints: orderHints,
+                appliedBonuses: [],
+                sanityCost: 0,                    // Boss doesn't penalize sanity
+                customerName: this.state.customer.name,
+                customerAvatar: this.state.customer.avatar,
+                buttonText: buttonText,
+                courseName: currentOrder.name.toUpperCase()
+            };
 
             this.state.countertop.splice(this.state.selectedIndices[0], 1);
             this.callbacks.onClearSelection();
+            this.callbacks.showFeedbackDisplay(this.state.pendingFeedback);
             this.callbacks.onRender();
+        }
+        // FAILURE: dish doesn't meet boss standards
+        else {
+            const comment = `DISGRACEFUL! This is NOTHING like a proper ${currentOrder.name}!`;
 
-            if (this.state.customer.coursesServed >= this.state.customer.coursesRequired) {
+            // Store failure feedback
+            this.state.pendingFeedback = {
+                active: true,
+                isBoss: true,
+                dishName: item,
+                comment: comment,
+                rating: satisfaction,
+                payment: 0,
+                orderHints: orderHints,
+                appliedBonuses: [],
+                sanityCost: 0,
+                customerName: this.state.customer.name,
+                customerAvatar: this.state.customer.avatar,
+                buttonText: "ACCEPT DEFEAT",
+                courseName: currentOrder.name.toUpperCase()
+            };
+
+            this.state.countertop.splice(this.state.selectedIndices[0], 1);
+            this.callbacks.onClearSelection();
+            this.callbacks.showFeedbackDisplay(this.state.pendingFeedback);
+            this.callbacks.onRender();
+        }
+    }
+
+    collectPayment() {
+        if (!this.state.pendingFeedback.active) {
+            this.callbacks.onLog("No payment to collect.", "error");
+            return;
+        }
+
+        const feedback = this.state.pendingFeedback;
+
+        // === BOSS FLOW ===
+        if (feedback.isBoss) {
+            // Apply payment
+            if (feedback.payment > 0) {
+                this.state.money += feedback.payment;
+                this.callbacks.onLog(`Received $${feedback.payment} for ${feedback.courseName}.`, "system");
+            }
+
+            // Check if this was a failure
+            if (feedback.buttonText === "ACCEPT DEFEAT") {
+                this.callbacks.onLog("CRITICAL FAILURE - BOSS BATTLE LOST!", "error");
+                this.state.pendingFeedback.active = false;
+                this.callbacks.hideFeedbackDisplay();
+                this.callbacks.onRender();
+                setTimeout(() => {
+                    this.callbacks.onGameOver(`${feedback.customerName.toUpperCase()} DEFEATED YOU`);
+                }, 1000);
+                return;
+            }
+
+            // Check if this was victory
+            if (feedback.buttonText === "VICTORY") {
+                this.state.pendingFeedback.active = false;
+                this.callbacks.hideFeedbackDisplay();
+                this.callbacks.onRender();
                 setTimeout(() => {
                     this.defeatBoss();
-                }, 1500);
-            } else {
-                setTimeout(() => {
-                    this.callbacks.onLog(`===================================`, "system");
-                    this.callbacks.onLog(`Next course: ${this.state.customer.orders[this.state.customer.currentCourse].name}`, "system");
-                    this.callbacks.updateBossDisplay(this.state.customer);
-                    this.callbacks.onRender();
-                }, 1500);
+                }, 500);
+                return;
             }
-        } else {
-            this.callbacks.onLog(`Comment: "DISGRACEFUL! This is NOTHING like a proper ${currentOrder.name}!"`, "error");
-            this.callbacks.onLog(`Rating: ${satisfaction.emoji} ${satisfaction.rating}`, "error");
-            this.callbacks.onLog(`${this.state.customer.name} is FURIOUS!`, "error");
-            this.callbacks.onLog("CRITICAL FAILURE - BOSS BATTLE LOST!", "error");
 
-            this.state.countertop.splice(this.state.selectedIndices[0], 1);
-            this.callbacks.onClearSelection();
+            // Next course
+            this.state.customer.currentCourse++;
+            this.state.customer.coursesServed++;
+            this.state.pendingFeedback.active = false;
+            this.callbacks.hideFeedbackDisplay();
+            this.callbacks.onLog(`Next course: ${this.state.customer.orders[this.state.customer.currentCourse].name}`, "system");
+            this.callbacks.updateBossDisplay(this.state.customer);
             this.callbacks.onRender();
-
-            setTimeout(() => {
-                this.callbacks.onGameOver(`${this.state.customer.name.toUpperCase()} DEFEATED YOU`);
-            }, 2000);
+            return;
         }
+
+        // === REGULAR CUSTOMER FLOW ===
+
+        // Apply sanity penalty FIRST
+        if (feedback.sanityCost > 0) {
+            this.state.sanity -= feedback.sanityCost;
+
+            // Check for game over AFTER collecting
+            if (this.state.sanity <= 0) {
+                this.state.pendingFeedback.active = false;
+                this.callbacks.hideFeedbackDisplay();
+                this.callbacks.onRender();
+                setTimeout(() => {
+                    this.callbacks.onGameOver("SANITY DEPLETED");
+                }, 1000);
+                return;
+            }
+        }
+
+        // Apply payment
+        if (feedback.payment >= 1) {
+            this.state.money += feedback.payment;
+            this.callbacks.onLog(`Received $${feedback.payment}. ${feedback.customerName} leaves.`, "system");
+        } else if (feedback.payment > 0) {
+            this.callbacks.onLog(`Customer left a few cents. ($${feedback.payment.toFixed(2)})`);
+        } else {
+            this.callbacks.onLog("Customer refused to pay and left.", "error");
+        }
+
+        // Run post-serve effects (Meditation Master artifact)
+        const isExcellentOrPerfect = feedback.rating.rating === "EXCELLENT" || feedback.rating.rating === "PERFECT";
+        runEffectHook('postServe', this.state.activeArtifacts, {
+            isExcellentOrPerfect,
+            restoreSanity: (amount) => this.callbacks.restoreSanity(amount),
+            log: (msg, type) => this.callbacks.onLog(msg, type)
+        });
+
+        // Clear feedback state
+        this.state.pendingFeedback.active = false;
+
+        // Hide feedback UI
+        this.callbacks.hideFeedbackDisplay();
+
+        // Advance to next customer (500ms delay)
+        this.advanceCustomer(500);
     }
 
     defeatBoss() {

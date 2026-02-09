@@ -11,7 +11,9 @@ export {
     updateBossDisplay,
     updateMerchantDisplay,
     hideMerchantDisplay,
-    updateConsumablesDisplay
+    updateConsumablesDisplay,
+    showFeedbackDisplay,
+    hideFeedbackDisplay
 } from './ui/ui.js';
 
 // Re-export from ui/tooltips.js

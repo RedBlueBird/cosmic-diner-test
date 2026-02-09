@@ -295,3 +295,71 @@ export function updateConsumablesDisplay(inventory, gameState) {
         list.appendChild(btn);
     });
 }
+
+// Show feedback display in right panel
+export function showFeedbackDisplay(feedback) {
+    // Update panel title
+    const titleText = feedback.isBoss ? 'BOSS COURSE COMPLETE' : 'SERVICE COMPLETE';
+    document.getElementById('right-panel-title').textContent = titleText;
+
+    // Populate feedback elements
+    document.getElementById('feedback-avatar').textContent = feedback.customerAvatar;
+    document.getElementById('feedback-customer-name').textContent = feedback.customerName;
+
+    // Show course name for boss
+    const courseNameEl = document.getElementById('feedback-course-name');
+    if (feedback.isBoss && feedback.courseName) {
+        courseNameEl.textContent = feedback.courseName;
+        courseNameEl.classList.remove('hidden');
+    } else {
+        courseNameEl.classList.add('hidden');
+    }
+
+    document.getElementById('feedback-comment').textContent = feedback.comment;
+    document.getElementById('feedback-rating-emoji').textContent = feedback.rating.emoji;
+
+    const ratingText = document.getElementById('feedback-rating-text');
+    ratingText.textContent = feedback.rating.rating;
+    ratingText.style.color = feedback.rating.color || '#33ff33';
+
+    // Display bonuses if any
+    const bonusesDiv = document.getElementById('feedback-bonuses');
+    if (feedback.appliedBonuses && feedback.appliedBonuses.length > 0) {
+        bonusesDiv.innerHTML = feedback.appliedBonuses.map(bonus =>
+            `<p>✦ ${bonus}</p>`
+        ).join('');
+    } else {
+        bonusesDiv.innerHTML = '';
+    }
+
+    // Display sanity cost warning (NOT YET APPLIED)
+    const sanityCostDiv = document.getElementById('feedback-sanity-cost');
+    if (feedback.sanityCost > 0) {
+        let message = '';
+        if (feedback.rating.rating === "TERRIBLE") {
+            message = `⚠ Collecting will damage your sanity! (-${feedback.sanityCost})`;
+        } else if (feedback.rating.rating === "POOR") {
+            message = `⚠ Collecting will cost sanity. (-${feedback.sanityCost})`;
+        }
+        sanityCostDiv.innerHTML = `<p>${message}</p>`;
+    } else {
+        sanityCostDiv.innerHTML = '';
+    }
+
+    document.getElementById('feedback-payment').textContent = feedback.payment;
+
+    // Update button text
+    const actionBtn = document.getElementById('feedback-action-btn');
+    actionBtn.textContent = `[${feedback.buttonText}]`;
+
+    // Toggle views: hide customer, show feedback
+    document.getElementById('customer-view').classList.add('hidden');
+    document.getElementById('feedback-view').classList.remove('hidden');
+}
+
+// Hide feedback display and restore customer view
+export function hideFeedbackDisplay() {
+    document.getElementById('right-panel-title').textContent = 'CURRENT CUSTOMER';
+    document.getElementById('feedback-view').classList.add('hidden');
+    document.getElementById('customer-view').classList.remove('hidden');
+}

@@ -56,6 +56,23 @@ export class Game {
         // Customer state
         this.customer = null;
 
+        // Customer feedback pending collection
+        this.pendingFeedback = {
+            active: false,              // Boolean: is feedback waiting to collect?
+            isBoss: false,              // Boolean: is this boss feedback?
+            dishName: "",              // String: name of dish served
+            comment: "",               // String: customer reaction
+            rating: {},                // Object: { rating, emoji, color }
+            payment: 0,                // Number: calculated payment
+            orderHints: "",            // String: original order for context
+            appliedBonuses: [],        // Array: bonus descriptions to display
+            sanityCost: 0,             // Number: STORED for application on collect
+            customerName: "",          // String: customer who was served
+            customerAvatar: "",        // String: ASCII art for feedback display
+            buttonText: "COLLECT",     // String: button label (COLLECT / NEXT COURSE / VICTORY)
+            courseName: ""             // String: for boss courses (e.g., "APPETIZER")
+        };
+
         // Initialize managers with callbacks
         this.initializeManagers();
 
@@ -123,7 +140,9 @@ export class Game {
             onProcessEndOfDayEffects: () => this.days.processEndOfDayEffects(),
             updateCustomerDisplay: (customer) => UI.updateCustomerDisplay(customer),
             updateBossDisplay: (customer) => UI.updateBossDisplay(customer),
-            showVictory: (day, money, sanity, bossName) => UI.showVictory(day, money, sanity, bossName)
+            showVictory: (day, money, sanity, bossName) => UI.showVictory(day, money, sanity, bossName),
+            showFeedbackDisplay: (feedback) => UI.showFeedbackDisplay(feedback),
+            hideFeedbackDisplay: () => UI.hideFeedbackDisplay()
         });
 
         // Day Manager
@@ -254,6 +273,10 @@ export class Game {
 
     serveCustomer() {
         this.customers.serveCustomer();
+    }
+
+    collectPayment() {
+        this.customers.collectPayment();
     }
 
     nextCustomer() {

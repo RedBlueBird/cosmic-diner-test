@@ -17,8 +17,8 @@ body {
     border: 2px solid #33ff33;
     background-color: #000;
     display: grid;
-    grid-template-columns: 250px 1fr 250px;
-    grid-template-rows: 80px 1fr 200px;
+    grid-template-columns: 275px 1fr 275px;
+    grid-template-rows: 80px 1fr 150px;
     gap: 10px;
     padding: 10px;
     box-shadow: 0 0 20px rgba(51, 255, 51, 0.2);
@@ -221,7 +221,9 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     box-shadow: 0 0 30px rgba(51, 255, 51, 0.5);
     text-align: center;
 }
-.hidden { display: none; }
+.hidden {
+    display: none !important;
+}
 .grid-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -533,4 +535,26 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     color: #888;
     padding: 40px 20px;
     line-height: 1.6;
+}
+
+/* Feedback view styling */
+#feedback-bonuses {
+    color: #ffff00;
+}
+
+#feedback-bonuses p {
+    margin: 0;
+}
+
+#feedback-sanity-cost {
+    color: #ff3333;
+}
+
+#feedback-sanity-cost p {
+    margin: 0;
+}
+
+#feedback-action-btn {
+    display: block;
+    margin: 10px auto 0 auto;
 }

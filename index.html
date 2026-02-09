@@ -89,6 +89,17 @@
             <p>"<span id="customer-quote">...</span>"</p>
             <p>ORDER: <span id="customer-order" style="color:#ffff00">???</span></p>
         </div>
+        <div id="feedback-view" class="hidden">
+            <pre id="feedback-avatar"></pre>
+            <p id="feedback-customer-name" style="font-weight:bold;"></p>
+            <p id="feedback-course-name" class="hidden" style="color: #ffaa00; font-weight: bold; text-align: center;"></p>
+            <p><span id="feedback-rating-emoji"></span> <span id="feedback-rating-text"></span></p>
+            <p>"<span id="feedback-comment"></span>"</p>
+            <div id="feedback-bonuses"></div>
+            <div id="feedback-sanity-cost"></div>
+            <p>Payment: <span style="color:#33ff33">$<span id="feedback-payment">0</span></span></p>
+            <button id="feedback-action-btn" class="btn" onclick="game.collectPayment()">[COLLECT]</button>
+        </div>
         <div id="merchant-shop" class="hidden">
             <p style="color: #aaffaa; margin-bottom: 10px;">Selling rare wares...</p>
             <h4>CONSUMABLES</h4>

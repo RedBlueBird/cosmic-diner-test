@@ -11,6 +11,14 @@ export class ApplianceManager {
         this.callbacks = callbacks;
     }
 
+    getBaseCost(itemName) {
+        return this.state.ingredientCosts[itemName] || 1;
+    }
+
+    getDisplayCost(itemName) {
+        return this.callbacks.getAtomCostWithArtifacts(itemName, this.getBaseCost(itemName));
+    }
+
     isApplianceUnlocked(appliance) {
         return this.state.day >= APPLIANCE_UNLOCK_DAYS[appliance];
     }
@@ -20,8 +28,7 @@ export class ApplianceManager {
 
         const displayCosts = {};
         this.state.availableIngredients.forEach(item => {
-            const baseCost = this.state.ingredientCosts[item] || 1;
-            displayCosts[item] = this.callbacks.getAtomCostWithArtifacts(item, baseCost);
+            displayCosts[item] = this.getDisplayCost(item);
         });
 
         // Softlock check: if broke with no items, trigger divine intervention
@@ -108,8 +115,7 @@ export class ApplianceManager {
             return;
         }
 
-        const baseCost = this.state.ingredientCosts[item] || 1;
-        let cost = this.callbacks.getAtomCostWithArtifacts(item, baseCost);
+        let cost = this.getDisplayCost(item);
         cost = this.callbacks.applyBulkDiscount(item, cost);
 
         // Apply free withdrawal effect
@@ -158,12 +164,10 @@ export class ApplianceManager {
 
         const mods = mergeModifiers(getItemModifiers(item1Obj), getItemModifiers(item2Obj));
 
-        const baseCost1 = this.state.ingredientCosts[item1] || 1;
-        const baseCost2 = this.state.ingredientCosts[item2] || 1;
         const baseCostResult = runHook('modifyPanIngredientCost', this.state.activeArtifacts, {
             defaultValue: {
-                cost1: this.callbacks.getAtomCostWithArtifacts(item1, baseCost1),
-                cost2: this.callbacks.getAtomCostWithArtifacts(item2, baseCost2)
+                cost1: this.getDisplayCost(item1),
+                cost2: this.getDisplayCost(item2)
             },
             log: (msg, type) => this.callbacks.onLog(msg, type)
         });
@@ -174,7 +178,7 @@ export class ApplianceManager {
         let result = getRecipeResult(item1, item2);
 
         // Base cost for storage (sum of base costs)
-        const baseCostForStorage = baseCost1 + baseCost2;
+        const baseCostForStorage = this.getBaseCost(item1) + this.getBaseCost(item2);
 
         // Display cost is what it will cost in the fridge (with Price Gouger applied to result)
         const resultFridgeCost = this.callbacks.getAtomCostWithArtifacts(result || "Unknown", baseCostForStorage);
@@ -214,8 +218,8 @@ export class ApplianceManager {
         const mods = getItemModifiers(itemObj);
 
         // Calculate cost of source item with artifact modifiers (for display)
-        const baseItemCost = this.state.ingredientCosts[item] || 1;
-        const itemDisplayCost = this.callbacks.getAtomCostWithArtifacts(item, baseItemCost);
+        const baseItemCost = this.getBaseCost(item);
+        const itemDisplayCost = this.getDisplayCost(item);
 
         let ingredients = null;
         for (let [key, val] of Object.entries(ADDITIONS)) {
@@ -278,8 +282,8 @@ export class ApplianceManager {
         const itemObj = this.state.countertop[this.state.selectedIndices[0]];
         const item = getItemName(itemObj);
         const mods = getItemModifiers(itemObj);
-        const baseItemCost = this.state.ingredientCosts[item] || 1;
-        const itemDisplayCost = this.callbacks.getAtomCostWithArtifacts(item, baseItemCost);
+        const baseItemCost = this.getBaseCost(item);
+        const itemDisplayCost = this.getDisplayCost(item);
 
         if (AMPLIFICATIONS[item]) {
             const result = AMPLIFICATIONS[item];
@@ -311,8 +315,8 @@ export class ApplianceManager {
         const itemObj = this.state.countertop[this.state.selectedIndices[0]];
         const item = getItemName(itemObj);
         const mods = getItemModifiers(itemObj);
-        const baseItemCost = this.state.ingredientCosts[item] || 1;
-        const itemDisplayCost = this.callbacks.getAtomCostWithArtifacts(item, baseItemCost);
+        const baseItemCost = this.getBaseCost(item);
+        const itemDisplayCost = this.getDisplayCost(item);
 
         this.state.countertop.splice(this.state.selectedIndices[0], 1);
 
@@ -353,7 +357,7 @@ export class ApplianceManager {
 
             totalRefund = runHook('trashRefund', this.state.activeArtifacts, {
                 defaultValue: totalRefund,
-                itemCost: this.state.ingredientCosts[getItemName(item)] || 1
+                itemCost: this.getBaseCost(getItemName(item))
             });
 
             this.state.countertop.splice(idx, 1);
