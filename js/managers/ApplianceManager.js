@@ -54,6 +54,52 @@ export class ApplianceManager {
         UI.hideFridgeModal();
     }
 
+    /**
+     * Add item(s) to countertop with capacity checking
+     * @param {string|Object|Array} items - Item name, item object, or array of item objects
+     * @param {Object} modifiers - Optional modifiers if items is a string
+     * @param {boolean} silent - If true, suppress "added" log message (default: false)
+     * @returns {boolean} - True if all items added, false if capacity exceeded
+     */
+    addToCountertop(items, modifiers = {}, silent = false) {
+        // Normalize input to array of item objects
+        let itemsToAdd = [];
+        if (Array.isArray(items)) {
+            itemsToAdd = items;
+        } else if (typeof items === 'string') {
+            itemsToAdd = [createItemObject(items, modifiers)];
+        } else {
+            itemsToAdd = [items]; // Already an item object
+        }
+
+        // Check capacity (all-or-nothing approach)
+        const capacity = this.callbacks.getCountertopCapacity();
+        const spaceNeeded = this.state.countertop.length + itemsToAdd.length;
+
+        if (spaceNeeded > capacity) {
+            const itemNames = itemsToAdd.map(i => getItemName(i)).join(', ');
+            this.callbacks.onLog(
+                `Countertop full! Cannot add ${itemNames}. (${this.state.countertop.length}/${capacity})`,
+                "error"
+            );
+            return false;
+        }
+
+        // Add all items
+        itemsToAdd.forEach(item => {
+            this.state.countertop.push(item);
+        });
+
+        // Optional success message
+        if (!silent && itemsToAdd.length > 0) {
+            const itemNames = itemsToAdd.map(i => getItemName(i)).join(', ');
+            this.callbacks.onLog(`Added to countertop: ${itemNames}`);
+        }
+
+        this.callbacks.onRender();
+        return true;
+    }
+
     withdrawItem(item) {
         const capacity = this.callbacks.getCountertopCapacity();
         if (this.state.countertop.length >= capacity) {
@@ -80,7 +126,11 @@ export class ApplianceManager {
         }
 
         this.state.money -= cost;
-        this.state.countertop.push(createItemObject(item));
+
+        if (!this.addToCountertop(item)) {
+            this.closeFridge();
+            return;
+        }
 
         // Track atom withdrawal for recipe book
         this.callbacks.trackAtom(item);
@@ -142,12 +192,16 @@ export class ApplianceManager {
             this.callbacks.trackRecipe('Pan', result, [item1Obj, item2Obj]);
         }
 
+        const resultItem = createItemObject(result, mods);
+
+        // Remove ingredients FIRST
         this.state.selectedIndices.sort((a, b) => b - a);
         this.state.countertop.splice(this.state.selectedIndices[0], 1);
         this.state.countertop.splice(this.state.selectedIndices[1], 1);
-        this.state.countertop.push(createItemObject(result, mods));
+
+        // Add result (should never fail since we removed 2, added 1)
+        this.addToCountertop(resultItem, {}, true); // silent=true, already logged
         this.callbacks.onClearSelection();
-        this.callbacks.onRender();
     }
 
     useBoard() {
@@ -186,9 +240,27 @@ export class ApplianceManager {
             this.callbacks.unlockIngredient(ingredients[0], splitBaseCost, [itemObj], splitFridgeCost);
             this.callbacks.unlockIngredient(ingredients[1], splitBaseCost, [itemObj], splitFridgeCost);
 
+            // Create split items
+            const splitItems = [
+                createItemObject(ingredients[0], mods),
+                createItemObject(ingredients[1], mods)
+            ];
+
+            // Check capacity BEFORE removing (since we remove 1, add 2 = net +1)
+            const capacity = this.callbacks.getCountertopCapacity();
+            if (this.state.countertop.length >= capacity) {
+                this.callbacks.onLog("Countertop full! Need 1 free space to split item.", "error");
+                this.callbacks.onClearSelection();
+                this.callbacks.onRender();
+                return;
+            }
+
+            // Remove original item
             this.state.countertop.splice(this.state.selectedIndices[0], 1);
-            this.state.countertop.push(createItemObject(ingredients[0], mods));
-            this.state.countertop.push(createItemObject(ingredients[1], mods));
+
+            // Add split results (should never fail since we just freed 1 space)
+            this.addToCountertop(splitItems, {}, true); // silent=true, already logged
+
             // Track Board usage for BOTH resulting ingredients
             this.callbacks.trackRecipe('Board', ingredients[0], [itemObj]);
             this.callbacks.trackRecipe('Board', ingredients[1], [itemObj]);
@@ -196,7 +268,6 @@ export class ApplianceManager {
             this.callbacks.onLog(`Cannot split ${item}. It is atomic or generic.`, "error");
         }
         this.callbacks.onClearSelection();
-        this.callbacks.onRender();
     }
 
     useAmp() {
@@ -255,7 +326,7 @@ export class ApplianceManager {
             result = MUTATIONS[item];
             const resultFridgeCost = this.callbacks.getAtomCostWithArtifacts(result, baseItemCost);
             this.callbacks.onLog(`Microwave mutated ${item} ($${itemDisplayCost}) into ${result} ($${resultFridgeCost})!`);
-            this.state.countertop.push(createItemObject(result, mods));
+            this.addToCountertop(createItemObject(result, mods), {}, true); // silent=true
             this.callbacks.unlockIngredient(result, baseItemCost, [itemObj], resultFridgeCost);
             this.callbacks.trackRecipe('Microwave', result, [itemObj]);
         } else {
@@ -263,7 +334,7 @@ export class ApplianceManager {
             result = "Radioactive Slime";
             const resultFridgeCost = this.callbacks.getAtomCostWithArtifacts(result, baseItemCost);
             this.callbacks.onLog(`Microwave mutated ${item} ($${itemDisplayCost}) into: RADIOACTIVE SLIME ($${resultFridgeCost})`, "error");
-            this.state.countertop.push(createItemObject(result, mods));
+            this.addToCountertop(createItemObject(result, mods), {}, true); // silent=true
             this.callbacks.unlockIngredient(result, baseItemCost, [itemObj], resultFridgeCost);
             this.callbacks.trackRecipe('Microwave', result, [itemObj]);
         }

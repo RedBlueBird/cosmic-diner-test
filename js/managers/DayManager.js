@@ -11,8 +11,7 @@ export class DayManager {
         this.callbacks = callbacks;
     }
 
-    endDay() {
-        this.state.isDayActive = false;
+    processEndOfDayEffects() {
         this.callbacks.onLog("=== SHIFT ENDED ===", "system");
 
         if (this.state.countertop.length > 0) {
@@ -53,7 +52,19 @@ export class DayManager {
 
         if (this.state.money < 0) {
             this.callbacks.onGameOver("BANKRUPT");
-            return;
+            return { bankrupt: true };
+        }
+
+        return { bankrupt: false };
+    }
+
+    endDay() {
+        this.state.isDayActive = false;
+
+        // Process end-of-day effects (rent, sanity, artifacts, bankruptcy)
+        const result = this.processEndOfDayEffects();
+        if (result.bankrupt) {
+            return; // Game over already triggered
         }
 
         // Show artifact selection if (before day 5 OR in endless mode) and pool has artifacts
@@ -91,23 +102,24 @@ export class DayManager {
         if (this.callbacks.hasArtifact('morning_prep')) {
             const artifact = getArtifactById('morning_prep');
             const numItems = artifact.effect.value;
-            const capacity = this.callbacks.getCountertopCapacity();
-            const spaceAvailable = capacity - this.state.countertop.length;
-            const itemsToAdd = Math.min(numItems, spaceAvailable);
+            const RECIPES = getRecipes();
+            const atoms = getAtoms();
+            const recipeResults = [...new Set(Object.values(RECIPES))];
+            const allFoods = [...atoms, ...recipeResults];
 
-            if (itemsToAdd > 0) {
-                const RECIPES = getRecipes();
-                const atoms = getAtoms();
-                const recipeResults = [...new Set(Object.values(RECIPES))];
-                const allFoods = [...atoms, ...recipeResults];
-
-                for (let i = 0; i < itemsToAdd; i++) {
-                    const randomItem = allFoods[Math.floor(Math.random() * allFoods.length)];
-                    // Apply temporary modifier instead of Set tracking
-                    this.state.countertop.push(createItemObject(randomItem, { temporary: 1 }));
+            let addedCount = 0;
+            for (let i = 0; i < numItems; i++) {
+                const randomItem = allFoods[Math.floor(Math.random() * allFoods.length)];
+                const success = this.callbacks.addToCountertop(randomItem, { temporary: 1 }, true);
+                if (success) {
+                    addedCount++;
+                } else {
+                    break; // Stop if countertop becomes full
                 }
+            }
 
-                this.callbacks.onLog(`MORNING PREP: Added ${itemsToAdd} temporary ingredient(s) to countertop!`, "system");
+            if (addedCount > 0) {
+                this.callbacks.onLog(`MORNING PREP: Added ${addedCount} temporary ingredient(s) to countertop!`, "system");
             }
         }
 

@@ -172,19 +172,16 @@ export class ConsumableManager {
             throw new Error("Need item selection");
         }
 
-        const capacity = this.callbacks.getCountertopCapacity();
-        if (this.state.countertop.length >= capacity) {
-            this.callbacks.onLog("Countertop is full! Cannot duplicate.", "error");
-            throw new Error("Countertop full");
-        }
-
         const itemIndex = this.state.selectedIndices[0];
         const itemObj = this.state.countertop[itemIndex];
         const itemName = getItemName(itemObj);
         const modifiers = getItemModifiers(itemObj);
 
         const duplicate = createItemObject(itemName, modifiers);
-        this.state.countertop.push(duplicate);
+        const success = this.callbacks.addToCountertop(duplicate, {}, true);
+        if (!success) {
+            throw new Error("Countertop full");
+        }
 
         this.callbacks.onLog(`Mirror Shard: Duplicated ${itemName}${Object.keys(modifiers).length > 0 ? ' (with modifiers)' : ''}!`, "system");
     }

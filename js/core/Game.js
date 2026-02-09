@@ -16,7 +16,7 @@ import RecipeBookManager from '../managers/RecipeBookManager.js';
 export class Game {
     constructor() {
         // Core game state
-        this.money = 50;
+        this.money = 30;
         this.sanity = 100;
         this.day = 1;
         this.rent = 30;
@@ -91,7 +91,8 @@ export class Game {
             onEndDay: () => this.days.endDay(),
             onNextCustomer: () => this.customers.nextCustomer(),
             onGrantArtifact: () => this.artifacts.grantArtifactFromConsumable(),
-            getCountertopCapacity: () => this.artifacts.getCountertopCapacity()
+            getCountertopCapacity: () => this.artifacts.getCountertopCapacity(),
+            addToCountertop: (item, mods, silent) => this.appliances.addToCountertop(item, mods, silent)
         });
 
         // Appliance Manager
@@ -117,7 +118,8 @@ export class Game {
             onGameOver: (reason) => this.days.gameOver(reason),
             hasArtifact: (id) => this.artifacts.hasArtifact(id),
             restoreSanity: (amount) => this.artifacts.restoreSanity(amount),
-            isMerchantActive: () => this.merchant ? this.merchant.isMerchantActive() : false
+            isMerchantActive: () => this.merchant ? this.merchant.isMerchantActive() : false,
+            onProcessEndOfDayEffects: () => this.days.processEndOfDayEffects()
         });
 
         // Day Manager
@@ -130,7 +132,8 @@ export class Game {
             restoreSanity: (amount) => this.artifacts.restoreSanity(amount),
             getCountertopCapacity: () => this.artifacts.getCountertopCapacity(),
             showArtifactSelection: () => this.artifacts.showArtifactSelection(),
-            onShowMerchant: () => this.merchant.showMerchant()
+            onShowMerchant: () => this.merchant.showMerchant(),
+            addToCountertop: (item, mods, silent) => this.appliances.addToCountertop(item, mods, silent)
         });
 
         // Merchant Manager
@@ -305,8 +308,13 @@ export class Game {
         const victoryElements = document.querySelectorAll('.game-over');
         victoryElements.forEach(el => el.remove());
 
-        // Continue to next day
-        this.days.startNextDay();
+        // Show artifact selection before Day 6 (if artifacts available)
+        if (this.artifactPool.length > 0) {
+            setTimeout(() => this.artifacts.showArtifactSelection(), 2000);
+        } else {
+            // No artifacts left, start next day immediately
+            setTimeout(() => this.days.startNextDay(), 2000);
+        }
     }
 
     // --- UI Helpers ---
@@ -335,6 +343,7 @@ export class Game {
             customersServedCount: this.customersServedCount,
             customersPerDay: this.customersPerDay,
             countertop: this.countertop,
+            countertopCapacity: this.getCountertopCapacity(),
             selectedIndices: this.selectedIndices,
             activeArtifacts: this.activeArtifacts,
             consumableInventory: this.consumableInventory,

@@ -50,7 +50,7 @@ export function updateApplianceButtons(day) {
 
 // Render the main game UI
 export function render(gameState) {
-    const { money, sanity, day, rent, customersServedCount, customersPerDay, countertop, selectedIndices, activeArtifacts, maxSanity, consumableInventory, selectedConsumable } = gameState;
+    const { money, sanity, day, rent, customersServedCount, customersPerDay, countertop, countertopCapacity, selectedIndices, activeArtifacts, maxSanity, consumableInventory, selectedConsumable } = gameState;
 
     document.getElementById('money').textContent = money;
 
@@ -75,6 +75,13 @@ export function render(gameState) {
 
     const list = document.getElementById('countertop-list');
     list.innerHTML = "";
+
+    // Update countertop count in heading
+    const countertopCountElement = document.getElementById('countertop-count');
+    if (countertopCountElement) {
+        countertopCountElement.textContent = `(${countertop.length}/${countertopCapacity})`;
+        countertopCountElement.style.color = countertop.length >= countertopCapacity ? '#ff3333' : '#ffff00'; // Red when full
+    }
 
     if (countertop.length === 0) {
         list.innerHTML = '<div style="color: #888; text-align: left;">Get food from Fridge</div>';

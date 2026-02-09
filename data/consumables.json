@@ -93,7 +93,7 @@
       "name": "Blowtorch",
       "description": "Intense heat that sears and dries",
       "category": "vial",
-      "rarity": "uncommon",
+      "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
         "modifiers": { "temperature": 8, "moisture": -2 }
@@ -170,7 +170,7 @@
       "name": "Chamomile Extract",
       "description": "Soothing essence that promotes relaxation",
       "category": "vial",
-      "rarity": "uncommon",
+      "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
         "modifiers": { "calming": 6, "energizing": -2 }
@@ -203,7 +203,7 @@
       "name": "Void Essence",
       "description": "Concentrated darkness from beyond reality",
       "category": "vial",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "effect": {
         "type": "attribute_modifier",
         "modifiers": { "void": 6, "fear": 3, "sanity": -5 }
@@ -214,7 +214,7 @@
       "name": "Nightmare Fuel",
       "description": "Distilled terror in liquid form",
       "category": "vial",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "effect": {
         "type": "attribute_modifier",
         "modifiers": { "fear": 7, "sentience": 2, "bitter": 3 }
@@ -225,7 +225,7 @@
       "name": "Uranium Dust",
       "description": "Glowing green powder radiating intense energy",
       "category": "vial",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "effect": {
         "type": "attribute_modifier",
         "modifiers": { "radioactive": 8, "energizing": 3, "health": -3 }
@@ -236,7 +236,7 @@
       "name": "Philosopher's Stone Fragment",
       "description": "A piece of conscious matter that whispers secrets",
       "category": "vial",
-      "rarity": "legendary",
+      "rarity": "rare",
       "effect": {
         "type": "attribute_modifier",
         "modifiers": { "sentience": 4, "health": 3, "sanity": 2 }
@@ -247,7 +247,7 @@
       "name": "Sanity Pills",
       "description": "Instant mental clarity",
       "category": "utility",
-      "rarity": "uncommon",
+      "rarity": "common",
       "effect": {
         "type": "sanity_restore",
         "value": 50
@@ -270,7 +270,7 @@
       "name": "Emergency Rations",
       "description": "Can be served directly to customer - they pay $20 and leave satisfied",
       "category": "utility",
-      "rarity": "common",
+      "rarity": "uncommon",
       "effect": {
         "type": "serve_emergency_food",
         "payment": 20
@@ -279,9 +279,9 @@
     {
       "id": "mirror_shard",
       "name": "Mirror Shard",
-      "description": "Duplicates selected item with all modifiers",
+      "description": "Duplicates selected food with all modifiers",
       "category": "utility",
-      "rarity": "rare",
+      "rarity": "common",
       "effect": {
         "type": "duplicate_item"
       }
@@ -289,12 +289,12 @@
     {
       "id": "ingredient_catalog",
       "name": "Ingredient Catalog",
-      "description": "Permanently adds one random food to your fridge, cost $1",
+      "description": "Permanently adds one random food to your fridge, cost $2",
       "category": "utility",
       "rarity": "uncommon",
       "effect": {
         "type": "unlock_random_ingredient",
-        "cost": 1
+        "cost": 2
       }
     },
     {
@@ -302,7 +302,7 @@
       "name": "Golden Plate",
       "description": "Next dish gets PERFECT rating automatically",
       "category": "utility",
-      "rarity": "legendary",
+      "rarity": "rare",
       "effect": {
         "type": "force_rating"
       }
@@ -312,7 +312,7 @@
       "name": "Cursed Cutlery",
       "description": "+10 to all attributes (extremely powerful but also adds +10 VoidLevel)",
       "category": "vial",
-      "rarity": "rare",
+      "rarity": "uncommon",
       "effect": {
         "type": "cursed_boost",
         "all_attributes_boost": 10,
@@ -324,7 +324,7 @@
       "name": "Wishing Well Penny",
       "description": "Instantly unlocks a new artifact when consumed",
       "category": "utility",
-      "rarity": "uncommon",
+      "rarity": "rare",
       "effect": {
         "type": "grant_artifact"
       }
@@ -344,7 +344,7 @@
       "name": "Quantum Refrigerator Card",
       "description": "Next 3 fridge withdrawals are free",
       "category": "utility",
-      "rarity": "rare",
+      "rarity": "common",
       "effect": {
         "type": "free_withdrawals",
         "count": 3

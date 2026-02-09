@@ -6,8 +6,8 @@ import * as UI from '../ui.js';
 // Base prices for consumables by rarity
 const CONSUMABLE_BASE_PRICES = {
     common: 5,
-    uncommon: 10,
-    rare: 15,
+    uncommon: 8,
+    rare: 12,
     legendary: 20
 };
 

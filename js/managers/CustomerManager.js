@@ -416,13 +416,22 @@ export class CustomerManager {
         this.state.customersServedCount++;
         this.callbacks.onRender();
 
+        // Process end-of-day effects before showing victory
         setTimeout(() => {
-            this.showVictory();
+            this.state.isDayActive = false;
+            const result = this.callbacks.onProcessEndOfDayEffects();
+
+            // If player went bankrupt, game over is already shown
+            // Only show victory if solvent
+            if (!result.bankrupt) {
+                setTimeout(() => {
+                    this.showVictory();
+                }, 1000);
+            }
         }, 2000);
     }
 
     showVictory() {
-        this.state.isDayActive = false;
         this.callbacks.onLog("=== YOU DEFEATED GORDON G! ===", "system");
         UI.showVictory(this.state.day, this.state.money, this.state.sanity);
     }
