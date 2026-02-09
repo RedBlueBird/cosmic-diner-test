@@ -229,6 +229,29 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     margin-bottom: 15px;
 }
 
+/* Search Input */
+.search-input {
+    width: 100%;
+    background-color: #000;
+    border: 1px solid #33ff33;
+    color: #33ff33;
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    box-sizing: border-box;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #ffff00;
+    box-shadow: 0 0 5px rgba(51, 255, 51, 0.3);
+}
+
+.search-input::placeholder {
+    color: #555;
+}
+
 .sanity-critical { animation: pulse 1s infinite; }
 @keyframes pulse {
     0%, 100% { color: #ff3333; }

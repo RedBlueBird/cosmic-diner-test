@@ -15,13 +15,19 @@ export function hideModal(modalId) {
 export function showFridgeModal(ingredients, costs, money, onWithdraw) {
     const modal = document.getElementById('fridge-modal');
     const list = document.getElementById('fridge-items');
-    list.innerHTML = "";
+    const searchInput = document.getElementById('fridge-search');
 
+    list.innerHTML = "";
+    searchInput.value = ""; // Reset search on open
+
+    // Create and store all buttons with data attributes
     ingredients.forEach(item => {
         const cost = costs[item] || 1;
         const btn = document.createElement('button');
         btn.className = "btn";
         btn.textContent = `${item} ($${cost})`;
+        btn.dataset.itemName = item.toLowerCase(); // Store lowercase for filtering
+
         // Grey out if player can't afford
         if (money < cost) {
             btn.style.opacity = "0.5";
@@ -31,11 +37,57 @@ export function showFridgeModal(ingredients, costs, money, onWithdraw) {
         list.appendChild(btn);
     });
 
+    // Set up search filtering
+    setupFridgeSearch();
+
     modal.classList.remove('hidden');
+}
+
+// Set up search input filtering
+function setupFridgeSearch() {
+    const searchInput = document.getElementById('fridge-search');
+    const list = document.getElementById('fridge-items');
+
+    // Remove any existing listeners to avoid duplicates
+    // (Clone and replace method)
+    const newSearchInput = searchInput.cloneNode(true);
+    searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+
+    // Add input event listener for real-time filtering
+    newSearchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase().trim();
+        const buttons = list.querySelectorAll('.btn');
+
+        buttons.forEach(btn => {
+            const itemName = btn.dataset.itemName;
+
+            // Case-insensitive substring matching
+            if (itemName.includes(searchTerm)) {
+                btn.style.display = ''; // Show matching items
+            } else {
+                btn.style.display = 'none'; // Hide non-matching items
+            }
+        });
+    });
 }
 
 // Hide fridge modal
 export function hideFridgeModal() {
+    // Clear search input
+    const searchInput = document.getElementById('fridge-search');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+
+    // Reset all button visibility
+    const list = document.getElementById('fridge-items');
+    if (list) {
+        const buttons = list.querySelectorAll('.btn');
+        buttons.forEach(btn => {
+            btn.style.display = '';
+        });
+    }
+
     hideModal('fridge-modal');
 }
 
