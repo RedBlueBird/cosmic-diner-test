@@ -22,6 +22,7 @@ export const TASTE_TEST_SANITY_COST = 10;
 // Sanity penalties for bad service
 export const TERRIBLE_SERVICE_SANITY_PENALTY = 15;
 export const POOR_SERVICE_SANITY_PENALTY = 5;
+export const BOSS_FAILURE_SANITY_PENALTY = 60;
 
 // Divine intervention (softlock prevention)
 export const DIVINE_INTERVENTION_SANITY_RATE = 0.2;

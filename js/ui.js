@@ -13,7 +13,8 @@ export {
     hideMerchantDisplay,
     updateConsumablesDisplay,
     showFeedbackDisplay,
-    hideFeedbackDisplay
+    hideFeedbackDisplay,
+    renderPaymentItems
 } from './ui/ui.js';
 
 // Re-export from ui/tooltips.js

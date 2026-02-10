@@ -105,9 +105,11 @@
             <p id="feedback-course-name" class="hidden" style="color: #ffaa00; font-weight: bold; text-align: center;"></p>
             <p>"<span id="feedback-comment"></span>"</p>
             <p><span id="feedback-rating-emoji"></span> <span id="feedback-rating-text"></span></p>
-            <div id="feedback-bonuses"></div>
-            <div id="feedback-sanity-cost"></div>
-            <p>Payment: <span style="color:#33ff33">$<span id="feedback-payment">0</span></span></p>
+            <div id="payment-section">
+                <h4>PAYMENT</h4>
+                <div id="payment-items-list"></div>
+            </div>
+            <p id="boss-payment-line" class="hidden">Payment: <span style="color:#33ff33">$<span id="feedback-payment">0</span></span></p>
             <button id="feedback-action-btn" class="btn" onclick="game.collectPayment()">[COLLECT]</button>
         </div>
         <div id="merchant-shop" class="hidden">

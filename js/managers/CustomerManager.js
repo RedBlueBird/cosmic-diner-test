@@ -1,7 +1,7 @@
 // CustomerManager.js - Customer and serving logic
 
-import { FEEDBACK_CATEGORIES, TASTE_TEST_SANITY_COST, TERRIBLE_SERVICE_SANITY_PENALTY, POOR_SERVICE_SANITY_PENALTY } from '../config.js';
-import { getCustomerTypes, getBossForDay } from '../data/DataStore.js';
+import { FEEDBACK_CATEGORIES, TASTE_TEST_SANITY_COST, TERRIBLE_SERVICE_SANITY_PENALTY, POOR_SERVICE_SANITY_PENALTY, BOSS_FAILURE_SANITY_PENALTY } from '../config.js';
+import { getCustomerTypes, getBossForDay, getArtifactById } from '../data/DataStore.js';
 import { getItemName, getFoodAttributes } from '../utils/ItemUtils.js';
 import { getTasteFeedback, getDemandHints } from '../services/FeedbackService.js';
 import { calculateDistance, calculatePayment, getSatisfactionRating } from '../services/PaymentService.js';
@@ -239,22 +239,66 @@ export class CustomerManager {
             itemName: item
         });
 
-        const appliedBonuses = [];
-        if (paymentResult.multiplier > 1) {
-            payment *= paymentResult.multiplier;
-            appliedBonuses.push(`${paymentResult.reasons.join(" + ")}: ${paymentResult.multiplier}x`);
-        }
+        // Build combined modifier sources and multiplier
+        let combinedMultiplier = paymentResult.multiplier;
+        const combinedSources = [...paymentResult.reasons];
 
         // Apply Lucky Coin effect
         if (this.state.activeEffects.luckyCoins > 0) {
-            payment *= 2;
-            appliedBonuses.push("Lucky Coin: 2x");
+            combinedMultiplier *= 2;
+            combinedSources.push("Lucky Coin");
             this.state.activeEffects.luckyCoins--;
         }
 
-        // Apply Golden Plate bonus message if used
+        // Apply Golden Plate to sources
         if (usedGoldenPlate) {
-            appliedBonuses.unshift("Golden Plate: PERFECT rating");
+            combinedSources.unshift("Golden Plate");
+        }
+
+        // Recalculate payment with combined multiplier applied
+        payment = calculatePayment(usedGoldenPlate ? 0 : distance) * combinedMultiplier;
+
+        const finalPayment = Math.floor(payment);
+
+        // Build paymentItems array
+        const paymentItems = [];
+
+        // Money item
+        const moneyModifiers = [];
+        if (combinedMultiplier > 1 || usedGoldenPlate) {
+            const modLine = `x${combinedMultiplier} from ${combinedSources.join(", ")}`;
+            moneyModifiers.push(modLine);
+        }
+        paymentItems.push({
+            label: `+$${finalPayment}`,
+            type: "money",
+            value: finalPayment,
+            binded: false,
+            modifiers: moneyModifiers
+        });
+
+        // Sanity cost item (only if cost > 0)
+        if (sanityCost > 0) {
+            paymentItems.push({
+                label: `-${sanityCost} sanity`,
+                type: "sanity_cost",
+                value: sanityCost,
+                binded: true,
+                modifiers: ["Binded. Cannot press the collect button without selecting this item."]
+            });
+        }
+
+        // Meditation Master item (if player has artifact AND rating is EXCELLENT/PERFECT)
+        if (this.state.activeArtifacts.includes('meditation_master') && isExcellentOrPerfect) {
+            const mmArtifact = getArtifactById('meditation_master');
+            const sanityRestore = mmArtifact.effect.value;
+            paymentItems.push({
+                label: `+${sanityRestore} sanity`,
+                type: "sanity_restore",
+                value: sanityRestore,
+                binded: false,
+                modifiers: ["Meditation Master"]
+            });
         }
 
         // Store feedback instead of applying payment/sanity
@@ -264,10 +308,9 @@ export class CustomerManager {
             dishName: item,
             comment: comment,
             rating: satisfaction,
-            payment: Math.floor(payment),
+            payment: finalPayment,
             orderHints: orderHints,
-            appliedBonuses: appliedBonuses,
-            sanityCost: sanityCost,           // STORED, not applied
+            paymentItems: paymentItems,
             customerName: this.state.customer.name,
             customerAvatar: this.state.customer.avatar,
             buttonText: "COLLECT",
@@ -291,7 +334,6 @@ export class CustomerManager {
         const item = getItemName(itemObj);
         const currentOrder = this.state.customer.orders[this.state.customer.currentCourse];
 
-        // Minimal console log
         this.callbacks.onLog(`Serving ${item} as ${currentOrder.name}...`, "customer");
 
         const foodAttrs = getFoodAttributes(itemObj);
@@ -299,14 +341,16 @@ export class CustomerManager {
 
         const distance = calculateDistance(foodAttrs, demandVector);
         const satisfaction = getSatisfactionRating(distance);
+        const isLastCourse = (this.state.customer.currentCourse + 1) >= this.state.customer.coursesRequired;
+        const success = distance <= currentOrder.maxDistance;
 
-        const orderHints = getDemandHints(demandVector);
+        // Build paymentItems
+        const paymentItems = [];
+        let comment;
 
-        // SUCCESS: dish meets boss standards
-        if (distance <= currentOrder.maxDistance) {
-            const payment = calculatePayment(distance);
+        if (success) {
+            const payment = Math.floor(calculatePayment(distance));
 
-            let comment;
             if (satisfaction.rating === "PERFECT") {
                 comment = `MAGNIFICENT! This ${currentOrder.name} is PERFECT!`;
             } else if (satisfaction.rating === "EXCELLENT") {
@@ -315,57 +359,46 @@ export class CustomerManager {
                 comment = `Acceptable. This ${currentOrder.name} will do.`;
             }
 
-            const isLastCourse = (this.state.customer.currentCourse + 1) >= this.state.customer.coursesRequired;
-            const buttonText = isLastCourse ? "VICTORY" : "NEXT COURSE";
+            paymentItems.push({
+                label: `+$${payment}`,
+                type: "money",
+                value: payment,
+                binded: false,
+                modifiers: []
+            });
+        } else {
+            comment = `DISGRACEFUL! This is NOTHING like a proper ${currentOrder.name}!`;
 
-            // Store feedback for successful course
-            this.state.pendingFeedback = {
-                active: true,
-                isBoss: true,
-                dishName: item,
-                comment: comment,
-                rating: satisfaction,
-                payment: Math.floor(payment),
-                orderHints: orderHints,
-                appliedBonuses: [],
-                sanityCost: 0,                    // Boss doesn't penalize sanity
-                customerName: this.state.customer.name,
-                customerAvatar: this.state.customer.avatar,
-                buttonText: buttonText,
-                courseName: currentOrder.name.toUpperCase()
-            };
-
-            this.state.countertop.splice(this.state.selectedIndices[0], 1);
-            this.callbacks.onClearSelection();
-            this.callbacks.showFeedbackDisplay(this.state.pendingFeedback);
-            this.callbacks.onRender();
+            paymentItems.push({
+                label: `-${BOSS_FAILURE_SANITY_PENALTY} sanity`,
+                type: "sanity_cost",
+                value: BOSS_FAILURE_SANITY_PENALTY,
+                binded: true,
+                modifiers: ["Binded. Cannot press the collect button without selecting this item."]
+            });
         }
-        // FAILURE: dish doesn't meet boss standards
-        else {
-            const comment = `DISGRACEFUL! This is NOTHING like a proper ${currentOrder.name}!`;
 
-            // Store failure feedback
-            this.state.pendingFeedback = {
-                active: true,
-                isBoss: true,
-                dishName: item,
-                comment: comment,
-                rating: satisfaction,
-                payment: 0,
-                orderHints: orderHints,
-                appliedBonuses: [],
-                sanityCost: 0,
-                customerName: this.state.customer.name,
-                customerAvatar: this.state.customer.avatar,
-                buttonText: "ACCEPT DEFEAT",
-                courseName: currentOrder.name.toUpperCase()
-            };
+        const buttonText = isLastCourse ? "COMPLETE ORDER" : "NEXT COURSE";
 
-            this.state.countertop.splice(this.state.selectedIndices[0], 1);
-            this.callbacks.onClearSelection();
-            this.callbacks.showFeedbackDisplay(this.state.pendingFeedback);
-            this.callbacks.onRender();
-        }
+        this.state.pendingFeedback = {
+            active: true,
+            isBoss: true,
+            dishName: item,
+            comment: comment,
+            rating: satisfaction,
+            payment: 0,
+            orderHints: getDemandHints(demandVector),
+            paymentItems: paymentItems,
+            customerName: this.state.customer.name,
+            customerAvatar: this.state.customer.avatar,
+            buttonText: buttonText,
+            courseName: ""
+        };
+
+        this.state.countertop.splice(this.state.selectedIndices[0], 1);
+        this.callbacks.onClearSelection();
+        this.callbacks.showFeedbackDisplay(this.state.pendingFeedback);
+        this.callbacks.onRender();
     }
 
     collectPayment() {
@@ -375,108 +408,126 @@ export class CustomerManager {
         }
 
         const feedback = this.state.pendingFeedback;
+        const paymentItems = feedback.paymentItems || [];
+        const selectedIndices = this.state.selectedPaymentIndices;
 
-        // === BOSS FLOW ===
-        if (feedback.isBoss) {
-            // Apply payment
-            if (feedback.payment > 0) {
-                this.state.money += feedback.payment;
-                this.callbacks.onLog(`Received $${feedback.payment} for ${feedback.courseName}.`, "customer");
-            }
-
-            // Check if this was a failure
-            if (feedback.buttonText === "ACCEPT DEFEAT") {
-                this.callbacks.onLog("CRITICAL FAILURE - BOSS BATTLE LOST!", "narrative");
-                this.state.pendingFeedback.active = false;
-                this.callbacks.hideFeedbackDisplay();
-                this.callbacks.onRender();
-                setTimeout(() => {
-                    this.callbacks.onGameOver(`${feedback.customerName.toUpperCase()} DEFEATED YOU`);
-                }, 1000);
-                return;
-            }
-
-            // Check if this was victory
-            if (feedback.buttonText === "VICTORY") {
-                this.state.pendingFeedback.active = false;
-                this.callbacks.hideFeedbackDisplay();
-                this.callbacks.onRender();
-                setTimeout(() => {
-                    this.defeatBoss();
-                }, 500);
-                return;
-            }
-
-            // Next course
-            this.state.customer.currentCourse++;
-            this.state.customer.coursesServed++;
-            this.state.pendingFeedback.active = false;
-            this.callbacks.hideFeedbackDisplay();
-            this.callbacks.onLog(`Next course: ${this.state.customer.orders[this.state.customer.currentCourse].name}`, "customer");
-            this.callbacks.updateBossDisplay(this.state.customer);
-            this.callbacks.onRender();
+        // Check all binded items are selected
+        const unselectedBinded = paymentItems.filter((item, i) => item.binded && !selectedIndices.includes(i));
+        if (unselectedBinded.length > 0) {
+            this.callbacks.onLog("Select all required (binded) items in the payment section to collect.", "error");
             return;
         }
 
-        // === REGULAR CUSTOMER FLOW ===
+        // Process selected items
+        let moneyCollected = false;
+        let gameOver = false;
 
-        // Apply sanity penalty FIRST
-        if (feedback.sanityCost > 0) {
-            this.state.sanity -= feedback.sanityCost;
+        for (const idx of selectedIndices) {
+            const item = paymentItems[idx];
+            if (!item) continue;
 
-            // Check for game over AFTER collecting
-            if (this.state.sanity <= 0) {
-                this.state.pendingFeedback.active = false;
-                this.callbacks.hideFeedbackDisplay();
-                this.callbacks.onRender();
-                setTimeout(() => {
-                    this.callbacks.onGameOver("SANITY DEPLETED");
-                }, 1000);
-                return;
+            if (item.type === "money") {
+                this.state.money += item.value;
+                if (item.value >= 1) {
+                    this.callbacks.onLog(`Received $${item.value}.`, "customer");
+                } else if (item.value > 0) {
+                    this.callbacks.onLog(`Received a few cents. ($${item.value.toFixed(2)})`, "customer");
+                }
+                moneyCollected = true;
+            } else if (item.type === "sanity_cost") {
+                this.state.sanity -= item.value;
+                this.callbacks.onLog(`-${item.value} sanity.`, "narrative");
+                if (this.state.sanity <= 0) {
+                    gameOver = true;
+                }
+            } else if (item.type === "sanity_restore") {
+                this.callbacks.restoreSanity(item.value);
+                this.callbacks.onLog(`MEDITATION MASTER: +${item.value} sanity from excellent service!`, "artifact");
             }
         }
 
-        // Apply payment
-        if (feedback.payment >= 1) {
-            this.state.money += feedback.payment;
-            this.callbacks.onLog(`Received $${feedback.payment}. ${feedback.customerName} leaves.`, "customer");
-        } else if (feedback.payment > 0) {
-            this.callbacks.onLog(`Customer left a few cents. ($${feedback.payment.toFixed(2)})`, "customer");
-        } else {
-            this.callbacks.onLog("Customer refused to pay and left.", "narrative");
+        // Skip payment message (only for regular customers with no selection)
+        if (!feedback.isBoss && selectedIndices.length === 0) {
+            this.callbacks.onLog(`You skipped payment.`, "customer");
         }
-
-        // Run post-serve effects (Meditation Master artifact)
-        const isExcellentOrPerfect = feedback.rating.rating === "EXCELLENT" || feedback.rating.rating === "PERFECT";
-        runEffectHook('postServe', this.state.activeArtifacts, {
-            isExcellentOrPerfect,
-            restoreSanity: (amount) => this.callbacks.restoreSanity(amount),
-            log: (msg, type) => this.callbacks.onLog(msg, type)
-        });
 
         // Clear feedback state
         this.state.pendingFeedback.active = false;
-
-        // Hide feedback UI
+        this.state.selectedPaymentIndices = [];
         this.callbacks.hideFeedbackDisplay();
 
-        // Advance to next customer (500ms delay)
-        this.advanceCustomer(500);
+        // Check for game over after processing
+        if (gameOver) {
+            this.callbacks.onRender();
+            setTimeout(() => {
+                this.callbacks.onGameOver("SANITY DEPLETED");
+            }, 1000);
+            return;
+        }
+
+        // === What happens next ===
+        if (feedback.isBoss && !feedback.isBossBonus) {
+            // Advance to next course or show final bonus page
+            this.state.customer.currentCourse++;
+            this.state.customer.coursesServed++;
+
+            if (this.state.customer.currentCourse >= this.state.customer.coursesRequired) {
+                // All courses done — show final bonus feedback page
+                this.showBossBonusFeedback();
+            } else {
+                // More courses remain
+                this.callbacks.onLog(`Next course: ${this.state.customer.orders[this.state.customer.currentCourse].name}`, "customer");
+                this.callbacks.updateBossDisplay(this.state.customer);
+                this.callbacks.onRender();
+            }
+        } else if (feedback.isBossBonus) {
+            // Final bonus collected — proceed to victory
+            this.defeatBoss();
+        } else {
+            // Regular customer — advance
+            this.advanceCustomer(500);
+        }
+    }
+
+    showBossBonusFeedback() {
+        const bossName = this.state.customer.name;
+        const victoryBonus = this.state.customer.victoryBonus || 0;
+
+        this.callbacks.onLog("=== BOSS DEFEATED ===", "narrative");
+
+        const paymentItems = [];
+        if (victoryBonus > 0) {
+            paymentItems.push({
+                label: `+$${victoryBonus}`,
+                type: "money",
+                value: victoryBonus,
+                binded: false,
+                modifiers: ["Boss Victory Bonus"]
+            });
+        }
+
+        this.state.pendingFeedback = {
+            active: true,
+            isBoss: true,
+            isBossBonus: true,
+            dishName: "",
+            comment: `'Magnificent! Your ${this.state.customer.coursesRequired}-course meal was a masterpiece!'`,
+            rating: { rating: "PERFECT", emoji: "★★★★★", color: "#ffff00" },
+            payment: 0,
+            orderHints: "",
+            paymentItems: paymentItems,
+            customerName: bossName,
+            customerAvatar: this.state.customer.avatar,
+            buttonText: "COLLECT",
+            courseName: ""
+        };
+
+        this.callbacks.showFeedbackDisplay(this.state.pendingFeedback);
+        this.callbacks.onRender();
     }
 
     defeatBoss() {
         const bossName = this.state.customer.name;
-        const victoryBonus = this.state.customer.victoryBonus || 0;
-
-        this.callbacks.onLog(`${bossName}: 'Magnificent! A perfect ${this.state.customer.coursesRequired}-course meal!'`, "narrative");
-        this.callbacks.onLog(`${bossName}: 'Your cooking... it's RAW TALENT!'`, "narrative");
-        this.callbacks.onLog("=== BOSS DEFEATED ===", "narrative");
-
-        if (victoryBonus > 0) {
-            this.state.money += victoryBonus;
-            this.callbacks.onLog(`Received $${victoryBonus} BOSS BONUS!`, "customer");
-        }
-
         this.state.customersServedCount++;
         this.callbacks.onRender();
 

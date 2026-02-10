@@ -28,6 +28,7 @@ export class Game {
 
         this.countertop = [];
         this.selectedIndices = [];
+        this.selectedPaymentIndices = [];
 
         // Recipe Book Manager (initialize before ingredient deck)
         this.recipeBook = new RecipeBookManager();
@@ -60,17 +61,17 @@ export class Game {
         this.pendingFeedback = {
             active: false,              // Boolean: is feedback waiting to collect?
             isBoss: false,              // Boolean: is this boss feedback?
+            isBossBonus: false,         // Boolean: is this the final boss bonus page?
             dishName: "",              // String: name of dish served
             comment: "",               // String: customer reaction
             rating: {},                // Object: { rating, emoji, color }
             payment: 0,                // Number: calculated payment
             orderHints: "",            // String: original order for context
-            appliedBonuses: [],        // Array: bonus descriptions to display
-            sanityCost: 0,             // Number: STORED for application on collect
+            paymentItems: [],          // Array: payment item objects for selection UI
             customerName: "",          // String: customer who was served
             customerAvatar: "",        // String: ASCII art for feedback display
-            buttonText: "COLLECT",     // String: button label (COLLECT / NEXT COURSE / VICTORY)
-            courseName: ""             // String: for boss courses (e.g., "APPETIZER")
+            buttonText: "COLLECT",     // String: button label
+            courseName: ""             // String: for boss courses
         };
 
         // Initialize managers with callbacks
@@ -141,7 +142,10 @@ export class Game {
             updateCustomerDisplay: (customer) => UI.updateCustomerDisplay(customer),
             updateBossDisplay: (customer) => UI.updateBossDisplay(customer),
             showVictory: (day, money, sanity, bossName) => UI.showVictory(day, money, sanity, bossName),
-            showFeedbackDisplay: (feedback) => UI.showFeedbackDisplay(feedback),
+            showFeedbackDisplay: (feedback) => {
+                this.clearPaymentSelection();
+                UI.showFeedbackDisplay(feedback, (index) => this.togglePaymentSelection(index));
+            },
             hideFeedbackDisplay: () => UI.hideFeedbackDisplay()
         });
 
@@ -365,6 +369,27 @@ export class Game {
     clearSelection() {
         this.selectedIndices = [];
         this.render();
+    }
+
+    togglePaymentSelection(index) {
+        if (this.selectedPaymentIndices.includes(index)) {
+            this.selectedPaymentIndices = this.selectedPaymentIndices.filter(i => i !== index);
+        } else {
+            this.selectedPaymentIndices.push(index);
+        }
+        this.updatePaymentDisplay();
+    }
+
+    clearPaymentSelection() {
+        this.selectedPaymentIndices = [];
+    }
+
+    updatePaymentDisplay() {
+        const feedback = this.pendingFeedback;
+        if (feedback.active && feedback.paymentItems && feedback.paymentItems.length > 0) {
+            const bossButtonText = feedback.isBoss ? feedback.buttonText : null;
+            UI.renderPaymentItems(feedback.paymentItems, this.selectedPaymentIndices, (index) => this.togglePaymentSelection(index), bossButtonText);
+        }
     }
 
     render() {

@@ -190,18 +190,6 @@ registerHandler('modifyPayment', 'price_gouger', (context, current) => {
 });
 
 // =============================================================================
-// postServe — CustomerManager
-// =============================================================================
-
-registerHandler('postServe', 'meditation_master', (context) => {
-    if (!context.isExcellentOrPerfect) return;
-    const artifact = getArtifactById('meditation_master');
-    const sanityBonus = artifact.effect.value;
-    context.restoreSanity(sanityBonus);
-    context.log(`MEDITATION MASTER: +${sanityBonus} sanity from excellent service!`, "artifact");
-});
-
-// =============================================================================
 // endOfDay — DayManager
 // =============================================================================
 

@@ -613,24 +613,20 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     line-height: 1.6;
 }
 
-/* Feedback view styling */
-#feedback-bonuses {
+/* Payment section in feedback view */
+#payment-section h4 {
+    margin: 8px 0 5px 0;
     color: #ffff00;
-}
-
-#feedback-bonuses p {
-    margin: 0;
-}
-
-#feedback-sanity-cost {
-    color: #ff3333;
-}
-
-#feedback-sanity-cost p {
-    margin: 0;
+    font-size: 0.9em;
+    border-bottom: 1px solid #555;
+    padding-bottom: 3px;
 }
 
 #feedback-action-btn {
     display: block;
     margin: 10px auto 0 auto;
 }
+
+/* Payment items in feedback view */
+.item-slot.binded { color: #ff6666; }
+.item-slot.binded.selected { background-color: #ff6666; color: #000; }

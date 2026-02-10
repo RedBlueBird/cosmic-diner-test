@@ -303,65 +303,90 @@ export function updateConsumablesDisplay(inventory, gameState) {
 }
 
 // Show feedback display in right panel
-export function showFeedbackDisplay(feedback) {
+export function showFeedbackDisplay(feedback, onTogglePaymentSelection) {
     // Update panel title
-    const titleText = feedback.isBoss ? 'BOSS COURSE COMPLETE' : 'SERVICE COMPLETE';
+    let titleText = 'SERVICE COMPLETE';
+    if (feedback.isBossBonus) {
+        titleText = 'BOSS DEFEATED';
+    } else if (feedback.isBoss) {
+        titleText = 'BOSS COURSE COMPLETE';
+    }
     document.getElementById('right-panel-title').textContent = titleText;
 
     // Populate feedback elements
     document.getElementById('feedback-avatar').textContent = feedback.customerAvatar;
     document.getElementById('feedback-customer-name').textContent = feedback.customerName;
 
-    // Show course name for boss
-    const courseNameEl = document.getElementById('feedback-course-name');
-    if (feedback.isBoss && feedback.courseName) {
-        courseNameEl.textContent = feedback.courseName;
-        courseNameEl.classList.remove('hidden');
-    } else {
-        courseNameEl.classList.add('hidden');
-    }
+    // Hide course name (no longer displayed)
+    document.getElementById('feedback-course-name').classList.add('hidden');
 
     document.getElementById('feedback-comment').textContent = feedback.comment;
     document.getElementById('feedback-rating-emoji').textContent = feedback.rating.emoji;
 
-    // Hides the rating text for now
-    // const ratingText = document.getElementById('feedback-rating-text');
-    // ratingText.textContent = feedback.rating.rating;
-    // ratingText.style.color = feedback.rating.color || '#33ff33';
+    // Payment section
+    const paymentSection = document.getElementById('payment-section');
+    const bossPaymentLine = document.getElementById('boss-payment-line');
+    const paymentItems = feedback.paymentItems || [];
 
-    // Display bonuses if any
-    const bonusesDiv = document.getElementById('feedback-bonuses');
-    if (feedback.appliedBonuses && feedback.appliedBonuses.length > 0) {
-        bonusesDiv.innerHTML = feedback.appliedBonuses.map(bonus =>
-            `<p>✦ ${bonus}</p>`
-        ).join('');
+    if (paymentItems.length > 0) {
+        // Show interactive payment items
+        paymentSection.classList.remove('hidden');
+        bossPaymentLine.classList.add('hidden');
+        renderPaymentItems(paymentItems, [], onTogglePaymentSelection, feedback.isBoss ? feedback.buttonText : null);
     } else {
-        bonusesDiv.innerHTML = '';
+        // No payment items (e.g. boss course with $0 payment somehow)
+        paymentSection.classList.add('hidden');
+        bossPaymentLine.classList.add('hidden');
+
+        const actionBtn = document.getElementById('feedback-action-btn');
+        actionBtn.textContent = `[${feedback.buttonText}]`;
     }
-
-    // Display sanity cost warning (NOT YET APPLIED)
-    const sanityCostDiv = document.getElementById('feedback-sanity-cost');
-    if (feedback.sanityCost > 0) {
-        let message = '';
-        if (feedback.rating.rating === "TERRIBLE") {
-            message = `⚠ Collecting will damage your sanity! (-${feedback.sanityCost})`;
-        } else if (feedback.rating.rating === "POOR") {
-            message = `⚠ Collecting will cost sanity. (-${feedback.sanityCost})`;
-        }
-        sanityCostDiv.innerHTML = `<p>${message}</p>`;
-    } else {
-        sanityCostDiv.innerHTML = '';
-    }
-
-    document.getElementById('feedback-payment').textContent = feedback.payment;
-
-    // Update button text
-    const actionBtn = document.getElementById('feedback-action-btn');
-    actionBtn.textContent = `[${feedback.buttonText}]`;
 
     // Toggle views: hide customer, show feedback
     document.getElementById('customer-view').classList.add('hidden');
     document.getElementById('feedback-view').classList.remove('hidden');
+}
+
+// Render interactive payment items in feedback view
+// bossButtonText: if provided, use this fixed text for the button (boss flow)
+export function renderPaymentItems(paymentItems, selectedIndices, onToggle, bossButtonText = null) {
+    const list = document.getElementById('payment-items-list');
+    list.innerHTML = '';
+
+    paymentItems.forEach((item, index) => {
+        const div = document.createElement('div');
+        let className = 'item-slot';
+        if (selectedIndices.includes(index)) className += ' selected';
+        if (item.binded) className += ' binded';
+        div.className = className;
+
+        const indicator = item.modifiers.length > 0 ? ' ✦' : '';
+        div.textContent = `[${index + 1}] ${item.label}${indicator}`;
+
+        div.onclick = () => onToggle(index);
+
+        // Tooltip
+        if (item.modifiers.length > 0) {
+            const body = item.modifiers.map(m => `- ${m}`).join('\n') + '\n\n(Left-Click to select)';
+            createTooltip(div, 'Modifiers', body);
+        } else {
+            createTooltip(div, '(Left-Click to select)');
+        }
+
+        list.appendChild(div);
+    });
+
+    // Update button text
+    const actionBtn = document.getElementById('feedback-action-btn');
+    if (bossButtonText) {
+        // Boss flow: always show the specific boss button text
+        actionBtn.textContent = `[${bossButtonText}]`;
+    } else {
+        // Regular flow: SKIP PAYMENT when nothing selected and no binded items
+        const hasBinded = paymentItems.some(item => item.binded);
+        const hasSelection = selectedIndices.length > 0;
+        actionBtn.textContent = (!hasSelection && !hasBinded) ? '[SKIP PAYMENT]' : '[COLLECT]';
+    }
 }
 
 // Hide feedback display and restore customer view
@@ -369,4 +394,5 @@ export function hideFeedbackDisplay() {
     document.getElementById('right-panel-title').textContent = 'CURRENT CUSTOMER';
     document.getElementById('feedback-view').classList.add('hidden');
     document.getElementById('customer-view').classList.remove('hidden');
+    document.getElementById('payment-items-list').innerHTML = '';
 }
