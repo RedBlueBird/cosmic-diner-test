@@ -41,6 +41,7 @@ export function showFridgeModal(ingredients, costs, money, onWithdraw) {
     setupFridgeSearch();
 
     modal.classList.remove('hidden');
+    document.getElementById('fridge-backdrop').classList.remove('hidden');
 }
 
 // Set up search input filtering
@@ -89,6 +90,7 @@ export function hideFridgeModal() {
     }
 
     hideModal('fridge-modal');
+    hideModal('fridge-backdrop');
 }
 
 // Show artifact selection modal

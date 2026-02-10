@@ -173,8 +173,13 @@ export class Game {
 
     initializeIngredientDeck() {
         const atoms = getAtoms();
-        const shuffled = [...atoms].sort(() => Math.random() - 0.5);
-        this.availableIngredients = shuffled.slice(0, STARTING_ATOM_COUNT);
+        const pick = (arr, n) => [...arr].sort(() => Math.random() - 0.5).slice(0, n);
+        this.availableIngredients = [
+            ...pick(atoms.slice(0, 5), 1),   // 1 drink
+            ...pick(atoms.slice(5, 11), 2),   // 2 spices
+            ...pick(atoms.slice(11, 21), 2),  // 2 food
+            ...pick(atoms.slice(21, 24), 1),  // 1 horror
+        ];
         this.availableIngredients.forEach(atom => {
             this.ingredientCosts[atom] = 1;
             // Track starting atoms in recipe book immediately

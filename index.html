@@ -103,8 +103,8 @@
             <pre id="feedback-avatar"></pre>
             <p id="feedback-customer-name" style="font-weight:bold;"></p>
             <p id="feedback-course-name" class="hidden" style="color: #ffaa00; font-weight: bold; text-align: center;"></p>
-            <p><span id="feedback-rating-emoji"></span> <span id="feedback-rating-text"></span></p>
             <p>"<span id="feedback-comment"></span>"</p>
+            <p><span id="feedback-rating-emoji"></span> <span id="feedback-rating-text"></span></p>
             <div id="feedback-bonuses"></div>
             <div id="feedback-sanity-cost"></div>
             <p>Payment: <span style="color:#33ff33">$<span id="feedback-payment">0</span></span></p>
@@ -128,6 +128,9 @@
     <div id="log-panel">
         <div>> SYSTEM INITIALIZED...</div>
     </div>
+
+    <!-- Backdrop for Fridge Modal -->
+    <div id="fridge-backdrop" class="modal-backdrop hidden" onclick="game.closeFridge()"></div>
 
     <!-- Modal for Fridge -->
     <div id="fridge-modal" class="modal hidden">

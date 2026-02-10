@@ -324,9 +324,10 @@ export function showFeedbackDisplay(feedback) {
     document.getElementById('feedback-comment').textContent = feedback.comment;
     document.getElementById('feedback-rating-emoji').textContent = feedback.rating.emoji;
 
-    const ratingText = document.getElementById('feedback-rating-text');
-    ratingText.textContent = feedback.rating.rating;
-    ratingText.style.color = feedback.rating.color || '#33ff33';
+    // Hides the rating text for now
+    // const ratingText = document.getElementById('feedback-rating-text');
+    // ratingText.textContent = feedback.rating.rating;
+    // ratingText.style.color = feedback.rating.color || '#33ff33';
 
     // Display bonuses if any
     const bonusesDiv = document.getElementById('feedback-bonuses');
