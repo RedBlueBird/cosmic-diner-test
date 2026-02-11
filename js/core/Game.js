@@ -18,7 +18,7 @@ export class Game {
         // Core game state
         this.money = STARTING_MONEY;
         this.sanity = STARTING_SANITY;
-        this.day = 5;
+        this.day = 1;
         this.rent = STARTING_RENT;
 
         this.customersPerDay = STARTING_CUSTOMERS_PER_DAY;
@@ -141,7 +141,7 @@ export class Game {
             onProcessEndOfDayEffects: () => this.days.processEndOfDayEffects(),
             updateCustomerDisplay: (customer) => UI.updateCustomerDisplay(customer),
             updateBossDisplay: (customer) => UI.updateBossDisplay(customer),
-            showVictory: (day, money, sanity, bossName) => UI.showVictory(day, money, sanity, bossName),
+            showVictory: (day, money, sanity, customersServed, bossName) => UI.showVictory(day, money, sanity, customersServed, bossName),
             showFeedbackDisplay: (feedback) => {
                 this.clearPaymentSelection();
                 UI.showFeedbackDisplay(feedback, (index) => this.togglePaymentSelection(index));

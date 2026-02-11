@@ -148,7 +148,7 @@ export function showGameOver(reason, day, customersServed) {
 }
 
 // Show victory screen in right panel
-export function showVictory(day, money, sanity, bossName = "THE BOSS") {
+export function showVictory(day, money, sanity, customersServed, bossName = "THE BOSS") {
     document.getElementById('right-panel-title').textContent = 'VICTORY';
 
     document.getElementById('gameover-content').innerHTML = `

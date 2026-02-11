@@ -585,6 +585,6 @@ export class CustomerManager {
 
     showVictory(bossName) {
         this.callbacks.onLog(`=== YOU DEFEATED ${bossName.toUpperCase()}! ===`, "system");
-        this.callbacks.showVictory(this.state.day, this.state.money, this.state.sanity, bossName);
+        this.callbacks.showVictory(this.state.day, this.state.money, this.state.sanity, this.state.customersServedCount, bossName);
     }
 }
