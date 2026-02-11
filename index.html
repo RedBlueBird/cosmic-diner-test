@@ -135,7 +135,7 @@
     <div id="fridge-backdrop" class="modal-backdrop hidden" onclick="game.closeFridge()"></div>
 
     <!-- Modal for Fridge -->
-    <div id="fridge-modal" class="modal hidden">
+    <div id="fridge-modal" class="modal fridge-modal hidden">
         <h3>FRIDGE STORAGE</h3>
         <input
             type="text"
@@ -143,7 +143,7 @@
             class="search-input"
             placeholder="Search items..."
         >
-        <div id="fridge-items" class="grid-buttons">
+        <div id="fridge-items" class="grid-buttons fridge-items-scroll">
             <!-- Buttons injected here -->
         </div>
         <button class="btn" onclick="game.closeFridge()">[CLOSE]</button>

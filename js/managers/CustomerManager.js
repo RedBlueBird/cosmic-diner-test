@@ -1,6 +1,6 @@
 // CustomerManager.js - Customer and serving logic
 
-import { FEEDBACK_CATEGORIES, TASTE_TEST_SANITY_COST, TERRIBLE_SERVICE_SANITY_PENALTY, POOR_SERVICE_SANITY_PENALTY, BOSS_FAILURE_SANITY_PENALTY } from '../config.js';
+import { FEEDBACK_CATEGORIES, TASTE_TEST_SANITY_COST, TERRIBLE_SERVICE_SANITY_PENALTY, POOR_SERVICE_SANITY_PENALTY, BOSS_FAILURE_SANITY_PENALTY, MAX_CONSUMABLES } from '../config.js';
 import { getCustomerTypes, getBossForDay, getArtifactById, getConsumables } from '../data/DataStore.js';
 import { getItemName, getFoodAttributes } from '../utils/ItemUtils.js';
 import { getTasteFeedback, getDemandHints } from '../services/FeedbackService.js';
@@ -440,6 +440,16 @@ export class CustomerManager {
         if (unselectedBinded.length > 0) {
             this.callbacks.onLog("Select all required (binded) items in the payment section to collect.", "error");
             return;
+        }
+
+        // Check consumable inventory space if a consumable is selected
+        const selectedConsumables = selectedIndices.filter(i => paymentItems[i] && paymentItems[i].type === "consumable");
+        if (selectedConsumables.length > 0) {
+            const currentTotal = Object.values(this.state.consumableInventory).reduce((sum, qty) => sum + qty, 0);
+            if (currentTotal + selectedConsumables.length > MAX_CONSUMABLES) {
+                this.callbacks.onLog(`Inventory full (${MAX_CONSUMABLES}/${MAX_CONSUMABLES})! Deselect the consumable or discard something first.`, "error");
+                return;
+            }
         }
 
         // Process selected items
