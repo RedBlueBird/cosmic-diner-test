@@ -360,13 +360,19 @@ export function renderPaymentItems(paymentItems, selectedIndices, onToggle, boss
         if (item.binded) className += ' binded';
         div.className = className;
 
-        const indicator = item.modifiers.length > 0 ? ' ✦' : '';
+        const indicator = (item.modifiers.length > 0 || item.consumableInfo) ? ' ✦' : '';
         div.textContent = `[${index + 1}] ${item.label}${indicator}`;
 
         div.onclick = () => onToggle(index);
 
         // Tooltip
-        if (item.modifiers.length > 0) {
+        if (item.consumableInfo) {
+            // Multi-tooltip for consumable items
+            createTooltip(div, [
+                { title: `${item.consumableInfo.tipText}\n\n(Left-Click to select)` },
+                { title: item.consumableInfo.name, description: item.consumableInfo.description }
+            ]);
+        } else if (item.modifiers.length > 0) {
             const body = item.modifiers.map(m => `- ${m}`).join('\n') + '\n\n(Left-Click to select)';
             createTooltip(div, 'Modifiers', body);
         } else {

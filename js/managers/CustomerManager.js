@@ -1,7 +1,7 @@
 // CustomerManager.js - Customer and serving logic
 
 import { FEEDBACK_CATEGORIES, TASTE_TEST_SANITY_COST, TERRIBLE_SERVICE_SANITY_PENALTY, POOR_SERVICE_SANITY_PENALTY, BOSS_FAILURE_SANITY_PENALTY } from '../config.js';
-import { getCustomerTypes, getBossForDay, getArtifactById } from '../data/DataStore.js';
+import { getCustomerTypes, getBossForDay, getArtifactById, getConsumables } from '../data/DataStore.js';
 import { getItemName, getFoodAttributes } from '../utils/ItemUtils.js';
 import { getTasteFeedback, getDemandHints } from '../services/FeedbackService.js';
 import { calculateDistance, calculatePayment, getSatisfactionRating } from '../services/PaymentService.js';
@@ -301,6 +301,34 @@ export class CustomerManager {
             });
         }
 
+        // Consumable reward for EXCELLENT/PERFECT ratings
+        if (isExcellentOrPerfect) {
+            const allConsumables = getConsumables();
+            let eligible;
+            if (satisfaction.rating === "PERFECT") {
+                eligible = allConsumables.filter(c => c.rarity === "uncommon" || c.rarity === "rare");
+            } else {
+                eligible = allConsumables.filter(c => c.rarity === "common" || c.rarity === "uncommon");
+            }
+            if (eligible.length > 0) {
+                const picked = eligible[Math.floor(Math.random() * eligible.length)];
+                paymentItems.push({
+                    label: picked.name,
+                    type: "consumable",
+                    value: picked.id,
+                    binded: false,
+                    modifiers: [],
+                    consumableInfo: {
+                        name: picked.name,
+                        description: picked.description,
+                        tipText: satisfaction.rating === "PERFECT"
+                            ? "A tip from a very satisfied customer"
+                            : "A tip from a satisfied customer"
+                    }
+                });
+            }
+        }
+
         // Store feedback instead of applying payment/sanity
         this.state.pendingFeedback = {
             active: true,
@@ -443,6 +471,9 @@ export class CustomerManager {
             } else if (item.type === "sanity_restore") {
                 this.callbacks.restoreSanity(item.value);
                 this.callbacks.onLog(`MEDITATION MASTER: +${item.value} sanity from excellent service!`, "artifact");
+            } else if (item.type === "consumable") {
+                this.callbacks.grantConsumable(item.value, 1);
+                this.callbacks.onLog(`Received ${item.label}!`, "consumable");
             }
         }
 

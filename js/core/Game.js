@@ -146,7 +146,8 @@ export class Game {
                 this.clearPaymentSelection();
                 UI.showFeedbackDisplay(feedback, (index) => this.togglePaymentSelection(index));
             },
-            hideFeedbackDisplay: () => UI.hideFeedbackDisplay()
+            hideFeedbackDisplay: () => UI.hideFeedbackDisplay(),
+            grantConsumable: (id, qty) => this.consumables.grantConsumable(id, qty)
         });
 
         // Day Manager

@@ -1,7 +1,17 @@
 // tooltips.js - Tooltip creation and initialization
 
 // Reusable tooltip component
-export function createTooltip(element, title, description) {
+// Supports two modes:
+//   Single:  createTooltip(element, title, description)
+//   Multi:   createTooltip(element, [{title, description}, ...])
+export function createTooltip(element, titleOrList, description) {
+    // Multi-tooltip mode: first arg after element is an array
+    if (Array.isArray(titleOrList)) {
+        return createMultiTooltip(element, titleOrList);
+    }
+
+    // Single tooltip mode (existing behavior)
+    const title = titleOrList;
     const tooltip = document.createElement('div');
     tooltip.className = 'tooltip';
 
@@ -34,6 +44,45 @@ export function createTooltip(element, title, description) {
     });
 
     return tooltip;
+}
+
+// Create multiple stacked tooltip boxes for one element
+function createMultiTooltip(element, tooltipConfigs) {
+    const container = document.createElement('div');
+    container.className = 'tooltip-container';
+
+    tooltipConfigs.forEach(config => {
+        const box = document.createElement('div');
+        box.className = 'tooltip-box';
+        if (config.description) {
+            box.innerHTML = `
+                <span class="tooltip-name">${config.title}</span>
+                <span class="tooltip-description">${config.description}</span>
+            `;
+        } else {
+            box.innerHTML = `<span class="tooltip-description">${config.title}</span>`;
+        }
+        container.appendChild(box);
+    });
+
+    element.appendChild(container);
+    element.style.position = 'relative';
+
+    element.addEventListener('mouseenter', () => {
+        const rect = element.getBoundingClientRect();
+        container.style.left = `${rect.right + 10}px`;
+        container.style.top = `${rect.top + (rect.height / 2)}px`;
+        container.style.transform = 'translateY(-50%)';
+        container.style.visibility = 'visible';
+        container.style.opacity = '1';
+    });
+
+    element.addEventListener('mouseleave', () => {
+        container.style.visibility = 'hidden';
+        container.style.opacity = '0';
+    });
+
+    return container;
 }
 
 // Initialize tooltips for all buttons
