@@ -402,3 +402,10 @@ export function hideFeedbackDisplay() {
     document.getElementById('customer-view').classList.remove('hidden');
     document.getElementById('payment-items-list').innerHTML = '';
 }
+
+// Hide game over/victory display and restore customer view
+export function hideGameOverDisplay() {
+    document.getElementById('right-panel-title').textContent = 'CURRENT CUSTOMER';
+    document.getElementById('gameover-view').classList.add('hidden');
+    document.getElementById('customer-view').classList.remove('hidden');
+}

@@ -18,7 +18,7 @@ export class Game {
         // Core game state
         this.money = STARTING_MONEY;
         this.sanity = STARTING_SANITY;
-        this.day = 1;
+        this.day = 5;
         this.rent = STARTING_RENT;
 
         this.customersPerDay = STARTING_CUSTOMERS_PER_DAY;
@@ -343,9 +343,8 @@ export class Game {
         this.log("The boss is satisfied. The diner continues...", "narrative");
         this.log("Endless customers await!", "narrative");
 
-        // Hide victory modal
-        const victoryElements = document.querySelectorAll('.game-over');
-        victoryElements.forEach(el => el.remove());
+        // Hide victory display
+        UI.hideGameOverDisplay();
 
         // Show artifact selection before Day 6 (if artifacts available)
         if (this.artifactPool.length > 0) {

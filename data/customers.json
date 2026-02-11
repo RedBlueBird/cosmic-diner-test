@@ -357,19 +357,19 @@
                     "name": "Appetizer",
                     "hint": "A PROPER salad! Fresh, crunchy, with oil dressing. HEALTHY!",
                     "demand": { "crunch": 6, "sour": 4, "grease": 4, "health": 8, "isVegan": 1 },
-                    "maxDistance": 8
+                    "maxDistance": 800
                 },
                 {
                     "name": "Main Course",
                     "hint": "The ULTIMATE beef bowl! Savory, filling, with EGG! PERFECTION!",
                     "demand": { "savory": 9, "salty": 6, "filling": 10, "temperature": 8, "calming": 4 },
-                    "maxDistance": 8
+                    "maxDistance": 800
                 },
                 {
                     "name": "Dessert",
                     "hint": "A chocolate shake! COLD. SWEET. CREAMY. ICE COLD!",
                     "demand": { "sweet": 9, "soft": 10, "moisture": 8, "temperature": 1, "calming": 4 },
-                    "maxDistance": 8
+                    "maxDistance": 800
                 }
             ]
         }

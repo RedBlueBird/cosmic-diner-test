@@ -121,56 +121,60 @@ export function hideArtifactModal() {
     hideModal('artifact-modal');
 }
 
-// Show game over screen
+// Show game over screen in right panel
 export function showGameOver(reason, day, customersServed) {
     // Clear sanity visual effects so player can read the game over screen
     document.body.style.filter = "none";
 
-    const panel = document.getElementById('log-panel');
-    const gameOverDiv = document.createElement('div');
-    gameOverDiv.className = "game-over";
-    gameOverDiv.innerHTML = `
-        <br>
-        =============================<br>
-        GAME OVER: ${reason}<br>
-        DAYS SURVIVED: ${day}<br>
-        CUSTOMERS SERVED: ${customersServed}<br>
-        =============================<br>
+    document.getElementById('right-panel-title').textContent = 'GAME OVER';
+
+    document.getElementById('gameover-content').innerHTML = `
+        =============================
+        <div class="stat-row"><span>REASON:</span><span>${reason}</span></div>
+        <div class="stat-row"><span>DAYS SURVIVED:</span><span>${day}</span></div>
+        <div class="stat-row"><span>CUSTOMERS SERVED:</span><span>${customersServed}</span></div>
+        =============================
+    `;
+
+    document.getElementById('gameover-buttons').innerHTML = `
         <button class="btn" onclick="window.restartGame()">RESTART</button>
         <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdgbIcJ9WAKpupUfn_u9wrx_eZXS_xxQEdLbvE8eQz2rNU9uw/viewform" target="_blank">FEEDBACK FORM</a>
     `;
-    panel.appendChild(gameOverDiv);
+
+    document.getElementById('customer-view').classList.add('hidden');
+    document.getElementById('feedback-view').classList.add('hidden');
+    document.getElementById('merchant-shop').classList.add('hidden');
+    document.getElementById('gameover-view').classList.remove('hidden');
 }
 
-// Show victory screen
+// Show victory screen in right panel
 export function showVictory(day, money, sanity, bossName = "THE BOSS") {
-    const panel = document.getElementById('log-panel');
-    const victoryDiv = document.createElement('div');
-    victoryDiv.className = "game-over";
-    victoryDiv.innerHTML = `
-        <br>
+    document.getElementById('right-panel-title').textContent = 'VICTORY';
+
+    document.getElementById('gameover-content').innerHTML = `
         =============================<br>
-        VICTORY!<br>
-        =============================<br>
-        YOU DEFEATED ${bossName.toUpperCase()}!<br>
-        THE BOSS HAS BEEN SATISFIED!<br>
-        <br>
-        FINAL STATS:<br>
-        Days Survived: ${day}<br>
-        Total Money Earned: $${money}<br>
-        Final Sanity: ${sanity}%<br>
+        YOU DEFEATED ${bossName.toUpperCase()}!
+        <br><br>
+        <div class="stat-row"><span>DAYS SURVIVED:</span><span>${day}</span></div>
+        <div class="stat-row"><span>CUSTOMERS SERVED:</span><span>${customersServed}</span></div>
         <br>
         =============================<br>
         STAY TUNED FOR THE FULL VERSION<br>
         WITH MORE BOSSES, ALIEN ARCS,<br>
         AND ELDRITCH HORRORS!<br>
-        =============================<br>
-        <br>
+        =============================
+    `;
+
+    document.getElementById('gameover-buttons').innerHTML = `
         <button class="btn" onclick="window.game.continueEndlessMode()">CONTINUE TO ENDLESS MODE</button>
         <button class="btn" onclick="window.restartGame()">RESTART GAME</button>
         <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdgbIcJ9WAKpupUfn_u9wrx_eZXS_xxQEdLbvE8eQz2rNU9uw/viewform" target="_blank">FEEDBACK FORM</a>
     `;
-    panel.appendChild(victoryDiv);
+
+    document.getElementById('customer-view').classList.add('hidden');
+    document.getElementById('feedback-view').classList.add('hidden');
+    document.getElementById('merchant-shop').classList.add('hidden');
+    document.getElementById('gameover-view').classList.remove('hidden');
 }
 
 // Show recipe book view

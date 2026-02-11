@@ -1,6 +1,6 @@
 import { loadFoodData, loadRecipes, loadFoodAttributes, loadTasteFeedback, loadCustomers, loadArtifacts, loadConsumables } from './utils.js';
 import { Game } from './core/Game.js';
-import { initApplianceTooltips } from './ui.js';
+import { initApplianceTooltips, hideGameOverDisplay } from './ui.js';
 import './effects/ArtifactHandlers.js';
 
 // Global game instance (needed for HTML onclick handlers)
@@ -48,8 +48,8 @@ function restartGame() {
     const logPanel = document.getElementById('log-panel');
     logPanel.innerHTML = '';
 
-    // Remove any game-over or victory screens
-    document.querySelectorAll('.game-over').forEach(el => el.remove());
+    // Hide game over/victory display
+    hideGameOverDisplay();
 
     // Hide any open modals
     document.getElementById('fridge-modal').classList.add('hidden');
