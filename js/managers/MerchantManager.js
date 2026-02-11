@@ -194,7 +194,8 @@ export class MerchantManager {
      * Dismiss the merchant and continue the day
      */
     dismissMerchant() {
-        this.callbacks.hideMerchantDisplay();
+        // Keep merchant view visible with disabled button until nextCustomer() transitions
+        this.callbacks.disableLeaveButton("DEPARTING...");
         this.callbacks.onLog("The Morning Merchant departs...", "merchant");
         this.currentStock = null;
 
@@ -202,7 +203,7 @@ export class MerchantManager {
         this.state.customersServedCount++;
         this.callbacks.onRender();
 
-        // Spawn next customer
+        // Spawn next customer (showCustomerView in nextCustomer handles the view transition)
         setTimeout(() => {
             this.callbacks.onNextCustomer();
         }, 500);

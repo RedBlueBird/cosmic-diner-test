@@ -91,7 +91,7 @@ export class ArtifactManager {
     showArtifactSelection() {
         if (this.state.artifactPool.length === 0) {
             this.callbacks.onLog("No more artifacts available.", "system");
-            setTimeout(() => this.callbacks.onStartNextDay(), 2000);
+            // setTimeout(() => this.callbacks.onStartNextDay(), 2000);
             return;
         }
 
@@ -110,7 +110,7 @@ export class ArtifactManager {
         this.callbacks.hideArtifactModal();
         this.callbacks.onRender();
 
-        setTimeout(() => this.callbacks.onStartNextDay(), 2000);
+        setTimeout(() => this.callbacks.onStartNextDay(), 500);
     }
 
     // Grant artifact from consumable (Wishing Well Penny)

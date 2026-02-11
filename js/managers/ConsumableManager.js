@@ -155,7 +155,7 @@ export class ConsumableManager {
         this.state.money += payment;
         this.callbacks.onLog(`${consumable.name}: Customer accepts emergency rations and pays $${payment}!`, "consumable");
 
-        this.callbacks.onAdvanceCustomer(1500);
+        this.callbacks.onAdvanceCustomer(500);
     }
 
     duplicateSelectedItem() {
@@ -234,7 +234,7 @@ export class ConsumableManager {
 
         this.callbacks.onLog(`Wishing Well Penny: Skipped ${this.state.customer.name}!`, "consumable");
 
-        this.callbacks.onAdvanceCustomer(1000);
+        this.callbacks.onAdvanceCustomer(500);
     }
 
     discardConsumable(consumableId) {

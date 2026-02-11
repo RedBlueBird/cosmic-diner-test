@@ -210,7 +210,7 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
 .game-over {
     color: #ff3333;
     font-weight: bold;
-    font-size: 1.1em;
+    font-size: 1em;
     text-align: left;
 }
 

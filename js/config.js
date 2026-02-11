@@ -20,16 +20,16 @@ export const END_OF_DAY_SANITY_RESTORE = 50;
 export const TASTE_TEST_SANITY_COST = 10;
 
 // Sanity penalties for bad service
-export const TERRIBLE_SERVICE_SANITY_PENALTY = 15;
-export const POOR_SERVICE_SANITY_PENALTY = 5;
+export const TERRIBLE_SERVICE_SANITY_PENALTY = 20;
+export const POOR_SERVICE_SANITY_PENALTY = 10;
 export const BOSS_FAILURE_SANITY_PENALTY = 60;
 
 // Divine intervention (softlock prevention)
 export const DIVINE_INTERVENTION_SANITY_RATE = 0.2;
 
 // Merchant system
-export const MERCHANT_CONSUMABLE_BASE_PRICES = { common: 5, uncommon: 8, rare: 12, legendary: 20 };
-export const MERCHANT_FOOD_BASE_PRICE = 15;
+export const MERCHANT_CONSUMABLE_BASE_PRICES = { common: 5, uncommon: 8, rare: 12, legendary: 15 };
+export const MERCHANT_FOOD_BASE_PRICE = 12;
 export const MERCHANT_BASE_USAGE_COST = 2;
 export const MERCHANT_CONSUMABLE_PRICE_MULTIPLIER = 1.2;
 export const MERCHANT_FOOD_PRICE_MULTIPLIER = 1.2;

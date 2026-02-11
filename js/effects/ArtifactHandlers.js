@@ -118,7 +118,7 @@ registerHandler('modifyTasteTestCost', 'caffeine_addiction', (context, currentCo
 registerHandler('modifyTasteTestCost', 'adrenaline_rush', (context, currentCost) => {
     const artifact = getArtifactById('adrenaline_rush');
     const costCap = artifact.effect.value;
-    const sanityThreshold = parseInt(artifact.effect.condition.split('_')[2]) || 40;
+    const sanityThreshold = parseInt(artifact.effect.condition.split('_')[2]) || 50;
     if (context.sanity < sanityThreshold) {
         return Math.min(costCap, currentCost);
     }

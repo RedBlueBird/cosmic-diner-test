@@ -159,9 +159,7 @@ export function showVictory(day, money, sanity, customersServed, bossName = "THE
         <div class="stat-row"><span>CUSTOMERS SERVED:</span><span>${customersServed}</span></div>
         <br>
         =============================<br>
-        STAY TUNED FOR THE FULL VERSION<br>
-        WITH MORE BOSSES, ALIEN ARCS,<br>
-        AND ELDRITCH HORRORS!<br>
+        STAY TUNED FOR THE FULL VERSION WITH MORE BOSSES, ALIEN ARCS, AND ELDRITCH HORRORS!<br>
         =============================
     `;
 

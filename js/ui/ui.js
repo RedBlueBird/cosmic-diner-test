@@ -195,10 +195,20 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) 
     document.getElementById('customer-avatar').textContent = merchantAvatar;
     document.getElementById('customer-name').textContent = 'Wandering Trader';
 
-    // Hide normal customer info, show shop
+    // Hide normal customer info and feedback view, show shop
     document.getElementById('customer-quote').parentElement.classList.add('hidden');
     document.getElementById('customer-order').parentElement.classList.add('hidden');
+    document.getElementById('feedback-view').classList.add('hidden');
+    document.getElementById('customer-view').classList.remove('hidden');
     document.getElementById('merchant-shop').classList.remove('hidden');
+    document.getElementById('payment-items-list').innerHTML = '';
+
+    // Re-enable leave button (may have been disabled by disableLeaveButton)
+    const leaveBtn = document.getElementById('btn-leave-shop');
+    if (leaveBtn) {
+        leaveBtn.disabled = false;
+        leaveBtn.textContent = '[LEAVE SHOP]';
+    }
 
     // Render consumables
     const consumablesDiv = document.getElementById('merchant-consumables');
@@ -328,6 +338,10 @@ export function showFeedbackDisplay(feedback, onTogglePaymentSelection) {
     const bossPaymentLine = document.getElementById('boss-payment-line');
     const paymentItems = feedback.paymentItems || [];
 
+    // Re-enable action button (may have been disabled by disableFeedbackAction)
+    const actionBtn = document.getElementById('feedback-action-btn');
+    actionBtn.disabled = false;
+
     if (paymentItems.length > 0) {
         // Show interactive payment items
         paymentSection.classList.remove('hidden');
@@ -338,7 +352,6 @@ export function showFeedbackDisplay(feedback, onTogglePaymentSelection) {
         paymentSection.classList.add('hidden');
         bossPaymentLine.classList.add('hidden');
 
-        const actionBtn = document.getElementById('feedback-action-btn');
         actionBtn.textContent = `[${feedback.buttonText}]`;
     }
 
@@ -408,4 +421,16 @@ export function hideGameOverDisplay() {
     document.getElementById('right-panel-title').textContent = 'CURRENT CUSTOMER';
     document.getElementById('gameover-view').classList.add('hidden');
     document.getElementById('customer-view').classList.remove('hidden');
+}
+
+// Transition right panel to customer view from any state (feedback, merchant, gameover)
+export function showCustomerView() {
+    document.getElementById('right-panel-title').textContent = 'CURRENT CUSTOMER';
+    document.getElementById('feedback-view').classList.add('hidden');
+    document.getElementById('merchant-shop').classList.add('hidden');
+    document.getElementById('gameover-view').classList.add('hidden');
+    document.getElementById('customer-quote').parentElement.classList.remove('hidden');
+    document.getElementById('customer-order').parentElement.classList.remove('hidden');
+    document.getElementById('customer-view').classList.remove('hidden');
+    document.getElementById('payment-items-list').innerHTML = '';
 }

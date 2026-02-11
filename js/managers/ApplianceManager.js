@@ -121,7 +121,7 @@ export class ApplianceManager {
         // Apply free withdrawal effect
         if (this.state.activeEffects.freeWithdrawals > 0) {
             this.state.activeEffects.freeWithdrawals--;
-            this.callbacks.onLog(`QUANTUM FRIDGE: ${item} is FREE! (${this.state.activeEffects.freeWithdrawals} left)`, "consumable");
+            this.callbacks.onLog(`REFRIDGERATOR CARD: ${item} is FREE! (${this.state.activeEffects.freeWithdrawals} left)`, "consumable");
             cost = 0;
         }
 

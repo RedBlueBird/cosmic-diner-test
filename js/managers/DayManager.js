@@ -51,9 +51,9 @@ export class DayManager {
         // Show artifact selection if pool has artifacts
         // (Boss days handle their own end-of-day flow via defeatBoss, so endDay is only called on non-boss days)
         if (this.state.artifactPool.length > 0) {
-            setTimeout(() => this.callbacks.showArtifactSelection(), 2000);
+            setTimeout(() => this.callbacks.showArtifactSelection(), 500);
         } else {
-            setTimeout(() => this.startNextDay(), 3000);
+            setTimeout(() => this.startNextDay(), 500);
         }
     }
 

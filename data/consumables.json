@@ -16,7 +16,7 @@
       "name": "Tears of a Clown",
       "description": "Harvested from cosmic jesters, adds sadness and void energy",
       "category": "vial",
-      "rarity": "uncommon",
+      "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
         "modifiers": { "sadness": 5, "void": 3 }
@@ -49,7 +49,7 @@
       "name": "Ghost Pepper Extract",
       "description": "Intense heat that burns the tongue, enhances spiciness",
       "category": "vial",
-      "rarity": "uncommon",
+      "rarity": "common",
       "effect": {
         "type": "attribute_modifier",
         "modifiers": { "spicy": 7, "temperature": 3 }
@@ -270,7 +270,7 @@
       "name": "Emergency Rations",
       "description": "Can be served directly to customer - they pay $20 and leave satisfied",
       "category": "utility",
-      "rarity": "uncommon",
+      "rarity": "common",
       "effect": {
         "type": "serve_emergency_food",
         "payment": 20
@@ -340,11 +340,11 @@
       }
     },
     {
-      "id": "quantum_refrigerator_card",
-      "name": "Quantum Refrigerator Card",
+      "id": "refrigerator_card",
+      "name": "Refrigerator Card",
       "description": "Next 3 fridge withdrawals are free",
       "category": "utility",
-      "rarity": "common",
+      "rarity": "uncommon",
       "effect": {
         "type": "free_withdrawals",
         "count": 3

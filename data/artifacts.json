@@ -44,7 +44,7 @@
   {
     "id": "generous_portions",
     "name": "Generous Portions",
-    "description": "Dishes with filling >= 4 pay 50% extra",
+    "description": "Dishes with moderate filling or more pay 50% extra",
     "category": "customer",
     "effect": { "type": "payment_multiplier", "value": 1.5, "condition": "filling_gte_4" }
   },
@@ -72,9 +72,9 @@
   {
     "id": "night_owl",
     "name": "Night Owl",
-    "description": "Ending the day with $50+ restores 10 sanity",
+    "description": "Ending the day with $50+ restores 50 more sanity",
     "category": "progression",
-    "effect": { "type": "end_day_sanity", "value": 10, "condition": "money_gte_50" }
+    "effect": { "type": "end_day_sanity", "value": 50, "condition": "money_gte_50" }
   },
   {
     "id": "price_gouger",
@@ -95,7 +95,7 @@
     "name": "Investment Portfolio",
     "description": "Earn $1 per $5 saved at day end",
     "category": "economic",
-    "effect": { "type": "end_day_interest", "rate": 0.2, "max": 10000 }
+    "effect": { "type": "end_day_interest", "rate": 0.2, "max": 1000 }
   },
   {
     "id": "meditation_master",
@@ -114,8 +114,8 @@
   {
     "id": "adrenaline_rush",
     "name": "Adrenaline Rush",
-    "description": "Below 40 sanity, taste tests only cost 10 sanity",
+    "description": "Below 50 sanity, taste tests only cost 5 sanity",
     "category": "sanity",
-    "effect": { "type": "taste_cost_cap", "value": 10, "condition": "sanity_lt_40" }
+    "effect": { "type": "taste_cost_cap", "value": 5, "condition": "sanity_lt_50" }
   }
 ]

@@ -15,6 +15,7 @@ export {
     showFeedbackDisplay,
     hideFeedbackDisplay,
     hideGameOverDisplay,
+    showCustomerView,
     renderPaymentItems
 } from './ui/ui.js';
 

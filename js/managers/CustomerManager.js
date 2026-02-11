@@ -13,7 +13,7 @@ export class CustomerManager {
         this.callbacks = callbacks;
     }
 
-    advanceCustomer(delay = 1500) {
+    advanceCustomer(delay = 500) {
         this.state.customersServedCount++;
         this.callbacks.onRender();
 
@@ -29,6 +29,9 @@ export class CustomerManager {
     nextCustomer() {
         if (!this.state.isDayActive) return;
         if (this.state.customer && this.state.customer.isBoss) return;
+
+        // Transition right panel to customer view before populating data
+        this.callbacks.showCustomerView();
 
         // Check if a boss should spawn as the final customer of the day
         const boss = getBossForDay(this.state.day);
@@ -53,6 +56,8 @@ export class CustomerManager {
     }
 
     spawnBoss(bossData) {
+        this.callbacks.showCustomerView();
+
         this.state.customer = {
             name: bossData.name,
             isBoss: true,
@@ -491,10 +496,10 @@ export class CustomerManager {
         // Clear feedback state
         this.state.pendingFeedback.active = false;
         this.state.selectedPaymentIndices = [];
-        this.callbacks.hideFeedbackDisplay();
 
         // Check for game over after processing
         if (gameOver) {
+            this.callbacks.hideFeedbackDisplay();
             this.callbacks.onRender();
             setTimeout(() => {
                 this.callbacks.onGameOver("SANITY DEPLETED");
@@ -505,6 +510,7 @@ export class CustomerManager {
         // === What happens next ===
         if (feedback.isBoss && !feedback.isBossBonus) {
             // Advance to next course or show final bonus page
+            this.callbacks.hideFeedbackDisplay();
             this.state.customer.currentCourse++;
             this.state.customer.coursesServed++;
 
@@ -519,9 +525,11 @@ export class CustomerManager {
             }
         } else if (feedback.isBossBonus) {
             // Final bonus collected — proceed to victory
+            this.callbacks.hideFeedbackDisplay();
             this.defeatBoss();
         } else {
-            // Regular customer — advance
+            // Regular customer — keep feedback visible with disabled button until nextCustomer()
+            this.callbacks.disableFeedbackAction("NEXT CUSTOMER...");
             this.advanceCustomer(500);
         }
     }

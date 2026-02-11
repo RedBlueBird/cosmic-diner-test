@@ -147,6 +147,12 @@ export class Game {
                 UI.showFeedbackDisplay(feedback, (index) => this.togglePaymentSelection(index));
             },
             hideFeedbackDisplay: () => UI.hideFeedbackDisplay(),
+            showCustomerView: () => UI.showCustomerView(),
+            disableFeedbackAction: (text) => {
+                const btn = document.getElementById('feedback-action-btn');
+                btn.disabled = true;
+                btn.textContent = '[' + text + ']';
+            },
             grantConsumable: (id, qty) => this.consumables.grantConsumable(id, qty)
         });
 
@@ -172,7 +178,12 @@ export class Game {
             grantConsumable: (id, qty) => this.consumables.grantConsumable(id, qty),
             trackMerchantPurchase: (foodName) => this.recipeBook.trackMerchantPurchase(foodName),
             updateMerchantDisplay: (stock, money, buyCb, buyFoodCb) => UI.updateMerchantDisplay(stock, money, buyCb, buyFoodCb),
-            hideMerchantDisplay: () => UI.hideMerchantDisplay()
+            hideMerchantDisplay: () => UI.hideMerchantDisplay(),
+            disableLeaveButton: (text) => {
+                const btn = document.getElementById('btn-leave-shop');
+                btn.disabled = true;
+                btn.textContent = '[' + text + ']';
+            }
         });
     }
 
@@ -348,10 +359,10 @@ export class Game {
 
         // Show artifact selection before Day 6 (if artifacts available)
         if (this.artifactPool.length > 0) {
-            setTimeout(() => this.artifacts.showArtifactSelection(), 2000);
+            setTimeout(() => this.artifacts.showArtifactSelection(), 500);
         } else {
             // No artifacts left, start next day immediately
-            setTimeout(() => this.days.startNextDay(), 2000);
+            setTimeout(() => this.days.startNextDay(), 500);
         }
     }
 
