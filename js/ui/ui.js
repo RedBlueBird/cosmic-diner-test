@@ -332,7 +332,7 @@ export function showFeedbackDisplay(feedback, onTogglePaymentSelection) {
         // Show interactive payment items
         paymentSection.classList.remove('hidden');
         bossPaymentLine.classList.add('hidden');
-        renderPaymentItems(paymentItems, [], onTogglePaymentSelection, feedback.isBoss ? feedback.buttonText : null);
+        renderPaymentItems(paymentItems, [], onTogglePaymentSelection, (feedback.isBoss && !feedback.isBossBonus) ? feedback.buttonText : null);
     } else {
         // No payment items (e.g. boss course with $0 payment somehow)
         paymentSection.classList.add('hidden');

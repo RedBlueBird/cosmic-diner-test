@@ -387,7 +387,7 @@ export class Game {
     updatePaymentDisplay() {
         const feedback = this.pendingFeedback;
         if (feedback.active && feedback.paymentItems && feedback.paymentItems.length > 0) {
-            const bossButtonText = feedback.isBoss ? feedback.buttonText : null;
+            const bossButtonText = (feedback.isBoss && !feedback.isBossBonus) ? feedback.buttonText : null;
             UI.renderPaymentItems(feedback.paymentItems, this.selectedPaymentIndices, (index) => this.togglePaymentSelection(index), bossButtonText);
         }
     }

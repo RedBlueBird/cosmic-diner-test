@@ -9,7 +9,7 @@
   {
     "id": "tip_jar",
     "name": "Tip Jar",
-    "description": "Excellent/Perfect ratings pay 50% extra",
+    "description": "4 and 5 star ratings pay 50% extra",
     "category": "economic",
     "effect": { "type": "payment_multiplier", "value": 1.5, "condition": "excellent_or_perfect" }
   },
@@ -100,7 +100,7 @@
   {
     "id": "meditation_master",
     "name": "Meditation Master",
-    "description": "Excellent/Perfect ratings restore 5 sanity",
+    "description": "4 and 5 star ratings restore 5 sanity",
     "category": "sanity",
     "effect": { "type": "serve_sanity_bonus", "value": 5, "condition": "excellent_or_perfect" }
   },

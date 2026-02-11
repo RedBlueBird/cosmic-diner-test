@@ -60,6 +60,7 @@ export class DayManager {
     startNextDay() {
         this.state.day++;
         this.state.customersServedCount = 0;
+        this.state.customer = null;
 
         // Rent Negotiator: Freeze rent increase if artifact is active and within freeze period
         if (this.state.day <= this.state.rentFrozenUntilDay) {
