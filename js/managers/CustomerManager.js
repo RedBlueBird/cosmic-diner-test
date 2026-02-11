@@ -158,6 +158,96 @@ export class CustomerManager {
         this.callbacks.onRender();
     }
 
+    // Shared helper: build paymentItems with artifact/consumable modifiers
+    buildPaymentItems({ distance, satisfaction, foodAttrs, itemName, usedGoldenPlate = false }) {
+        const isExcellentOrPerfect = satisfaction.rating === "EXCELLENT" || satisfaction.rating === "PERFECT";
+
+        // Artifact payment modifiers
+        const paymentResult = runHook('modifyPayment', this.state.activeArtifacts, {
+            defaultValue: { multiplier: 1, reasons: [] },
+            isExcellentOrPerfect,
+            foodAttrs,
+            itemName
+        });
+
+        let combinedMultiplier = paymentResult.multiplier;
+        const combinedSources = [...paymentResult.reasons];
+
+        // Lucky Coin
+        if (this.state.activeEffects.luckyCoins > 0) {
+            combinedMultiplier *= 2;
+            combinedSources.push("Lucky Coin");
+            this.state.activeEffects.luckyCoins--;
+        }
+
+        // Golden Plate source
+        if (usedGoldenPlate) {
+            combinedSources.unshift("Golden Plate");
+        }
+
+        // Calculate final payment
+        const payment = calculatePayment(usedGoldenPlate ? 0 : distance) * combinedMultiplier;
+        const finalPayment = Math.floor(payment);
+
+        const paymentItems = [];
+
+        // Money item
+        const moneyModifiers = [];
+        if (combinedMultiplier > 1 || usedGoldenPlate) {
+            moneyModifiers.push(`x${combinedMultiplier} from ${combinedSources.join(", ")}`);
+        }
+        paymentItems.push({
+            label: `+$${finalPayment}`,
+            type: "money",
+            value: finalPayment,
+            binded: false,
+            modifiers: moneyModifiers
+        });
+
+        // Meditation Master
+        if (this.state.activeArtifacts.includes('meditation_master') && isExcellentOrPerfect) {
+            const mmArtifact = getArtifactById('meditation_master');
+            const sanityRestore = mmArtifact.effect.value;
+            paymentItems.push({
+                label: `+${sanityRestore} sanity`,
+                type: "sanity_restore",
+                value: sanityRestore,
+                binded: false,
+                modifiers: ["Meditation Master"]
+            });
+        }
+
+        // Consumable reward for EXCELLENT/PERFECT
+        if (isExcellentOrPerfect) {
+            const allConsumables = getConsumables();
+            let eligible;
+            if (satisfaction.rating === "PERFECT") {
+                eligible = allConsumables.filter(c => c.rarity === "uncommon" || c.rarity === "rare");
+            } else {
+                eligible = allConsumables.filter(c => c.rarity === "common" || c.rarity === "uncommon");
+            }
+            if (eligible.length > 0) {
+                const picked = eligible[Math.floor(Math.random() * eligible.length)];
+                paymentItems.push({
+                    label: picked.name,
+                    type: "consumable",
+                    value: picked.id,
+                    binded: false,
+                    modifiers: [],
+                    consumableInfo: {
+                        name: picked.name,
+                        description: picked.description,
+                        tipText: satisfaction.rating === "PERFECT"
+                            ? "A tip from a very satisfied customer"
+                            : "A tip from a satisfied customer"
+                    }
+                });
+            }
+        }
+
+        return { paymentItems, finalPayment };
+    }
+
     serveCustomer() {
         if (!this.state.isDayActive) return;
 
@@ -192,14 +282,12 @@ export class CustomerManager {
         const demandVector = this.state.customer.demand;
 
         const distance = calculateDistance(foodAttrs, demandVector);
-        let payment = calculatePayment(distance);
         let satisfaction = getSatisfactionRating(distance);
 
         // Apply Golden Plate effect
         const usedGoldenPlate = this.state.activeEffects.goldenPlate;
         if (usedGoldenPlate) {
             satisfaction = { rating: "PERFECT", emoji: "★★★★★", color: "#ffff00" };
-            payment = calculatePayment(0);
             this.state.activeEffects.goldenPlate = false;
         }
 
@@ -221,63 +309,18 @@ export class CustomerManager {
             comment = "What IS this?! This is NOTHING like what I wanted!";
         }
 
-        // Calculate sanity cost but DON'T apply it yet
+        // Build payment items with artifact/consumable modifiers
+        const { paymentItems, finalPayment } = this.buildPaymentItems({
+            distance, satisfaction, foodAttrs, itemName: item, usedGoldenPlate
+        });
+
+        // Sanity cost item for regular customers (TERRIBLE/POOR)
         let sanityCost = 0;
         if (satisfaction.rating === "TERRIBLE") {
             sanityCost = TERRIBLE_SERVICE_SANITY_PENALTY;
         } else if (satisfaction.rating === "POOR") {
             sanityCost = POOR_SERVICE_SANITY_PENALTY;
         }
-
-        // Apply payment bonus artifacts
-        const isExcellentOrPerfect = satisfaction.rating === "EXCELLENT" || satisfaction.rating === "PERFECT";
-
-        const paymentResult = runHook('modifyPayment', this.state.activeArtifacts, {
-            defaultValue: { multiplier: 1, reasons: [] },
-            isExcellentOrPerfect,
-            foodAttrs,
-            itemName: item
-        });
-
-        // Build combined modifier sources and multiplier
-        let combinedMultiplier = paymentResult.multiplier;
-        const combinedSources = [...paymentResult.reasons];
-
-        // Apply Lucky Coin effect
-        if (this.state.activeEffects.luckyCoins > 0) {
-            combinedMultiplier *= 2;
-            combinedSources.push("Lucky Coin");
-            this.state.activeEffects.luckyCoins--;
-        }
-
-        // Apply Golden Plate to sources
-        if (usedGoldenPlate) {
-            combinedSources.unshift("Golden Plate");
-        }
-
-        // Recalculate payment with combined multiplier applied
-        payment = calculatePayment(usedGoldenPlate ? 0 : distance) * combinedMultiplier;
-
-        const finalPayment = Math.floor(payment);
-
-        // Build paymentItems array
-        const paymentItems = [];
-
-        // Money item
-        const moneyModifiers = [];
-        if (combinedMultiplier > 1 || usedGoldenPlate) {
-            const modLine = `x${combinedMultiplier} from ${combinedSources.join(", ")}`;
-            moneyModifiers.push(modLine);
-        }
-        paymentItems.push({
-            label: `+$${finalPayment}`,
-            type: "money",
-            value: finalPayment,
-            binded: false,
-            modifiers: moneyModifiers
-        });
-
-        // Sanity cost item (only if cost > 0)
         if (sanityCost > 0) {
             paymentItems.push({
                 label: `-${sanityCost} sanity`,
@@ -286,47 +329,6 @@ export class CustomerManager {
                 binded: true,
                 modifiers: ["Binded. Cannot press the collect button without selecting this item."]
             });
-        }
-
-        // Meditation Master item (if player has artifact AND rating is EXCELLENT/PERFECT)
-        if (this.state.activeArtifacts.includes('meditation_master') && isExcellentOrPerfect) {
-            const mmArtifact = getArtifactById('meditation_master');
-            const sanityRestore = mmArtifact.effect.value;
-            paymentItems.push({
-                label: `+${sanityRestore} sanity`,
-                type: "sanity_restore",
-                value: sanityRestore,
-                binded: false,
-                modifiers: ["Meditation Master"]
-            });
-        }
-
-        // Consumable reward for EXCELLENT/PERFECT ratings
-        if (isExcellentOrPerfect) {
-            const allConsumables = getConsumables();
-            let eligible;
-            if (satisfaction.rating === "PERFECT") {
-                eligible = allConsumables.filter(c => c.rarity === "uncommon" || c.rarity === "rare");
-            } else {
-                eligible = allConsumables.filter(c => c.rarity === "common" || c.rarity === "uncommon");
-            }
-            if (eligible.length > 0) {
-                const picked = eligible[Math.floor(Math.random() * eligible.length)];
-                paymentItems.push({
-                    label: picked.name,
-                    type: "consumable",
-                    value: picked.id,
-                    binded: false,
-                    modifiers: [],
-                    consumableInfo: {
-                        name: picked.name,
-                        description: picked.description,
-                        tipText: satisfaction.rating === "PERFECT"
-                            ? "A tip from a very satisfied customer"
-                            : "A tip from a satisfied customer"
-                    }
-                });
-            }
         }
 
         // Store feedback instead of applying payment/sanity
@@ -372,13 +374,11 @@ export class CustomerManager {
         const isLastCourse = (this.state.customer.currentCourse + 1) >= this.state.customer.coursesRequired;
         const success = distance <= currentOrder.maxDistance;
 
-        // Build paymentItems
-        const paymentItems = [];
+        // Build paymentItems and comment
+        let paymentItems;
         let comment;
 
         if (success) {
-            const payment = Math.floor(calculatePayment(distance));
-
             if (satisfaction.rating === "PERFECT") {
                 comment = `MAGNIFICENT! This ${currentOrder.name} is PERFECT!`;
             } else if (satisfaction.rating === "EXCELLENT") {
@@ -387,23 +387,19 @@ export class CustomerManager {
                 comment = `Acceptable. This ${currentOrder.name} will do.`;
             }
 
-            paymentItems.push({
-                label: `+$${payment}`,
-                type: "money",
-                value: payment,
-                binded: false,
-                modifiers: []
-            });
+            ({ paymentItems } = this.buildPaymentItems({
+                distance, satisfaction, foodAttrs, itemName: item
+            }));
         } else {
             comment = `DISGRACEFUL! This is NOTHING like a proper ${currentOrder.name}!`;
 
-            paymentItems.push({
+            paymentItems = [{
                 label: `-${BOSS_FAILURE_SANITY_PENALTY} sanity`,
                 type: "sanity_cost",
                 value: BOSS_FAILURE_SANITY_PENALTY,
                 binded: true,
                 modifiers: ["Binded. Cannot press the collect button without selecting this item."]
-            });
+            }];
         }
 
         const buttonText = isLastCourse ? "COMPLETE ORDER" : "NEXT COURSE";
