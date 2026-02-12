@@ -2,6 +2,7 @@
 
 import { MERCHANT_CONSUMABLE_BASE_PRICES, MERCHANT_FOOD_BASE_PRICE, MERCHANT_BASE_USAGE_COST, MERCHANT_CONSUMABLE_PRICE_MULTIPLIER, MERCHANT_FOOD_PRICE_MULTIPLIER, MERCHANT_START_DAY, MERCHANT_STOCK_COUNT } from '../config.js';
 import { getConsumables, getConsumableById, getAllFoods } from '../data/DataStore.js';
+import { runHook } from '../effects/EffectHandlerRegistry.js';
 
 export class MerchantManager {
     constructor(gameState, callbacks) {
@@ -23,7 +24,10 @@ export class MerchantManager {
      */
     calculatePrice(basePrice, priceMultiplier) {
         const multiplier = Math.pow(priceMultiplier, this.state.day - MERCHANT_START_DAY);
-        return Math.ceil(basePrice * multiplier);
+        const rawPrice = Math.ceil(basePrice * multiplier);
+        return runHook('modifyMerchantPrice', this.state.activeArtifacts, {
+            defaultValue: rawPrice
+        });
     }
 
     /**
@@ -57,7 +61,10 @@ export class MerchantManager {
     generateConsumableStock() {
         const allConsumables = getConsumables();
         const shuffled = [...allConsumables].sort(() => Math.random() - 0.5);
-        const selected = shuffled.slice(0, MERCHANT_STOCK_COUNT);
+        const stockCount = runHook('getMerchantStockCount', this.state.activeArtifacts, {
+            defaultValue: MERCHANT_STOCK_COUNT
+        });
+        const selected = shuffled.slice(0, stockCount);
 
         return selected.map(c => ({
             id: c.id,
@@ -82,7 +89,10 @@ export class MerchantManager {
 
         // Shuffle and take up to stock count
         const shuffled = [...notUnlocked].sort(() => Math.random() - 0.5);
-        const selected = shuffled.slice(0, MERCHANT_STOCK_COUNT);
+        const stockCount = runHook('getMerchantStockCount', this.state.activeArtifacts, {
+            defaultValue: MERCHANT_STOCK_COUNT
+        });
+        const selected = shuffled.slice(0, stockCount);
 
         const usageCost = this.calculateUsageCost();
 

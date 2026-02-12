@@ -400,7 +400,7 @@ export function renderPaymentItems(paymentItems, selectedIndices, onToggle, boss
         if (item.binded) className += ' binded';
         div.className = className;
 
-        const indicator = (item.modifiers.length > 0 || item.consumableInfo) ? ' ✦' : '';
+        const indicator = (item.modifiers.length > 0 || item.consumableInfo || item.artifactInfo) ? ' ✦' : '';
         div.textContent = `[${index + 1}] ${item.label}${indicator}`;
 
         div.onclick = () => onToggle(index);
@@ -415,6 +415,12 @@ export function renderPaymentItems(paymentItems, selectedIndices, onToggle, boss
             createTooltip(div, [
                 { title: item.consumableInfo.tipText },
                 { title: item.consumableInfo.name, description: item.consumableInfo.description },
+                { title: selectHint }
+            ]);
+        } else if (item.artifactInfo) {
+            // 3 stacked tooltips for artifact items
+            createTooltip(div, [
+                { title: item.artifactInfo.name, description: item.artifactInfo.description },
                 { title: selectHint }
             ]);
         } else if (item.modifiers.length > 0) {

@@ -12,7 +12,7 @@ export class ArtifactManager {
 
     initializeArtifactPool() {
         const artifacts = getArtifacts();
-        this.state.artifactPool = artifacts.map(a => a.id);
+        this.state.artifactPool = artifacts.filter(a => a.category !== 'boss').map(a => a.id);
     }
 
     hasArtifact(artifactId) {

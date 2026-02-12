@@ -66,7 +66,8 @@ export class CustomerManager {
             orders: bossData.orders,
             currentCourse: 0,
             avatar: bossData.avatar,
-            victoryBonus: bossData.victoryBonus || 0
+            victoryBonus: bossData.victoryBonus || 0,
+            victoryArtifact: bossData.victoryArtifact || null
         };
 
         this.callbacks.onLog("=== BOSS ARRIVED ===", "narrative");
@@ -149,9 +150,16 @@ export class CustomerManager {
         });
 
         if (this.state.sanity <= 0) {
-            this.callbacks.onRender();
-            this.callbacks.onGameOver("SANITY DEPLETED");
-            return;
+            const prevented = runHook('preventSanityGameOver', this.state.activeArtifacts, {
+                defaultValue: false,
+                state: this.state,
+                log: (msg, type) => this.callbacks.onLog(msg, type)
+            });
+            if (!prevented) {
+                this.callbacks.onRender();
+                this.callbacks.onGameOver("SANITY DEPLETED");
+                return;
+            }
         }
 
         if (this.state.sanity <= 30) {
@@ -172,7 +180,8 @@ export class CustomerManager {
             defaultValue: { multiplier: 1, reasons: [] },
             isExcellentOrPerfect,
             foodAttrs,
-            itemName
+            itemName,
+            sanity: this.state.sanity
         });
 
         let combinedMultiplier = paymentResult.multiplier;
@@ -314,6 +323,15 @@ export class CustomerManager {
             comment = "What IS this?! This is NOTHING like what I wanted!";
         }
 
+        // Post-serve artifact effects (e.g. comfort_food)
+        runEffectHook('postServe', this.state.activeArtifacts, {
+            foodAttrs,
+            state: this.state,
+            satisfaction: satisfaction.rating,
+            restoreSanity: (amount) => this.callbacks.restoreSanity(amount),
+            log: (msg, type) => this.callbacks.onLog(msg, type)
+        });
+
         // Build payment items with artifact/consumable modifiers
         const { paymentItems, finalPayment } = this.buildPaymentItems({
             distance, satisfaction, foodAttrs, itemName: item, usedGoldenPlate
@@ -378,6 +396,15 @@ export class CustomerManager {
         const satisfaction = getSatisfactionRating(distance);
         const isLastCourse = (this.state.customer.currentCourse + 1) >= this.state.customer.coursesRequired;
         const success = distance <= currentOrder.maxDistance;
+
+        // Post-serve artifact effects (e.g. comfort_food)
+        runEffectHook('postServe', this.state.activeArtifacts, {
+            foodAttrs,
+            state: this.state,
+            satisfaction: satisfaction.rating,
+            restoreSanity: (amount) => this.callbacks.restoreSanity(amount),
+            log: (msg, type) => this.callbacks.onLog(msg, type)
+        });
 
         // Build paymentItems and comment
         let paymentItems;
@@ -485,6 +512,8 @@ export class CustomerManager {
             } else if (item.type === "consumable") {
                 this.callbacks.grantConsumable(item.value, 1);
                 this.callbacks.onLog(`Received ${item.label}!`, "consumable");
+            } else if (item.type === "artifact") {
+                this.callbacks.grantArtifact(item.value);
             }
         }
 
@@ -499,12 +528,18 @@ export class CustomerManager {
 
         // Check for game over after processing
         if (gameOver) {
-            this.callbacks.hideFeedbackDisplay();
-            this.callbacks.onRender();
-            setTimeout(() => {
-                this.callbacks.onGameOver("SANITY DEPLETED");
-            }, 1000);
-            return;
+            const prevented = runHook('preventSanityGameOver', this.state.activeArtifacts, {
+                defaultValue: false,
+                state: this.state,
+                log: (msg, type) => this.callbacks.onLog(msg, type)
+            });
+            if (!prevented) {
+                this.callbacks.hideFeedbackDisplay();
+                this.callbacks.onRender();
+                setTimeout(() => { this.callbacks.onGameOver("SANITY DEPLETED"); }, 1000);
+                return;
+            }
+            // Artifact saved us — continue normally
         }
 
         // === What happens next ===
@@ -537,6 +572,7 @@ export class CustomerManager {
     showBossBonusFeedback() {
         const bossName = this.state.customer.name;
         const victoryBonus = this.state.customer.victoryBonus || 0;
+        const victoryArtifactId = this.state.customer.victoryArtifact || null;
 
         this.callbacks.onLog("=== BOSS DEFEATED ===", "narrative");
 
@@ -549,6 +585,22 @@ export class CustomerManager {
                 binded: false,
                 modifiers: ["Boss Victory Bonus"]
             });
+        }
+        if (victoryArtifactId) {
+            const artifactData = getArtifactById(victoryArtifactId);
+            if (artifactData) {
+                paymentItems.push({
+                    label: artifactData.name,
+                    type: "artifact",
+                    value: victoryArtifactId,
+                    binded: false,
+                    modifiers: [],
+                    artifactInfo: {
+                        name: artifactData.name,
+                        description: artifactData.description
+                    }
+                });
+            }
         }
 
         this.state.pendingFeedback = {

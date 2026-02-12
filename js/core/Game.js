@@ -45,6 +45,8 @@ export class Game {
         this.artifactPool = [];
         this.purchaseHistory = {};
         this.rentFrozenUntilDay = 0;
+        this.cosmicInsuranceUsed = false;
+        this.sanityCheckUsed = false;
 
         // Consumables system
         this.consumableInventory = {};
@@ -160,7 +162,8 @@ export class Game {
                 btn.disabled = true;
                 btn.textContent = '[' + text + ']';
             },
-            grantConsumable: (id, qty) => this.consumables.grantConsumable(id, qty)
+            grantConsumable: (id, qty) => this.consumables.grantConsumable(id, qty),
+            grantArtifact: (id) => this.artifacts.activateArtifact(id)
         });
 
         // Day Manager

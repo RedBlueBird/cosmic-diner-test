@@ -1,7 +1,7 @@
 // DayManager.js - Day progression and rent management
 
 import { APPLIANCE_UNLOCK_DAYS, CUSTOMERS_PER_DAY, RENT_MULTIPLIER, END_OF_DAY_SANITY_RESTORE, MERCHANT_START_DAY } from '../config.js';
-import { runEffectHook } from '../effects/EffectHandlerRegistry.js';
+import { runHook, runEffectHook } from '../effects/EffectHandlerRegistry.js';
 
 export class DayManager {
     constructor(gameState, callbacks) {
@@ -12,28 +12,37 @@ export class DayManager {
     processEndOfDayEffects() {
         this.callbacks.onLog("=== SHIFT ENDED ===", "system");
 
-        if (this.state.countertop.length > 0) {
-            this.callbacks.onLog(`Discarded ${this.state.countertop.length} items from countertop.`);
-            this.state.countertop = [];
-        }
-
         this.callbacks.restoreSanity(END_OF_DAY_SANITY_RESTORE);
         this.callbacks.onLog(`Sanity restored by ${END_OF_DAY_SANITY_RESTORE}%. Current: ${this.state.sanity}%`, "system");
 
-        // End-of-day artifact effects (night_owl, investment_portfolio)
+        // End-of-day artifact effects (waste_not_want_not runs here before countertop cleared)
         runEffectHook('endOfDay', this.state.activeArtifacts, {
             state: this.state,
             restoreSanity: (amount) => this.callbacks.restoreSanity(amount),
             log: (msg, type) => this.callbacks.onLog(msg, type)
         });
 
+        // Clear any remaining countertop items after artifacts had a chance to recycle them
+        if (this.state.countertop.length > 0) {
+            this.callbacks.onLog(`Discarded ${this.state.countertop.length} items from countertop.`);
+            this.state.countertop = [];
+        }
+
         this.callbacks.onLog(`Deducting Rent: -$${this.state.rent}`);
         this.state.money -= this.state.rent;
         this.callbacks.onRender();
 
         if (this.state.money < 0) {
-            this.callbacks.onGameOver("BANKRUPT");
-            return { bankrupt: true };
+            const prevented = runHook('preventBankruptcy', this.state.activeArtifacts, {
+                defaultValue: false,
+                state: this.state,
+                log: (msg, type) => this.callbacks.onLog(msg, type)
+            });
+            if (!prevented) {
+                this.callbacks.onGameOver("BANKRUPT");
+                return { bankrupt: true };
+            }
+            if (this.state.money < 0) this.state.money = 0;
         }
 
         return { bankrupt: false };
@@ -69,7 +78,9 @@ export class DayManager {
             this.state.rent = Math.floor(this.state.rent * RENT_MULTIPLIER);
         }
 
-        this.state.customersPerDay = CUSTOMERS_PER_DAY;
+        this.state.customersPerDay = runHook('getCustomersPerDay', this.state.activeArtifacts, {
+            defaultValue: CUSTOMERS_PER_DAY
+        });
 
         this.callbacks.onLog(`=== STARTING DAY ${this.state.day} ===`, "system");
         this.callbacks.onLog(`Rent due at end of shift: $${this.state.rent}. Customer Quota: ${this.state.customersPerDay}`);

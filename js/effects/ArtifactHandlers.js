@@ -3,7 +3,7 @@
 
 import { registerHandler } from './EffectHandlerRegistry.js';
 import { getArtifactById, getRecipeResult, getAllFoods } from '../data/DataStore.js';
-import { getItemName, createItemObject } from '../utils/ItemUtils.js';
+import { getItemName, createItemObject, hasTemporaryModifier } from '../utils/ItemUtils.js';
 import { isSimpleDish } from '../services/RecipeService.js';
 
 // --- Helper ---
@@ -197,11 +197,8 @@ registerHandler('modifyPayment', 'price_gouger', (context, current) => {
 registerHandler('endOfDay', 'night_owl', (context) => {
     const artifact = getArtifactById('night_owl');
     const sanityBonus = artifact.effect.value;
-    const moneyThreshold = parseInt(artifact.effect.condition.split('_')[2]) || 50;
-    if (context.state.money >= moneyThreshold) {
-        context.restoreSanity(sanityBonus);
-        context.log(`NIGHT OWL: +${sanityBonus} sanity for having $${moneyThreshold}+!`, "artifact");
-    }
+    context.restoreSanity(sanityBonus);
+    context.log(`NIGHT OWL: +${sanityBonus} sanity!`, "artifact");
 });
 
 registerHandler('endOfDay', 'investment_portfolio', (context) => {
@@ -247,4 +244,123 @@ registerHandler('startOfDay', 'morning_prep', (context) => {
 registerHandler('onArtifactAcquired', 'rent_negotiator', (context) => {
     context.state.rentFrozenUntilDay = context.state.day + 1;
     context.log("Rent increase frozen for the next day!", "artifact");
+});
+
+// =============================================================================
+// endOfDay — waste_not_want_not
+// =============================================================================
+
+registerHandler('endOfDay', 'waste_not_want_not', (context) => {
+    const { state, log } = context;
+    if (state.countertop.length === 0) return;
+
+    let refundTotal = 0;
+    let refundCount = 0;
+    for (const item of state.countertop) {
+        if (hasTemporaryModifier(item)) continue;
+        const name = typeof item === 'string' ? item : item.name;
+        refundTotal += state.ingredientCosts[name] || 0;
+        refundCount++;
+    }
+
+    if (refundTotal > 0) {
+        state.money += refundTotal;
+        log(`WASTE NOT, WANT NOT: Sold ${refundCount} item(s) for $${refundTotal}!`, "artifact");
+    }
+
+    state.countertop = [];
+});
+
+// =============================================================================
+// modifyPayment — lucid_state
+// =============================================================================
+
+registerHandler('modifyPayment', 'lucid_state', (context, current) => {
+    const artifact = getArtifactById('lucid_state');
+    if (context.sanity < artifact.effect.threshold) {
+        return {
+            multiplier: current.multiplier * artifact.effect.multiplier,
+            reasons: [...current.reasons, "Lucid State"]
+        };
+    }
+    return current;
+});
+
+// =============================================================================
+// preventBankruptcy — cosmic_insurance
+// =============================================================================
+
+registerHandler('preventBankruptcy', 'cosmic_insurance', (context, prevented) => {
+    if (prevented) return true;
+    const { state, log } = context;
+    if (state.cosmicInsuranceUsed) return false;
+    state.cosmicInsuranceUsed = true;
+    log("COSMIC INSURANCE: Bankruptcy prevented! The artifact is spent.", "artifact");
+    return true;
+});
+
+// =============================================================================
+// preventSanityGameOver — sanity_check
+// =============================================================================
+
+registerHandler('preventSanityGameOver', 'sanity_check', (context, prevented) => {
+    if (prevented) return true;
+    const { state, log } = context;
+    if (state.sanityCheckUsed) return false;
+    const artifact = getArtifactById('sanity_check');
+    state.sanityCheckUsed = true;
+    state.sanity = artifact.effect.value;
+    log(`SANITY CHECK: Breakdown prevented! Sanity restored to ${artifact.effect.value}. The artifact is spent.`, "artifact");
+    return true;
+});
+
+// =============================================================================
+// modifyPayment — michelin_star
+// =============================================================================
+
+registerHandler('modifyPayment', 'michelin_star', (context, current) => {
+    const artifact = getArtifactById('michelin_star');
+    return {
+        multiplier: current.multiplier * artifact.effect.multiplier,
+        reasons: [...current.reasons, "Michelin Star"]
+    };
+});
+
+// =============================================================================
+// getCustomersPerDay — michelin_star
+// =============================================================================
+
+registerHandler('getCustomersPerDay', 'michelin_star', (context, current) => {
+    const artifact = getArtifactById('michelin_star');
+    return current + artifact.effect.extraCustomers;
+});
+
+// =============================================================================
+// getMerchantStockCount — extended_bazaar
+// =============================================================================
+
+registerHandler('getMerchantStockCount', 'extended_bazaar', (context, current) => {
+    const artifact = getArtifactById('extended_bazaar');
+    return current + artifact.effect.value;
+});
+
+// =============================================================================
+// modifyMerchantPrice — merchants_favor
+// =============================================================================
+
+registerHandler('modifyMerchantPrice', 'merchants_favor', (context, currentPrice) => {
+    const artifact = getArtifactById('merchants_favor');
+    return Math.max(1, Math.ceil(currentPrice * (1 - artifact.effect.value)));
+});
+
+// =============================================================================
+// postServe — comfort_food
+// =============================================================================
+
+registerHandler('postServe', 'comfort_food', (context) => {
+    const artifact = getArtifactById('comfort_food');
+    if (context.foodAttrs.calming >= artifact.effect.calmingThreshold) {
+        context.restoreSanity(artifact.effect.value);
+        context.log(`COMFORT FOOD: +${artifact.effect.value} sanity from serving a calming dish!`, "artifact");
+    }
 });

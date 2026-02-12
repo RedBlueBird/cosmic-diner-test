@@ -352,6 +352,7 @@
             "avatar": "  [G]\n <|||>\n  /|\\\n  / \\",
             "spawnDay": 5,
             "victoryBonus": 50,
+            "victoryArtifact": "michelin_star",
             "orders": [
                 {
                     "name": "Appetizer",

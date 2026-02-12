@@ -222,6 +222,11 @@ export class ConsumableManager {
     }
 
     skipCurrentCustomer() {
+        if (this.state.customersServedCount >= this.state.customersPerDay) {
+            this.callbacks.onLog("No more customers left today!", "error");
+            throw new Error("No customers left today");
+        }
+
         if (!this.state.customer) {
             this.callbacks.onLog("No customer to skip!", "error");
             throw new Error("No customer");

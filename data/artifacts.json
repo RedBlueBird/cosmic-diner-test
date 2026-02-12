@@ -65,9 +65,9 @@
   {
     "id": "night_owl",
     "name": "Night Owl",
-    "description": "Ending the day with $50+ restores 50 more sanity",
+    "description": "Restore 50 extra sanity at the end of each day.",
     "category": "progression",
-    "effect": { "type": "end_day_sanity", "value": 50, "condition": "money_gte_50" }
+    "effect": { "type": "end_day_sanity", "value": 50 }
   },
   {
     "id": "price_gouger",
@@ -110,5 +110,61 @@
     "description": "Below 50 sanity, taste tests only cost 5 sanity",
     "category": "sanity",
     "effect": { "type": "taste_cost_cap", "value": 5, "condition": "sanity_lt_50" }
+  },
+  {
+    "id": "waste_not_want_not",
+    "name": "Waste Not, Want Not",
+    "description": "At end of day, non-temporary items left on the countertop are sold for 100% of their fridge cost",
+    "category": "economic",
+    "effect": { "type": "end_day_recycle" }
+  },
+  {
+    "id": "lucid_state",
+    "name": "Lucid State",
+    "description": "While below 20 sanity, all customer payments are doubled",
+    "category": "sanity",
+    "effect": { "type": "low_sanity_payment_bonus", "threshold": 20, "multiplier": 2 }
+  },
+  {
+    "id": "cosmic_insurance",
+    "name": "Cosmic Insurance",
+    "description": "One-time: the first time you would go bankrupt, keep $0 instead. Then this artifact is spent",
+    "category": "economic",
+    "effect": { "type": "prevent_bankruptcy" }
+  },
+  {
+    "id": "sanity_check",
+    "name": "Sanity Check",
+    "description": "One-time: the first time your sanity would hit 0, keep 10 instead. Then this artifact is spent",
+    "category": "sanity",
+    "effect": { "type": "prevent_sanity_game_over", "value": 10 }
+  },
+  {
+    "id": "michelin_star",
+    "name": "Michelin Star",
+    "description": "All customer payments are 100% extra and customer per day increased by 1",
+    "category": "boss",
+    "effect": { "type": "payment_and_extra_customer", "multiplier": 2, "extraCustomers": 1 }
+  },
+  {
+    "id": "extended_bazaar",
+    "name": "Extended Bazaar",
+    "description": "The Morning Merchant stocks 1 extra consumable and 1 extra food each visit",
+    "category": "merchant",
+    "effect": { "type": "merchant_stock_bonus", "value": 1 }
+  },
+  {
+    "id": "merchants_favor",
+    "name": "Merchant's Favor",
+    "description": "All Morning Merchant prices are 50% cheaper",
+    "category": "merchant",
+    "effect": { "type": "merchant_price_discount", "value": 0.5 }
+  },
+  {
+    "id": "comfort_food",
+    "name": "Comfort Food",
+    "description": "Serving a dish that is calming or calmer restores 10 sanity",
+    "category": "sanity",
+    "effect": { "type": "post_serve_sanity", "calmingThreshold": 4, "value": 10 }
   }
 ]
