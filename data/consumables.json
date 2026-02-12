@@ -270,7 +270,7 @@
       "name": "Emergency Rations",
       "description": "Can be served directly to customer. They pay $20 and leave satisfied",
       "category": "utility",
-      "rarity": "common",
+      "rarity": "uncommon",
       "effect": {
         "type": "serve_emergency_food",
         "payment": 20
@@ -334,7 +334,7 @@
       "name": "Customer Repellant",
       "description": "Current customer leaves peacefully without requiring food",
       "category": "utility",
-      "rarity": "uncommon",
+      "rarity": "common",
       "effect": {
         "type": "skip_customer"
       }
@@ -358,6 +358,17 @@
       "rarity": "uncommon",
       "effect": {
         "type": "reset_items"
+      }
+    },
+    {
+      "id": "lunch_rush",
+      "name": "Lunch Rush",
+      "description": "Word gets out. 2 extra customers visit today only.",
+      "category": "utility",
+      "rarity": "rare",
+      "effect": {
+        "type": "extra_customers_today",
+        "value": 2
       }
     }
   ]

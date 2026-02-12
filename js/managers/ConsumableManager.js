@@ -103,6 +103,8 @@ export class ConsumableManager {
                 this.callbacks.onLog(`${consumable.name}: Next ${consumable.effect.count} fridge uses are free!`, "consumable");
             } else if (effectType === 'reset_items') {
                 this.resetSelectedItems(consumable);
+            } else if (effectType === 'extra_customers_today') {
+                this.applyExtraCustomersToday(consumable);
             }
 
             // Consume the item
@@ -143,6 +145,11 @@ export class ConsumableManager {
     }
 
     serveEmergencyFood(consumable) {
+        if (this.state.customersServedCount >= this.state.customersPerDay) {
+            this.callbacks.onLog("No more customers left today!", "error");
+            throw new Error("No customers left today");
+        }
+
         if (!this.state.customer) {
             this.callbacks.onLog("No customer to serve!", "error");
             throw new Error("No customer");
@@ -242,6 +249,12 @@ export class ConsumableManager {
         this.callbacks.onLog(`Wishing Well Penny: Skipped ${this.state.customer.name}!`, "consumable");
 
         this.callbacks.onAdvanceCustomer(500);
+    }
+
+    applyExtraCustomersToday(consumable) {
+        const extra = consumable.effect.value;
+        this.state.customersPerDay += extra;
+        this.callbacks.onLog(`${consumable.name}: ${extra} more customers are on their way! (Quota: ${this.state.customersPerDay})`, "consumable");
     }
 
     resetSelectedItems(consumable) {
