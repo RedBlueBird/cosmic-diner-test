@@ -339,10 +339,10 @@ export class KeybindManager {
     }
 
     handleMerchant(e) {
+        // Confirm key = leave shop (only without shift)
         const normalized = this.normalizeKey(e.key);
         const action = this.keyMap[normalized];
 
-        // Confirm key = leave shop (only without shift)
         if (!e.shiftKey && action === 'confirm') {
             e.preventDefault();
             this.callbacks.onDismissMerchant();
@@ -362,19 +362,15 @@ export class KeybindManager {
             }
         }
 
-        // Settings key
-        if (action === 'settings') {
-            e.preventDefault();
-            this.callbacks.onShowSettings();
-            return;
-        }
+        // Fall through to gameplay for all other keys (countertop selection, appliances, etc.)
+        this.handleGameplay(e);
     }
 
     handleFeedback(e) {
+        // Confirm key = collect payment (only without shift)
         const normalized = this.normalizeKey(e.key);
         const action = this.keyMap[normalized];
 
-        // Confirm key = collect payment (only without shift)
         if (!e.shiftKey && action === 'confirm') {
             e.preventDefault();
             this.callbacks.onCollectPayment();
@@ -394,12 +390,8 @@ export class KeybindManager {
             }
         }
 
-        // Settings key
-        if (action === 'settings') {
-            e.preventDefault();
-            this.callbacks.onShowSettings();
-            return;
-        }
+        // Fall through to gameplay for all other keys (countertop selection, appliances, etc.)
+        this.handleGameplay(e);
     }
 
     handleGameplay(e) {
