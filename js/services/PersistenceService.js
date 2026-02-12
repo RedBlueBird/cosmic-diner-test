@@ -4,6 +4,7 @@
  */
 
 const STORAGE_KEY = 'cosmicDiner_recipeBook';
+const KEYBINDINGS_STORAGE_KEY = 'cosmicDiner_keybindings';
 const VERSION = 1;
 const MAX_DISCOVERIES_PER_FOOD = 50; // Prevent quota issues
 
@@ -189,6 +190,39 @@ class PersistenceService {
     clearAll() {
         this.cache = this.getDefaultStructure();
         this.saveRecipeBook();
+    }
+
+    /**
+     * Load keybindings from localStorage
+     * @returns {Object|null} Keybindings object or null if not found
+     */
+    loadKeybindings() {
+        try {
+            const data = localStorage.getItem(KEYBINDINGS_STORAGE_KEY);
+            return data ? JSON.parse(data) : null;
+        } catch (error) {
+            console.error('Error loading keybindings:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Save keybindings to localStorage
+     * @param {Object} bindings - Keybindings map
+     */
+    saveKeybindings(bindings) {
+        try {
+            localStorage.setItem(KEYBINDINGS_STORAGE_KEY, JSON.stringify(bindings));
+        } catch (error) {
+            console.error('Error saving keybindings:', error);
+        }
+    }
+
+    /**
+     * Clear keybindings from localStorage
+     */
+    clearKeybindings() {
+        localStorage.removeItem(KEYBINDINGS_STORAGE_KEY);
     }
 }
 

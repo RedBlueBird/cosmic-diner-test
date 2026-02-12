@@ -1,6 +1,7 @@
 // modals.js - Modal show/hide functions
 
 import { getArtifactById } from '../data/DataStore.js';
+import { KEYBINDING_LABELS } from '../config.js';
 import { createTooltip } from './tooltips.js';
 
 // Generic hide modal helper
@@ -185,6 +186,7 @@ export function showRecipeBookView(recipeBookManager) {
     cleanupRecipeTooltips();
 
     document.getElementById('settings-view').classList.add('hidden');
+    document.getElementById('keybinds-view').classList.add('hidden');
     const recipeView = document.getElementById('recipe-book-view');
     const content = document.getElementById('recipe-book-content');
 
@@ -259,12 +261,109 @@ function createRecipeTooltip(element, title, description) {
     return tooltip;
 }
 
+// Show keybinds view
+export function showKeybindsView(keybindManager) {
+    // Clean up any existing tooltips first
+    cleanupRecipeTooltips();
+
+    document.getElementById('settings-view').classList.add('hidden');
+    document.getElementById('recipe-book-view').classList.add('hidden');
+    document.getElementById('about-view').classList.add('hidden');
+
+    const keybindsView = document.getElementById('keybinds-view');
+    const content = document.getElementById('keybinds-content');
+    const bindings = keybindManager.getBindings();
+
+    const keybindsList = document.createElement('div');
+    keybindsList.className = 'keybinds-list';
+
+    for (const [action, key] of Object.entries(bindings)) {
+        const label = KEYBINDING_LABELS[action] || action;
+
+        const item = document.createElement('div');
+        item.className = 'keybind-item';
+        item.dataset.action = action;
+
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'keybind-label';
+        labelSpan.textContent = label;
+
+        const keySpan = document.createElement('span');
+        keySpan.className = 'keybind-key';
+        keySpan.textContent = formatKeyDisplay(key);
+
+        item.appendChild(labelSpan);
+        item.appendChild(keySpan);
+
+        // Tooltip: "Press any key to rebind"
+        createKeybindTooltip(item, 'Press any key to rebind');
+
+        // Hover sets/clears rebind target
+        item.addEventListener('mouseenter', () => keybindManager.setRebindTarget(action));
+        item.addEventListener('mouseleave', () => keybindManager.clearRebindTarget());
+
+        keybindsList.appendChild(item);
+    }
+
+    content.innerHTML = '';
+    content.appendChild(keybindsList);
+
+    keybindsView.classList.remove('hidden');
+}
+
+// Format key for display
+function formatKeyDisplay(key) {
+    if (key === 'Escape') return 'ESC';
+    if (key === ' ') return 'SPACE';
+    if (key === 'ArrowUp') return 'UP';
+    if (key === 'ArrowDown') return 'DOWN';
+    if (key === 'ArrowLeft') return 'LEFT';
+    if (key === 'ArrowRight') return 'RIGHT';
+    return key.toUpperCase();
+}
+
+// Tooltip for keybind items (appended to body, same cleanup as recipe tooltips)
+function createKeybindTooltip(element, text) {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.innerHTML = `<span class="tooltip-description">${text}</span>`;
+
+    document.body.appendChild(tooltip);
+
+    element.addEventListener('mouseenter', () => {
+        const rect = element.getBoundingClientRect();
+        tooltip.style.position = 'fixed';
+        tooltip.style.left = `${rect.right + 10}px`;
+        tooltip.style.top = `${rect.top + (rect.height / 2)}px`;
+        tooltip.style.transform = 'translateY(-50%)';
+        tooltip.style.visibility = 'visible';
+        tooltip.style.opacity = '1';
+    });
+
+    element.addEventListener('mouseleave', () => {
+        tooltip.style.visibility = 'hidden';
+        tooltip.style.opacity = '0';
+    });
+
+    return tooltip;
+}
+
+// Update a single keybind item's key display
+export function updateKeybindDisplay(action, key) {
+    const item = document.querySelector(`.keybind-item[data-action="${action}"]`);
+    if (item) {
+        const keySpan = item.querySelector('.keybind-key');
+        if (keySpan) keySpan.textContent = formatKeyDisplay(key);
+    }
+}
+
 // Show about view
 export function showAboutView() {
     // Clean up any recipe tooltips
     cleanupRecipeTooltips();
     document.getElementById('settings-view').classList.add('hidden');
     document.getElementById('recipe-book-view').classList.add('hidden');
+    document.getElementById('keybinds-view').classList.add('hidden');
     document.getElementById('about-view').classList.remove('hidden');
 }
 
@@ -274,6 +373,7 @@ export function showSettingsView() {
     cleanupRecipeTooltips();
     document.getElementById('recipe-book-view').classList.add('hidden');
     document.getElementById('about-view').classList.add('hidden');
+    document.getElementById('keybinds-view').classList.add('hidden');
     document.getElementById('settings-view').classList.remove('hidden');
 }
 

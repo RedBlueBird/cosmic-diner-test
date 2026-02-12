@@ -85,24 +85,38 @@ function createMultiTooltip(element, tooltipConfigs) {
     return container;
 }
 
-// Initialize tooltips for all buttons
-export function initApplianceTooltips() {
-    const buttons = [
-        // Appliance buttons
-        { id: 'btn-fridge', text: 'Withdraw an ingredient from your stock to Countertop', key: 'Q' },
-        { id: 'btn-pan', text: 'Combine two ingredients into a new dish', key: 'W' },
-        { id: 'btn-board', text: 'Break down a dish into its base ingredients', key: 'E' },
-        { id: 'btn-amp', text: 'Amplify an ingredient into a different variant', key: 'R' },
-        { id: 'btn-micro', text: 'Mutate an ingredient with unpredictable results', key: 'T' },
-        { id: 'btn-trash', text: 'Discard selected items from the countertop', key: 'Y' },
-        // Action buttons
-        { id: 'btn-taste', text: 'Analyze a dish\'s properties, costs 10 sanity', key: 'Z' },
-        { id: 'btn-serve', text: 'Serve the prepared dish to the customer', key: 'X' }
-    ];
+// Appliance/action button tooltip definitions (text + action name for key lookup)
+const APPLIANCE_TOOLTIPS = [
+    { id: 'btn-fridge', text: 'Withdraw an ingredient from your stock to Countertop', action: 'fridge' },
+    { id: 'btn-pan', text: 'Combine two ingredients into a new dish', action: 'pan' },
+    { id: 'btn-board', text: 'Break down a dish into its base ingredients', action: 'board' },
+    { id: 'btn-amp', text: 'Amplify an ingredient into a different variant', action: 'amp' },
+    { id: 'btn-micro', text: 'Mutate an ingredient with unpredictable results', action: 'microwave' },
+    { id: 'btn-trash', text: 'Discard selected items from the countertop', action: 'trash' },
+    { id: 'btn-taste', text: 'Analyze a dish\'s properties, costs 10 sanity', action: 'tasteTest' },
+    { id: 'btn-serve', text: 'Serve the prepared dish to the customer', action: 'serve' }
+];
 
-    buttons.forEach(({ id, text, key }) => {
+// Default key fallbacks (used on initial load before keybindManager exists)
+const DEFAULT_KEYS = {
+    fridge: 'Q', pan: 'W', board: 'E', amp: 'R', microwave: 'T', trash: 'Y',
+    tasteTest: 'Z', serve: 'X', deselectAll: '0'
+};
+
+// Remove existing tooltip children from an element
+function clearTooltips(element) {
+    const tooltips = element.querySelectorAll('.tooltip, .tooltip-container');
+    tooltips.forEach(t => t.remove());
+}
+
+// Initialize tooltips for all buttons
+export function initApplianceTooltips(keybindManager) {
+    const getKey = (action) => keybindManager ? keybindManager.getKeyForAction(action) : DEFAULT_KEYS[action];
+
+    APPLIANCE_TOOLTIPS.forEach(({ id, text, action }) => {
         const button = document.getElementById(id);
         if (button) {
+            const key = getKey(action);
             createTooltip(button, `${text}\n\n(Left-Click or ${key} to use)`);
         }
     });
@@ -110,12 +124,32 @@ export function initApplianceTooltips() {
     // Deselect All button
     const deselectBtn = document.getElementById('btn-deselect');
     if (deselectBtn) {
-        createTooltip(deselectBtn, '(Left-Click or 0 to use)');
+        const key = getKey('deselectAll');
+        createTooltip(deselectBtn, `(Left-Click or ${key} to use)`);
     }
 
     // Feedback button with title and description
     const feedbackBtn = document.getElementById('feedback-btn');
     if (feedbackBtn) {
         createTooltip(feedbackBtn, 'Give Cosmic Diner Game Feedback \n\n(Opens a Google Form)');
+    }
+}
+
+// Refresh appliance tooltips with current keybindings (called after rebind)
+export function refreshApplianceTooltips(keybindManager) {
+    APPLIANCE_TOOLTIPS.forEach(({ id, text, action }) => {
+        const button = document.getElementById(id);
+        if (button) {
+            clearTooltips(button);
+            const key = keybindManager.getKeyForAction(action);
+            createTooltip(button, `${text}\n\n(Left-Click or ${key} to use)`);
+        }
+    });
+
+    const deselectBtn = document.getElementById('btn-deselect');
+    if (deselectBtn) {
+        clearTooltips(deselectBtn);
+        const key = keybindManager.getKeyForAction('deselectAll');
+        createTooltip(deselectBtn, `(Left-Click or ${key} to use)`);
     }
 }

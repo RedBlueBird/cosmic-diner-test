@@ -216,6 +216,16 @@ export class Game {
             onShowSettings: () => window.showSettings(),
             onHideSettings: () => window.hideSettings(),
             onShowSettingsView: () => window.showSettingsView(),
+            onKeybindChanged: (action, swappedAction) => {
+                // Update the keybind display items directly
+                UI.updateKeybindDisplay(action, this.keybinds.getKeyForAction(action));
+                if (swappedAction) {
+                    UI.updateKeybindDisplay(swappedAction, this.keybinds.getKeyForAction(swappedAction));
+                }
+                // Refresh appliance tooltips and re-render for consumable keys
+                UI.refreshApplianceTooltips(this.keybinds);
+                this.render();
+            },
         });
     }
 
@@ -450,6 +460,13 @@ export class Game {
             activeArtifacts: this.activeArtifacts,
             consumableInventory: this.consumableInventory,
             selectedConsumable: this.selectedConsumable,
+            consumableSlotKeys: [
+                this.keybinds.getKeyForAction('consumable1'),
+                this.keybinds.getKeyForAction('consumable2'),
+                this.keybinds.getKeyForAction('consumable3'),
+                this.keybinds.getKeyForAction('consumable4'),
+                this.keybinds.getKeyForAction('consumable5'),
+            ],
             onToggleSelection: (index) => this.toggleSelection(index),
             onUseConsumable: (id) => {
                 this.selectedConsumable = id;

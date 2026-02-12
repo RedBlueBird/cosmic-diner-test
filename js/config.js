@@ -77,6 +77,33 @@ export const FEEDBACK_CATEGORIES = {
     "FLAGS": ['isBurnt', 'isRaw', 'isVegetarian', 'isVegan', 'containsGluten', 'containsBone'],
 };
 
+// Default keybindings (action -> key)
+export const DEFAULT_KEYBINDINGS = {
+    fridge: 'Q', pan: 'W', board: 'E', amp: 'R', microwave: 'T', trash: 'Y',
+    tasteTest: 'Z', serve: 'X',
+    slot1: '1', slot2: '2', slot3: '3', slot4: '4', slot5: '5',
+    slot6: '6', slot7: '7', slot8: '8', slot9: '9', deselectAll: '0',
+    consumable1: 'A', consumable2: 'S', consumable3: 'D', consumable4: 'F', consumable5: 'G',
+    settings: 'Escape',
+};
+
+// Human-readable labels for keybinding display
+export const KEYBINDING_LABELS = {
+    fridge: 'Fridge', pan: 'Pan', board: 'Board', amp: 'Amplifier',
+    microwave: 'Microwave', trash: 'Trash', tasteTest: 'Taste Test', serve: 'Serve',
+    slot1: 'Select Slot 1', slot2: 'Select Slot 2', slot3: 'Select Slot 3',
+    slot4: 'Select Slot 4', slot5: 'Select Slot 5', slot6: 'Select Slot 6',
+    slot7: 'Select Slot 7', slot8: 'Select Slot 8', slot9: 'Select Slot 9',
+    deselectAll: 'Deselect All',
+    consumable1: 'Use Consumable 1', consumable2: 'Use Consumable 2',
+    consumable3: 'Use Consumable 3', consumable4: 'Use Consumable 4',
+    consumable5: 'Use Consumable 5',
+    settings: 'Open Settings',
+};
+
+// Keys that cannot be used for rebinding
+export const BLOCKED_REBIND_KEYS = ['Control', 'Alt', 'Shift', 'Meta', 'Tab'];
+
 // Attribute descriptions for customer demand hints
 export const ATTR_DESCRIPTIONS = {
     savory: "savory",

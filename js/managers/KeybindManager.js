@@ -1,9 +1,20 @@
-// KeybindManager.js - Keyboard shortcut handling
+// KeybindManager.js - Keyboard shortcut handling with rebindable keys
+
+import { DEFAULT_KEYBINDINGS, BLOCKED_REBIND_KEYS } from '../config.js';
+import persistence from '../services/PersistenceService.js';
 
 export class KeybindManager {
     constructor(gameState, callbacks) {
         this.state = gameState;
         this.callbacks = callbacks;
+
+        // Load bindings: saved overrides merged onto defaults
+        const saved = persistence.loadKeybindings();
+        this.bindings = { ...DEFAULT_KEYBINDINGS, ...(saved || {}) };
+        this.keyMap = this.buildKeyMap();
+
+        // Rebind state (set when hovering a keybind item)
+        this.rebindTarget = null;
 
         // Fridge navigation state
         this.fridgeHighlightIndex = -1;
@@ -19,6 +30,65 @@ export class KeybindManager {
 
     destroy() {
         document.removeEventListener('keydown', this._onKeyDown);
+    }
+
+    // --- Key normalization & mapping ---
+
+    normalizeKey(key) {
+        return key.length === 1 ? key.toUpperCase() : key;
+    }
+
+    buildKeyMap() {
+        const map = {};
+        for (const [action, key] of Object.entries(this.bindings)) {
+            map[this.normalizeKey(key)] = action;
+        }
+        return map;
+    }
+
+    // --- Public API for bindings ---
+
+    getBindings() {
+        return { ...this.bindings };
+    }
+
+    getKeyForAction(action) {
+        return this.bindings[action] || null;
+    }
+
+    rebind(action, newKey) {
+        const normalized = this.normalizeKey(newKey);
+        const oldKey = this.bindings[action];
+
+        // Find conflict: another action already using this key
+        const conflictAction = this.keyMap[normalized];
+        let swapped = null;
+
+        if (conflictAction && conflictAction !== action) {
+            // Swap: give conflicting action the old key
+            this.bindings[conflictAction] = oldKey;
+            swapped = conflictAction;
+        }
+
+        this.bindings[action] = newKey.length === 1 ? newKey.toUpperCase() : newKey;
+        this.keyMap = this.buildKeyMap();
+        persistence.saveKeybindings(this.bindings);
+
+        return swapped;
+    }
+
+    resetToDefaults() {
+        this.bindings = { ...DEFAULT_KEYBINDINGS };
+        this.keyMap = this.buildKeyMap();
+        persistence.clearKeybindings();
+    }
+
+    setRebindTarget(action) {
+        this.rebindTarget = action;
+    }
+
+    clearRebindTarget() {
+        this.rebindTarget = null;
     }
 
     // --- Artifact modal context ---
@@ -41,6 +111,8 @@ export class KeybindManager {
 
         const settings = document.getElementById('settings-modal');
         if (settings && !settings.classList.contains('hidden')) {
+            const keybindsView = document.getElementById('keybinds-view');
+            if (keybindsView && !keybindsView.classList.contains('hidden')) return 'keybinds';
             const recipeBook = document.getElementById('recipe-book-view');
             if (recipeBook && !recipeBook.classList.contains('hidden')) return 'settings-sub';
             const about = document.getElementById('about-view');
@@ -130,6 +202,9 @@ export class KeybindManager {
             case 'settings-sub':
                 this.handleSettingsSub(e);
                 break;
+            case 'keybinds':
+                this.handleKeybinds(e);
+                break;
             case 'gameplay':
                 this.handleGameplay(e);
                 break;
@@ -190,10 +265,11 @@ export class KeybindManager {
     }
 
     handleArtifact(e) {
-        const num = parseInt(e.key);
-        if (num >= 1 && num <= 3 && this.artifactIds && this.artifactSelectCallback) {
-            const index = num - 1;
-            if (index < this.artifactIds.length) {
+        const normalized = this.normalizeKey(e.key);
+        const action = this.keyMap[normalized];
+        if (action && action.startsWith('slot') && this.artifactIds && this.artifactSelectCallback) {
+            const index = parseInt(action.replace('slot', '')) - 1;
+            if (index >= 0 && index < this.artifactIds.length) {
                 e.preventDefault();
                 this.artifactSelectCallback(this.artifactIds[index]);
             }
@@ -214,60 +290,48 @@ export class KeybindManager {
         }
     }
 
-    handleGameplay(e) {
-        const key = e.key;
-
-        // Number keys 1-9: toggle countertop selection
-        const num = parseInt(key);
-        if (num >= 1 && num <= 9) {
+    handleKeybinds(e) {
+        // If hovering a keybind item and pressing a non-blocked key, rebind it
+        if (this.rebindTarget && !BLOCKED_REBIND_KEYS.includes(e.key)) {
             e.preventDefault();
-            this.callbacks.onToggleSelection(num - 1);
+            const swapped = this.rebind(this.rebindTarget, e.key);
+            if (this.callbacks.onKeybindChanged) {
+                this.callbacks.onKeybindChanged(this.rebindTarget, swapped);
+            }
             return;
         }
 
-        // 0: deselect all
-        if (key === '0') {
+        // Escape goes back to settings view
+        if (e.key === 'Escape') {
             e.preventDefault();
+            this.callbacks.onShowSettingsView();
+        }
+    }
+
+    handleGameplay(e) {
+        const normalized = this.normalizeKey(e.key);
+        const action = this.keyMap[normalized];
+
+        if (!action) return;
+
+        e.preventDefault();
+
+        // Countertop slot selection (slot1-slot9)
+        if (action.startsWith('slot')) {
+            const index = parseInt(action.replace('slot', '')) - 1;
+            this.callbacks.onToggleSelection(index);
+            return;
+        }
+
+        // Deselect all
+        if (action === 'deselectAll') {
             this.callbacks.onClearSelection();
             return;
         }
 
-        const upper = key.toUpperCase();
-
-        // Appliances
-        switch (upper) {
-            case 'Q':
-                e.preventDefault();
-                this.resetFridgeHighlight();
-                this.callbacks.onUseFridge();
-                return;
-            case 'W':
-                e.preventDefault();
-                this.callbacks.onUsePan();
-                return;
-            case 'E':
-                e.preventDefault();
-                this.callbacks.onUseBoard();
-                return;
-            case 'R':
-                e.preventDefault();
-                this.callbacks.onUseAmp();
-                return;
-            case 'T':
-                e.preventDefault();
-                this.callbacks.onUseMicrowave();
-                return;
-            case 'Y':
-                e.preventDefault();
-                this.callbacks.onUseTrash();
-                return;
-        }
-
-        // Consumable slots A-G (5 slots)
-        const consumableKeys = ['A', 'S', 'D', 'F', 'G'];
-        const slotIndex = consumableKeys.indexOf(upper);
-        if (slotIndex !== -1) {
-            e.preventDefault();
+        // Consumable slots (consumable1-consumable5)
+        if (action.startsWith('consumable')) {
+            const slotIndex = parseInt(action.replace('consumable', '')) - 1;
             const id = this.getConsumableIdBySlot(slotIndex);
             if (!id) return;
             if (e.shiftKey) {
@@ -278,23 +342,36 @@ export class KeybindManager {
             return;
         }
 
-        // Actions
-        switch (upper) {
-            case 'Z':
-                e.preventDefault();
+        // Appliances and actions
+        switch (action) {
+            case 'fridge':
+                this.resetFridgeHighlight();
+                this.callbacks.onUseFridge();
+                return;
+            case 'pan':
+                this.callbacks.onUsePan();
+                return;
+            case 'board':
+                this.callbacks.onUseBoard();
+                return;
+            case 'amp':
+                this.callbacks.onUseAmp();
+                return;
+            case 'microwave':
+                this.callbacks.onUseMicrowave();
+                return;
+            case 'trash':
+                this.callbacks.onUseTrash();
+                return;
+            case 'tasteTest':
                 this.callbacks.onTasteTest();
                 return;
-            case 'X':
-                e.preventDefault();
+            case 'serve':
                 this.callbacks.onServeCustomer();
                 return;
-        }
-
-        // Escape: open settings
-        if (key === 'Escape') {
-            e.preventDefault();
-            this.callbacks.onShowSettings();
-            return;
+            case 'settings':
+                this.callbacks.onShowSettings();
+                return;
         }
     }
 }

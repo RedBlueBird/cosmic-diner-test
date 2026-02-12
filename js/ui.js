@@ -22,7 +22,8 @@ export {
 // Re-export from ui/tooltips.js
 export {
     createTooltip,
-    initApplianceTooltips
+    initApplianceTooltips,
+    refreshApplianceTooltips
 } from './ui/tooltips.js';
 
 // Re-export from ui/modals.js
@@ -35,5 +36,7 @@ export {
     showVictory,
     hideModal,
     showRecipeBookView,
+    showKeybindsView,
+    updateKeybindDisplay,
     showSettingsView
 } from './ui/modals.js';

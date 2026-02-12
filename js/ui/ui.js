@@ -288,7 +288,7 @@ export function updateConsumablesDisplay(inventory, gameState) {
         return;
     }
 
-    const slotKeys = ['A', 'S', 'D', 'F', 'G'];
+    const slotKeys = gameState.consumableSlotKeys || ['A', 'S', 'D', 'F', 'G'];
 
     consumableIds.forEach((id, index) => {
         const consumable = getConsumableById(id);

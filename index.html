@@ -170,6 +170,7 @@
             <div class="settings-content">
                 <button class="recipe-book-btn btn" onclick="showAboutView()">WHAT IS THIS?</button>
                 <button class="recipe-book-btn btn" onclick="showRecipeBookView()">RECIPES BOOK</button>
+                <button class="recipe-book-btn btn" onclick="showKeybindsView()">KEYBINDS</button>
                 <button class="github-btn btn" onclick="window.open('https://github.com/RedBlueBird/cosmic-diner-test', '_blank')">GITHUB PAGE</button>
                 <button class="recipe-book-btn btn" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdgbIcJ9WAKpupUfn_u9wrx_eZXS_xxQEdLbvE8eQz2rNU9uw/viewform', '_blank')">FEEDBACK FORM</button>
             </div>
@@ -198,6 +199,16 @@
             <div id="recipe-book-content" class="recipe-book-content">
                 <!-- Recipe list injected here -->
             </div>
+            <button class="btn exit-btn" onclick="showSettingsView()">BACK TO SETTINGS</button>
+        </div>
+
+        <!-- Keybinds View -->
+        <div id="keybinds-view" class="hidden">
+            <h2>KEYBINDS</h2>
+            <div id="keybinds-content" class="keybinds-content">
+                <!-- Keybind items injected here -->
+            </div>
+            <button class="btn exit-btn" onclick="resetKeybinds()">RESET TO DEFAULT</button>
             <button class="btn exit-btn" onclick="showSettingsView()">BACK TO SETTINGS</button>
         </div>
     </div>

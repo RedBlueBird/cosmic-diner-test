@@ -1,6 +1,6 @@
 import { loadFoodData, loadRecipes, loadFoodAttributes, loadTasteFeedback, loadCustomers, loadArtifacts, loadConsumables } from './utils.js';
 import { Game } from './core/Game.js';
-import { initApplianceTooltips, hideGameOverDisplay } from './ui.js';
+import { initApplianceTooltips, refreshApplianceTooltips, hideGameOverDisplay } from './ui.js';
 import './effects/ArtifactHandlers.js';
 
 // Global game instance (needed for HTML onclick handlers)
@@ -33,8 +33,8 @@ async function init() {
     game.initializeArtifactPool();
     game.recipeBook.loadFromPersistence();
 
-    // Initialize custom tooltips for appliance buttons
-    initApplianceTooltips();
+    // Initialize custom tooltips for appliance buttons (with keybind-aware keys)
+    initApplianceTooltips(game.keybinds);
 
     // Expose game methods to window for HTML onclick handlers
     window.game = game;
@@ -107,6 +107,24 @@ function showSettingsView() {
     });
 }
 
+// Show keybinds view
+function showKeybindsView() {
+    import('./ui/modals.js').then(module => {
+        module.showKeybindsView(game.keybinds);
+    });
+}
+
+// Reset keybinds to defaults
+function resetKeybinds() {
+    game.keybinds.resetToDefaults();
+    // Refresh the keybinds list and appliance tooltips
+    import('./ui/modals.js').then(module => {
+        module.showKeybindsView(game.keybinds);
+    });
+    refreshApplianceTooltips(game.keybinds);
+    game.render();
+}
+
 // Expose functions to window
 window.restartGame = restartGame;
 window.showSettings = showSettings;
@@ -114,6 +132,8 @@ window.hideSettings = hideSettings;
 window.showRecipeBookView = showRecipeBookView;
 window.showAboutView = showAboutView;
 window.showSettingsView = showSettingsView;
+window.showKeybindsView = showKeybindsView;
+window.resetKeybinds = resetKeybinds;
 
 // Start initialization when DOM is ready
 if (document.readyState === 'loading') {
