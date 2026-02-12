@@ -80,7 +80,7 @@ export const FEEDBACK_CATEGORIES = {
 // Default keybindings (action -> key)
 export const DEFAULT_KEYBINDINGS = {
     fridge: 'Q', pan: 'W', board: 'E', amp: 'R', microwave: 'T', trash: 'Y',
-    tasteTest: 'Z', serve: 'X',
+    tasteTest: 'Z', serve: 'X', confirm: 'C',
     slot1: '1', slot2: '2', slot3: '3', slot4: '4', slot5: '5',
     slot6: '6', slot7: '7', slot8: '8', slot9: '9', deselectAll: '0',
     consumable1: 'A', consumable2: 'S', consumable3: 'D', consumable4: 'F', consumable5: 'G',
@@ -91,6 +91,7 @@ export const DEFAULT_KEYBINDINGS = {
 export const KEYBINDING_LABELS = {
     fridge: 'Fridge', pan: 'Pan', board: 'Board', amp: 'Amplifier',
     microwave: 'Microwave', trash: 'Trash', tasteTest: 'Taste Test', serve: 'Serve',
+    confirm: 'Confirm (Collect / Leave Shop)',
     slot1: 'Select Slot 1', slot2: 'Select Slot 2', slot3: 'Select Slot 3',
     slot4: 'Select Slot 4', slot5: 'Select Slot 5', slot6: 'Select Slot 6',
     slot7: 'Select Slot 7', slot8: 'Select Slot 8', slot9: 'Select Slot 9',

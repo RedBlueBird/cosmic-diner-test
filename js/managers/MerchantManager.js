@@ -191,9 +191,30 @@ export class MerchantManager {
     }
 
     /**
+     * Buy an item by combined index (0-2 = consumables, 3-5 = foods)
+     */
+    buyItemByIndex(index) {
+        if (!this.currentStock) return;
+
+        const consumableCount = this.currentStock.consumables.length;
+        if (index < consumableCount) {
+            const item = this.currentStock.consumables[index];
+            this.buyConsumable(item.id, item.price);
+        } else {
+            const foodIndex = index - consumableCount;
+            if (foodIndex < this.currentStock.foods.length) {
+                const item = this.currentStock.foods[foodIndex];
+                this.buyFood(item.name, item.price, item.usageCost);
+            }
+        }
+    }
+
+    /**
      * Dismiss the merchant and continue the day
      */
     dismissMerchant() {
+        if (!this.currentStock) return; // Already dismissed
+
         // Keep merchant view visible with disabled button until nextCustomer() transitions
         this.callbacks.disableLeaveButton("DEPARTING...");
         this.callbacks.onLog("The Morning Merchant departs...", "merchant");

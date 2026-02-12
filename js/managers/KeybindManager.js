@@ -126,6 +126,13 @@ export class KeybindManager {
         const fridge = document.getElementById('fridge-modal');
         if (fridge && !fridge.classList.contains('hidden')) return 'fridge';
 
+        // Check for merchant shop or feedback view (sub-contexts of gameplay)
+        const merchantShop = document.getElementById('merchant-shop');
+        if (merchantShop && !merchantShop.classList.contains('hidden')) return 'merchant';
+
+        const feedbackView = document.getElementById('feedback-view');
+        if (feedbackView && !feedbackView.classList.contains('hidden')) return 'feedback';
+
         return 'gameplay';
     }
 
@@ -204,6 +211,12 @@ export class KeybindManager {
                 break;
             case 'keybinds':
                 this.handleKeybinds(e);
+                break;
+            case 'merchant':
+                this.handleMerchant(e);
+                break;
+            case 'feedback':
+                this.handleFeedback(e);
                 break;
             case 'gameplay':
                 this.handleGameplay(e);
@@ -308,11 +321,95 @@ export class KeybindManager {
         }
     }
 
+    // Helper: resolve slot action from shift+key (uses e.code for shift-safe lookup)
+    resolveShiftSlotAction(e) {
+        // First try normal key lookup (works for non-symbol keys)
+        const normalized = this.normalizeKey(e.key);
+        const action = this.keyMap[normalized];
+        if (action && action.startsWith('slot')) return action;
+
+        // Fallback: check e.code for digit keys (shift+1 produces '!' but code is 'Digit1')
+        if (e.code && e.code.startsWith('Digit')) {
+            const digit = e.code.replace('Digit', '');
+            const digitAction = this.keyMap[digit];
+            if (digitAction && digitAction.startsWith('slot')) return digitAction;
+        }
+
+        return null;
+    }
+
+    handleMerchant(e) {
+        const normalized = this.normalizeKey(e.key);
+        const action = this.keyMap[normalized];
+
+        // Confirm key = leave shop (only without shift)
+        if (!e.shiftKey && action === 'confirm') {
+            e.preventDefault();
+            this.callbacks.onDismissMerchant();
+            return;
+        }
+
+        // Shift + slot keys (1-9) = buy merchant items from combined list
+        if (e.shiftKey) {
+            const slotAction = this.resolveShiftSlotAction(e);
+            if (slotAction) {
+                const slotNum = parseInt(slotAction.replace('slot', ''));
+                if (slotNum >= 1 && slotNum <= 9) {
+                    e.preventDefault();
+                    this.callbacks.onBuyMerchantItem(slotNum - 1);
+                }
+                return;
+            }
+        }
+
+        // Settings key
+        if (action === 'settings') {
+            e.preventDefault();
+            this.callbacks.onShowSettings();
+            return;
+        }
+    }
+
+    handleFeedback(e) {
+        const normalized = this.normalizeKey(e.key);
+        const action = this.keyMap[normalized];
+
+        // Confirm key = collect payment (only without shift)
+        if (!e.shiftKey && action === 'confirm') {
+            e.preventDefault();
+            this.callbacks.onCollectPayment();
+            return;
+        }
+
+        // Shift + slot keys (1-9) = toggle payment item selection
+        if (e.shiftKey) {
+            const slotAction = this.resolveShiftSlotAction(e);
+            if (slotAction) {
+                const slotNum = parseInt(slotAction.replace('slot', ''));
+                if (slotNum >= 1 && slotNum <= 9) {
+                    e.preventDefault();
+                    this.callbacks.onTogglePaymentSelection(slotNum - 1);
+                }
+                return;
+            }
+        }
+
+        // Settings key
+        if (action === 'settings') {
+            e.preventDefault();
+            this.callbacks.onShowSettings();
+            return;
+        }
+    }
+
     handleGameplay(e) {
         const normalized = this.normalizeKey(e.key);
         const action = this.keyMap[normalized];
 
         if (!action) return;
+
+        // confirm key is only used in merchant/feedback contexts
+        if (action === 'confirm') return;
 
         e.preventDefault();
 

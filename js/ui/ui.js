@@ -3,7 +3,7 @@
 import { APPLIANCE_UNLOCK_DAYS } from '../config.js';
 import { getArtifactById, getConsumableById } from '../data/DataStore.js';
 import { getItemName, getItemModifiers } from '../utils/ItemUtils.js';
-import { createTooltip } from './tooltips.js';
+import { createTooltip, clearTooltips } from './tooltips.js';
 
 // Format modifiers object into readable description
 function formatModifiers(modifiers) {
@@ -182,7 +182,7 @@ export function updateBossDisplay(customer) {
 }
 
 // Update merchant display in right panel
-export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) {
+export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood, merchantSlotKeys = null, confirmKey = null) {
     // Update panel title
     document.getElementById('right-panel-title').textContent = 'MORNING MERCHANT';
 
@@ -208,13 +208,17 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) 
     if (leaveBtn) {
         leaveBtn.disabled = false;
         leaveBtn.textContent = '[LEAVE SHOP]';
+        // Clear old tooltips and add keybind hint
+        clearTooltips(leaveBtn);
+        const leaveHint = confirmKey ? `(Left-Click or ${confirmKey} to use)` : '(Left-Click to use)';
+        createTooltip(leaveBtn, leaveHint);
     }
 
     // Render consumables
     const consumablesDiv = document.getElementById('merchant-consumables');
     consumablesDiv.innerHTML = '';
 
-    stock.consumables.forEach(item => {
+    stock.consumables.forEach((item, index) => {
         const btn = document.createElement('button');
         btn.className = 'btn';
         btn.textContent = `${item.name} ($${item.price})`;
@@ -222,8 +226,10 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) 
         // Always allow clicking, merchant will handle insufficient funds
         btn.onclick = () => onBuyConsumable(item.id, item.price);
 
-        // Add tooltip
-        createTooltip(btn, item.name, `${item.description}\n\n(Left-Click to purchase)`);
+        // Add tooltip with keybind hint
+        const slotKey = merchantSlotKeys ? merchantSlotKeys[index] : null;
+        const keyHint = slotKey ? `(Left-Click or Shift+${slotKey} to purchase)` : '(Left-Click to purchase)';
+        createTooltip(btn, item.name, `${item.description}\n\n${keyHint}`);
 
         consumablesDiv.appendChild(btn);
     });
@@ -236,7 +242,8 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) 
     const foodsDiv = document.getElementById('merchant-foods');
     foodsDiv.innerHTML = '';
 
-    stock.foods.forEach(item => {
+    const consumableCount = stock.consumables.length;
+    stock.foods.forEach((item, index) => {
         const btn = document.createElement('button');
         btn.className = 'btn';
         btn.textContent = `${item.name} ($${item.price})`;
@@ -244,8 +251,10 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) 
         // Always allow clicking, merchant will handle insufficient funds
         btn.onclick = () => onBuyFood(item.name, item.price, item.usageCost);
 
-        // Add tooltip with usage cost information
-        const tooltipText = `One-time recipe purchase,\nthen $${item.usageCost}/use from Fridge\n\n(Left-Click to purchase)`;
+        // Add tooltip with usage cost and keybind hint
+        const slotKey = merchantSlotKeys ? merchantSlotKeys[consumableCount + index] : null;
+        const keyHint = slotKey ? `(Left-Click or Shift+${slotKey} to purchase)` : '(Left-Click to purchase)';
+        const tooltipText = `One-time recipe purchase,\nthen $${item.usageCost}/use from Fridge\n\n${keyHint}`;
         createTooltip(btn, item.name, tooltipText);
 
         foodsDiv.appendChild(btn);
@@ -320,7 +329,7 @@ export function updateConsumablesDisplay(inventory, gameState) {
 }
 
 // Show feedback display in right panel
-export function showFeedbackDisplay(feedback, onTogglePaymentSelection) {
+export function showFeedbackDisplay(feedback, onTogglePaymentSelection, paymentSlotKeys = null, confirmKey = null) {
     // Update panel title
     let titleText = 'SERVICE COMPLETE';
     if (feedback.isBossBonus) {
@@ -353,13 +362,16 @@ export function showFeedbackDisplay(feedback, onTogglePaymentSelection) {
         // Show interactive payment items
         paymentSection.classList.remove('hidden');
         bossPaymentLine.classList.add('hidden');
-        renderPaymentItems(paymentItems, [], onTogglePaymentSelection, (feedback.isBoss && !feedback.isBossBonus) ? feedback.buttonText : null);
+        renderPaymentItems(paymentItems, [], onTogglePaymentSelection, (feedback.isBoss && !feedback.isBossBonus) ? feedback.buttonText : null, paymentSlotKeys, confirmKey);
     } else {
         // No payment items (e.g. boss course with $0 payment somehow)
         paymentSection.classList.add('hidden');
         bossPaymentLine.classList.add('hidden');
 
+        clearTooltips(actionBtn);
         actionBtn.textContent = `[${feedback.buttonText}]`;
+        const keyHint = confirmKey ? `(Left-Click or ${confirmKey} to use)` : '(Left-Click to use)';
+        createTooltip(actionBtn, keyHint);
     }
 
     // Toggle views: hide customer, show feedback
@@ -369,7 +381,7 @@ export function showFeedbackDisplay(feedback, onTogglePaymentSelection) {
 
 // Render interactive payment items in feedback view
 // bossButtonText: if provided, use this fixed text for the button (boss flow)
-export function renderPaymentItems(paymentItems, selectedIndices, onToggle, bossButtonText = null) {
+export function renderPaymentItems(paymentItems, selectedIndices, onToggle, bossButtonText = null, paymentSlotKeys = null, confirmKey = null) {
     const list = document.getElementById('payment-items-list');
     list.innerHTML = '';
 
@@ -385,34 +397,39 @@ export function renderPaymentItems(paymentItems, selectedIndices, onToggle, boss
 
         div.onclick = () => onToggle(index);
 
+        // Build keybind select hint
+        const slotKey = paymentSlotKeys ? paymentSlotKeys[index] : (index + 1).toString();
+        const selectHint = `(Left-Click or Shift+${slotKey} to select)`;
+
         // Tooltip
         if (item.consumableInfo) {
             // Multi-tooltip for consumable items
             createTooltip(div, [
-                { title: `${item.consumableInfo.tipText}\n\n(Left-Click to select)` },
+                { title: `${item.consumableInfo.tipText}\n\n${selectHint}` },
                 { title: item.consumableInfo.name, description: item.consumableInfo.description }
             ]);
         } else if (item.modifiers.length > 0) {
-            const body = item.modifiers.map(m => `- ${m}`).join('\n') + '\n\n(Left-Click to select)';
+            const body = item.modifiers.map(m => `- ${m}`).join('\n') + `\n\n${selectHint}`;
             createTooltip(div, 'Modifiers', body);
         } else {
-            createTooltip(div, '(Left-Click to select)');
+            createTooltip(div, selectHint);
         }
 
         list.appendChild(div);
     });
 
-    // Update button text
+    // Update button text and tooltip
     const actionBtn = document.getElementById('feedback-action-btn');
+    clearTooltips(actionBtn);
+    const keyHint = confirmKey ? `(Left-Click or ${confirmKey} to use)` : '(Left-Click to use)';
     if (bossButtonText) {
-        // Boss flow: always show the specific boss button text
         actionBtn.textContent = `[${bossButtonText}]`;
     } else {
-        // Regular flow: SKIP PAYMENT when nothing selected and no binded items
         const hasBinded = paymentItems.some(item => item.binded);
         const hasSelection = selectedIndices.length > 0;
         actionBtn.textContent = (!hasSelection && !hasBinded) ? '[SKIP PAYMENT]' : '[COLLECT]';
     }
+    createTooltip(actionBtn, keyHint);
 }
 
 // Hide feedback display and restore customer view

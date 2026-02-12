@@ -151,7 +151,7 @@ export class Game {
             showVictory: (day, money, sanity, customersServed, bossName) => UI.showVictory(day, money, sanity, customersServed, bossName),
             showFeedbackDisplay: (feedback) => {
                 this.clearPaymentSelection();
-                UI.showFeedbackDisplay(feedback, (index) => this.togglePaymentSelection(index));
+                UI.showFeedbackDisplay(feedback, (index) => this.togglePaymentSelection(index), this.getPaymentSlotKeys(), this.keybinds.getKeyForAction('confirm'));
             },
             hideFeedbackDisplay: () => UI.hideFeedbackDisplay(),
             showCustomerView: () => UI.showCustomerView(),
@@ -184,7 +184,7 @@ export class Game {
             onNextCustomer: () => this.customers.nextCustomer(),
             grantConsumable: (id, qty) => this.consumables.grantConsumable(id, qty),
             trackMerchantPurchase: (foodName) => this.recipeBook.trackMerchantPurchase(foodName),
-            updateMerchantDisplay: (stock, money, buyCb, buyFoodCb) => UI.updateMerchantDisplay(stock, money, buyCb, buyFoodCb),
+            updateMerchantDisplay: (stock, money, buyCb, buyFoodCb) => UI.updateMerchantDisplay(stock, money, buyCb, buyFoodCb, this.getMerchantSlotKeys(), this.keybinds.getKeyForAction('confirm')),
             hideMerchantDisplay: () => UI.hideMerchantDisplay(),
             disableLeaveButton: (text) => {
                 const btn = document.getElementById('btn-leave-shop');
@@ -213,6 +213,10 @@ export class Game {
                 this.discardConsumable(id);
             },
             onCloseFridge: () => this.closeFridge(),
+            onDismissMerchant: () => this.dismissMerchant(),
+            onBuyMerchantItem: (index) => this.buyMerchantItemByIndex(index),
+            onCollectPayment: () => this.collectPayment(),
+            onTogglePaymentSelection: (index) => this.togglePaymentSelection(index),
             onShowSettings: () => window.showSettings(),
             onHideSettings: () => window.hideSettings(),
             onShowSettingsView: () => window.showSettingsView(),
@@ -374,6 +378,38 @@ export class Game {
         this.merchant.dismissMerchant();
     }
 
+    buyMerchantItemByIndex(index) {
+        this.merchant.buyItemByIndex(index);
+    }
+
+    getMerchantSlotKeys() {
+        return [
+            this.keybinds.getKeyForAction('slot1'),
+            this.keybinds.getKeyForAction('slot2'),
+            this.keybinds.getKeyForAction('slot3'),
+            this.keybinds.getKeyForAction('slot4'),
+            this.keybinds.getKeyForAction('slot5'),
+            this.keybinds.getKeyForAction('slot6'),
+            this.keybinds.getKeyForAction('slot7'),
+            this.keybinds.getKeyForAction('slot8'),
+            this.keybinds.getKeyForAction('slot9'),
+        ];
+    }
+
+    getPaymentSlotKeys() {
+        return [
+            this.keybinds.getKeyForAction('slot1'),
+            this.keybinds.getKeyForAction('slot2'),
+            this.keybinds.getKeyForAction('slot3'),
+            this.keybinds.getKeyForAction('slot4'),
+            this.keybinds.getKeyForAction('slot5'),
+            this.keybinds.getKeyForAction('slot6'),
+            this.keybinds.getKeyForAction('slot7'),
+            this.keybinds.getKeyForAction('slot8'),
+            this.keybinds.getKeyForAction('slot9'),
+        ];
+    }
+
     isMerchantActive() {
         return this.merchant.isMerchantActive();
     }
@@ -441,7 +477,7 @@ export class Game {
         const feedback = this.pendingFeedback;
         if (feedback.active && feedback.paymentItems && feedback.paymentItems.length > 0) {
             const bossButtonText = (feedback.isBoss && !feedback.isBossBonus) ? feedback.buttonText : null;
-            UI.renderPaymentItems(feedback.paymentItems, this.selectedPaymentIndices, (index) => this.togglePaymentSelection(index), bossButtonText);
+            UI.renderPaymentItems(feedback.paymentItems, this.selectedPaymentIndices, (index) => this.togglePaymentSelection(index), bossButtonText, this.getPaymentSlotKeys(), this.keybinds.getKeyForAction('confirm'));
         }
     }
 

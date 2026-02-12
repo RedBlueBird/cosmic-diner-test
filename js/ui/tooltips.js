@@ -104,7 +104,7 @@ const DEFAULT_KEYS = {
 };
 
 // Remove existing tooltip children from an element
-function clearTooltips(element) {
+export function clearTooltips(element) {
     const tooltips = element.querySelectorAll('.tooltip, .tooltip-container');
     tooltips.forEach(t => t.remove());
 }
