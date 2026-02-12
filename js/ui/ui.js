@@ -211,7 +211,10 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood, 
         // Clear old tooltips and add keybind hint
         clearTooltips(leaveBtn);
         const leaveHint = confirmKey ? `(Left-Click or ${confirmKey} to use)` : '(Left-Click to use)';
-        createTooltip(leaveBtn, leaveHint);
+        createTooltip(leaveBtn, [
+            { title: 'Leave Shop', description: 'Dismiss the merchant and continue your day' },
+            { title: leaveHint }
+        ]);
     }
 
     // Render consumables
@@ -229,7 +232,10 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood, 
         // Add tooltip with keybind hint
         const slotKey = merchantSlotKeys ? merchantSlotKeys[index] : null;
         const keyHint = slotKey ? `(Left-Click or Shift+${slotKey} to purchase)` : '(Left-Click to purchase)';
-        createTooltip(btn, item.name, `${item.description}\n\n${keyHint}`);
+        createTooltip(btn, [
+            { title: item.name, description: item.description },
+            { title: keyHint }
+        ]);
 
         consumablesDiv.appendChild(btn);
     });
@@ -254,8 +260,10 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood, 
         // Add tooltip with usage cost and keybind hint
         const slotKey = merchantSlotKeys ? merchantSlotKeys[consumableCount + index] : null;
         const keyHint = slotKey ? `(Left-Click or Shift+${slotKey} to purchase)` : '(Left-Click to purchase)';
-        const tooltipText = `One-time recipe purchase,\nthen $${item.usageCost}/use from Fridge\n\n${keyHint}`;
-        createTooltip(btn, item.name, tooltipText);
+        createTooltip(btn, [
+            { title: item.name, description: `One-time recipe purchase,\nthen $${item.usageCost}/use from Fridge` },
+            { title: keyHint }
+        ]);
 
         foodsDiv.appendChild(btn);
     });
@@ -403,14 +411,18 @@ export function renderPaymentItems(paymentItems, selectedIndices, onToggle, boss
 
         // Tooltip
         if (item.consumableInfo) {
-            // Multi-tooltip for consumable items
+            // 3 stacked tooltips for consumable items
             createTooltip(div, [
-                { title: `${item.consumableInfo.tipText}\n\n${selectHint}` },
-                { title: item.consumableInfo.name, description: item.consumableInfo.description }
+                { title: item.consumableInfo.tipText },
+                { title: item.consumableInfo.name, description: item.consumableInfo.description },
+                { title: selectHint }
             ]);
         } else if (item.modifiers.length > 0) {
-            const body = item.modifiers.map(m => `- ${m}`).join('\n') + `\n\n${selectHint}`;
-            createTooltip(div, 'Modifiers', body);
+            // 2 stacked tooltips for modifier items
+            createTooltip(div, [
+                { title: 'Modifiers', description: item.modifiers.map(m => `- ${m}`).join('\n') },
+                { title: selectHint }
+            ]);
         } else {
             createTooltip(div, selectHint);
         }

@@ -367,12 +367,14 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     z-index: 1000;
     width: 220px;
     color: #aaffaa;
-    font-size: 0.9em;
+    font-size: 0.9rem;
     box-shadow: 0 0 15px rgba(51, 255, 51, 0.4);
     pointer-events: none;
     transition: opacity 0.2s, visibility 0.2s;
     white-space: normal;
     word-wrap: break-word;
+    text-transform: none;
+    text-align: left;
 }
 
 .tooltip-name {
@@ -410,10 +412,12 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
     padding: 8px 12px;
     width: 220px;
     color: #aaffaa;
-    font-size: 0.9em;
+    font-size: 0.9rem;
     box-shadow: 0 0 15px rgba(51, 255, 51, 0.4);
     white-space: normal;
     word-wrap: break-word;
+    text-transform: none;
+    text-align: left;
 }
 
 /* Appliance Tooltip for Chef's Intuition */
