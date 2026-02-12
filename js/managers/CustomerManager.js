@@ -178,11 +178,11 @@ export class CustomerManager {
         let combinedMultiplier = paymentResult.multiplier;
         const combinedSources = [...paymentResult.reasons];
 
-        // Lucky Coin
-        if (this.state.activeEffects.luckyCoins > 0) {
+        // Golden Coin
+        if (this.state.activeEffects.goldenCoins > 0) {
             combinedMultiplier *= 2;
-            combinedSources.push("Lucky Coin");
-            this.state.activeEffects.luckyCoins--;
+            combinedSources.push("Golden Coin");
+            this.state.activeEffects.goldenCoins--;
         }
 
         // Golden Plate source

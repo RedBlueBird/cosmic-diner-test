@@ -223,7 +223,7 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) 
         btn.onclick = () => onBuyConsumable(item.id, item.price);
 
         // Add tooltip
-        createTooltip(btn, item.name, `${item.description}\n\n(Left Click to purchase)`);
+        createTooltip(btn, item.name, `${item.description}\n\n(Left-Click to purchase)`);
 
         consumablesDiv.appendChild(btn);
     });
@@ -245,7 +245,7 @@ export function updateMerchantDisplay(stock, money, onBuyConsumable, onBuyFood) 
         btn.onclick = () => onBuyFood(item.name, item.price, item.usageCost);
 
         // Add tooltip with usage cost information
-        const tooltipText = `One-time recipe purchase,\nthen $${item.usageCost}/use from Fridge\n\n(Left Click to purchase)`;
+        const tooltipText = `One-time recipe purchase,\nthen $${item.usageCost}/use from Fridge\n\n(Left-Click to purchase)`;
         createTooltip(btn, item.name, tooltipText);
 
         foodsDiv.appendChild(btn);
@@ -288,7 +288,9 @@ export function updateConsumablesDisplay(inventory, gameState) {
         return;
     }
 
-    consumableIds.forEach(id => {
+    const slotKeys = ['A', 'S', 'D', 'F', 'G'];
+
+    consumableIds.forEach((id, index) => {
         const consumable = getConsumableById(id);
         if (!consumable) return;
 
@@ -304,9 +306,14 @@ export function updateConsumablesDisplay(inventory, gameState) {
             window.game.discardConsumable(id);
         };
 
-        // Add tooltip with consumable description and discard hint
-        const tooltipText = `${consumable.description}\n\n(Right-click to discard)`;
-        createTooltip(btn, tooltipText);
+        // Add stacked tooltips: keybind hints + consumable info
+        const key = slotKeys[index] || null;
+        const useHint = key ? `(Left-Click or ${key} to use)` : '(Left-Click to use)';
+        const discardHint = key ? `(Right-Click or Shift+${key} to discard)` : '(Right-Click to discard)';
+        createTooltip(btn, [
+            { title: consumable.name, description: consumable.description },
+            { title: `${useHint}\n${discardHint}` }
+        ]);
 
         list.appendChild(btn);
     });

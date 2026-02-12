@@ -89,23 +89,29 @@ function createMultiTooltip(element, tooltipConfigs) {
 export function initApplianceTooltips() {
     const buttons = [
         // Appliance buttons
-        { id: 'btn-fridge', text: 'Withdraw an ingredient from your stock to Countertop' },
-        { id: 'btn-pan', text: 'Combine two ingredients into a new dish' },
-        { id: 'btn-board', text: 'Break down a dish into its base ingredients' },
-        { id: 'btn-amp', text: 'Amplify an ingredient into a different variant' },
-        { id: 'btn-micro', text: 'Mutate an ingredient with unpredictable results' },
-        { id: 'btn-trash', text: 'Discard selected items from the countertop' },
+        { id: 'btn-fridge', text: 'Withdraw an ingredient from your stock to Countertop', key: 'Q' },
+        { id: 'btn-pan', text: 'Combine two ingredients into a new dish', key: 'W' },
+        { id: 'btn-board', text: 'Break down a dish into its base ingredients', key: 'E' },
+        { id: 'btn-amp', text: 'Amplify an ingredient into a different variant', key: 'R' },
+        { id: 'btn-micro', text: 'Mutate an ingredient with unpredictable results', key: 'T' },
+        { id: 'btn-trash', text: 'Discard selected items from the countertop', key: 'Y' },
         // Action buttons
-        { id: 'btn-taste', text: 'Analyze a dish\'s properties (costs 10 sanity)' },
-        { id: 'btn-serve', text: 'Serve the prepared dish to the customer' }
+        { id: 'btn-taste', text: 'Analyze a dish\'s properties, costs 10 sanity', key: 'Z' },
+        { id: 'btn-serve', text: 'Serve the prepared dish to the customer', key: 'X' }
     ];
 
-    buttons.forEach(({ id, text }) => {
+    buttons.forEach(({ id, text, key }) => {
         const button = document.getElementById(id);
         if (button) {
-            createTooltip(button, text);
+            createTooltip(button, `${text}\n\n(Left-Click or ${key} to use)`);
         }
     });
+
+    // Deselect All button
+    const deselectBtn = document.getElementById('btn-deselect');
+    if (deselectBtn) {
+        createTooltip(deselectBtn, '(Left-Click or 0 to use)');
+    }
 
     // Feedback button with title and description
     const feedbackBtn = document.getElementById('feedback-btn');

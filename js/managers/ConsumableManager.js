@@ -81,7 +81,7 @@ export class ConsumableManager {
             } else if (effectType === 'sanity_restore') {
                 this.applySanityRestore(consumable);
             } else if (effectType === 'payment_multiplier') {
-                this.state.activeEffects.luckyCoins += consumable.effect.duration;
+                this.state.activeEffects.goldenCoins += consumable.effect.duration;
                 this.callbacks.onLog(`${consumable.name}: Next customer pays ${consumable.effect.value}x!`, "consumable");
             } else if (effectType === 'serve_emergency_food') {
                 this.serveEmergencyFood(consumable);

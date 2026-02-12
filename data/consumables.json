@@ -254,8 +254,8 @@
       }
     },
     {
-      "id": "lucky_coin",
-      "name": "Lucky Coin",
+      "id": "golden_coin",
+      "name": "Golden Coin",
       "description": "Next customer pays double",
       "category": "utility",
       "rarity": "uncommon",

@@ -42,6 +42,10 @@ export function showFridgeModal(ingredients, costs, money, onWithdraw) {
 
     modal.classList.remove('hidden');
     document.getElementById('fridge-backdrop').classList.remove('hidden');
+
+    // Auto-focus search input for keyboard use
+    const input = document.getElementById('fridge-search');
+    if (input) setTimeout(() => input.focus(), 50);
 }
 
 // Set up search input filtering

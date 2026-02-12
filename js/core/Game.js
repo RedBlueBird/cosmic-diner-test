@@ -12,6 +12,7 @@ import { CustomerManager } from '../managers/CustomerManager.js';
 import { DayManager } from '../managers/DayManager.js';
 import { MerchantManager } from '../managers/MerchantManager.js';
 import { RecipeBookManager } from '../managers/RecipeBookManager.js';
+import { KeybindManager } from '../managers/KeybindManager.js';
 
 export class Game {
     constructor() {
@@ -48,7 +49,7 @@ export class Game {
         // Consumables system
         this.consumableInventory = {};
         this.activeEffects = {
-            luckyCoins: 0,
+            goldenCoins: 0,
             goldenPlate: false,
             freeWithdrawals: 0
         };
@@ -98,8 +99,14 @@ export class Game {
             onLog: (msg, type) => this.log(msg, type),
             onRender: () => this.render(),
             onStartNextDay: () => this.days.startNextDay(),
-            showArtifactModal: (ids, cb) => UI.showArtifactModal(ids, cb),
-            hideArtifactModal: () => UI.hideArtifactModal()
+            showArtifactModal: (ids, cb) => {
+                UI.showArtifactModal(ids, cb);
+                this.keybinds.setArtifactModalContext(ids, cb);
+            },
+            hideArtifactModal: () => {
+                UI.hideArtifactModal();
+                this.keybinds.clearArtifactModalContext();
+            }
         });
 
         // Consumable Manager
@@ -184,6 +191,31 @@ export class Game {
                 btn.disabled = true;
                 btn.textContent = '[' + text + ']';
             }
+        });
+
+        // Keybind Manager
+        this.keybinds = new KeybindManager(state, {
+            onToggleSelection: (i) => this.toggleSelection(i),
+            onClearSelection: () => this.clearSelection(),
+            onUseFridge: () => this.useFridge(),
+            onUsePan: () => this.usePan(),
+            onUseBoard: () => this.useBoard(),
+            onUseAmp: () => this.useAmp(),
+            onUseMicrowave: () => this.useMicrowave(),
+            onUseTrash: () => this.useTrash(),
+            onTasteTest: () => this.tasteTest(),
+            onServeCustomer: () => this.serveCustomer(),
+            onUseConsumableBySlot: (id) => {
+                this.selectedConsumable = id;
+                this.useConsumable();
+            },
+            onDiscardConsumableBySlot: (id) => {
+                this.discardConsumable(id);
+            },
+            onCloseFridge: () => this.closeFridge(),
+            onShowSettings: () => window.showSettings(),
+            onHideSettings: () => window.hideSettings(),
+            onShowSettingsView: () => window.showSettingsView(),
         });
     }
 

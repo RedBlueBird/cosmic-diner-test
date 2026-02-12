@@ -55,6 +55,11 @@ function restartGame() {
     document.getElementById('fridge-modal').classList.add('hidden');
     document.getElementById('artifact-modal').classList.add('hidden');
 
+    // Destroy old keybind listener before creating new game
+    if (game && game.keybinds) {
+        game.keybinds.destroy();
+    }
+
     // Create a fresh game instance
     game = new Game();
     game.initializeArtifactPool();
