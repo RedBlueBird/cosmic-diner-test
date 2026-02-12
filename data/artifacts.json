@@ -126,20 +126,6 @@
     "effect": { "type": "low_sanity_payment_bonus", "threshold": 20, "multiplier": 2 }
   },
   {
-    "id": "cosmic_insurance",
-    "name": "Cosmic Insurance",
-    "description": "One-time: the first time you would go bankrupt, keep $0 instead. Then this artifact is spent",
-    "category": "economic",
-    "effect": { "type": "prevent_bankruptcy" }
-  },
-  {
-    "id": "sanity_check",
-    "name": "Sanity Check",
-    "description": "One-time: the first time your sanity would hit 0, keep 10 instead. Then this artifact is spent",
-    "category": "sanity",
-    "effect": { "type": "prevent_sanity_game_over", "value": 10 }
-  },
-  {
     "id": "michelin_star",
     "name": "Michelin Star",
     "description": "All customer payments are 100% extra and customer per day increased by 1",

@@ -1,7 +1,7 @@
 // Game configuration constants
 
 // Starting values
-export const STARTING_MONEY = 3000;
+export const STARTING_MONEY = 30;
 export const STARTING_SANITY = 100;
 export const STARTING_RENT = 30;
 export const STARTING_CUSTOMERS_PER_DAY = 4;

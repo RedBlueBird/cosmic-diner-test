@@ -93,13 +93,12 @@ registerHandler('modifyPanIngredientCost', 'pan_perfectionist', (context, curren
 // trashRefund — ApplianceManager
 // =============================================================================
 
-// TEMPORARILY DISABLED - The Recycler: trash refund effect
-// registerHandler('trashRefund', 'the_recycler', (context, currentRefund) => {
-//     const artifact = getArtifactById('the_recycler');
-//     const refundRate = artifact.effect.value;
-//     const itemCost = context.itemCost;
-//     return currentRefund + Math.ceil(itemCost * refundRate);
-// });
+registerHandler('trashRefund', 'the_recycler', (context, currentRefund) => {
+    const artifact = getArtifactById('the_recycler');
+    const refundRate = artifact.effect.value;
+    const itemCost = context.itemCost;
+    return currentRefund + Math.ceil(itemCost * refundRate);
+});
 
 // =============================================================================
 // modifyTasteTestCost — CustomerManager
