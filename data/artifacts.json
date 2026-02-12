@@ -1,12 +1,5 @@
 [
   {
-    "id": "the_recycler",
-    "name": "The Recycler",
-    "description": "Trashing items refunds 50% of their cost",
-    "category": "economic",
-    "effect": { "type": "trash_refund", "value": 0.5 }
-  },
-  {
     "id": "tip_jar",
     "name": "Tip Jar",
     "description": "4 and 5 star ratings pay 50% extra",
