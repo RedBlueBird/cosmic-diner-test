@@ -207,6 +207,7 @@ export class ApplianceManager {
 
     useBoard() {
         if (!this.state.isDayActive) return;
+        if (this.state.day < APPLIANCE_UNLOCK_DAYS.board) return;
         if (this.state.selectedIndices.length !== 1) {
             this.callbacks.onLog("CHOPPING BOARD requires 1 item selected.", "error");
             return;
@@ -273,6 +274,7 @@ export class ApplianceManager {
 
     useAmp() {
         if (!this.state.isDayActive) return;
+        if (this.state.day < APPLIANCE_UNLOCK_DAYS.amp) return;
         if (this.state.selectedIndices.length !== 1) {
             this.callbacks.onLog("AMPLIFIER requires 1 item.", "error");
             return;
@@ -306,6 +308,7 @@ export class ApplianceManager {
 
     useMicrowave() {
         if (!this.state.isDayActive) return;
+        if (this.state.day < APPLIANCE_UNLOCK_DAYS.micro) return;
         if (this.state.selectedIndices.length !== 1) {
             this.callbacks.onLog("MICROWAVE requires 1 item.", "error");
             return;
