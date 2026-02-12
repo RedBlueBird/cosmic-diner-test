@@ -594,7 +594,7 @@ export class CustomerManager {
                     type: "artifact",
                     value: victoryArtifactId,
                     binded: false,
-                    modifiers: [],
+                    modifiers: ["Boss Victory Bonus"],
                     artifactInfo: {
                         name: artifactData.name,
                         description: artifactData.description

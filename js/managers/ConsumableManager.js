@@ -2,7 +2,7 @@
 
 import { MAX_CONSUMABLES } from '../config.js';
 import { getConsumables, getConsumableById, getAllFoods } from '../data/DataStore.js';
-import { createItemObject, getItemName, getItemModifiers, getFoodAttributes } from '../utils/ItemUtils.js';
+import { createItemObject, getItemName, getItemModifiers, getFoodAttributes, hasTemporaryModifier } from '../utils/ItemUtils.js';
 
 export class ConsumableManager {
     constructor(gameState, callbacks) {
@@ -101,6 +101,8 @@ export class ConsumableManager {
             } else if (effectType === 'free_withdrawals') {
                 this.state.activeEffects.freeWithdrawals += consumable.effect.count;
                 this.callbacks.onLog(`${consumable.name}: Next ${consumable.effect.count} fridge uses are free!`, "consumable");
+            } else if (effectType === 'reset_items') {
+                this.resetSelectedItems(consumable);
             }
 
             // Consume the item
@@ -240,6 +242,36 @@ export class ConsumableManager {
         this.callbacks.onLog(`Wishing Well Penny: Skipped ${this.state.customer.name}!`, "consumable");
 
         this.callbacks.onAdvanceCustomer(500);
+    }
+
+    resetSelectedItems(consumable) {
+        if (this.state.selectedIndices.length === 0) {
+            this.callbacks.onLog("RESET BUTTON requires at least 1 item selected.", "error");
+            throw new Error("Need item selection");
+        }
+
+        // Sort indices descending so splicing doesn't shift remaining indices
+        const sorted = [...this.state.selectedIndices].sort((a, b) => b - a);
+
+        let refundTotal = 0;
+        const removedNames = [];
+
+        for (const idx of sorted) {
+            const item = this.state.countertop[idx];
+            const name = getItemName(item);
+            if (!hasTemporaryModifier(item)) {
+                refundTotal += this.state.ingredientCosts[name] || 0;
+            }
+            removedNames.push(name);
+            this.state.countertop.splice(idx, 1);
+        }
+
+        if (refundTotal > 0) {
+            this.state.money += refundTotal;
+        }
+
+        const nameList = removedNames.join(', ');
+        this.callbacks.onLog(`${consumable.name}: Removed ${removedNames.length} item(s) (${nameList}) and refunded $${refundTotal}.`, "consumable");
     }
 
     discardConsumable(consumableId) {

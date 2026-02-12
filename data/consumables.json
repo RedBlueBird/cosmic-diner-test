@@ -268,7 +268,7 @@
     {
       "id": "emergency_rations",
       "name": "Emergency Rations",
-      "description": "Can be served directly to customer - they pay $20 and leave satisfied",
+      "description": "Can be served directly to customer. They pay $20 and leave satisfied",
       "category": "utility",
       "rarity": "common",
       "effect": {
@@ -348,6 +348,16 @@
       "effect": {
         "type": "free_withdrawals",
         "count": 3
+      }
+    },
+    {
+      "id": "reset_button",
+      "name": "Reset Button",
+      "description": "Remove all selected countertop items and refund 100% of their fridge cost",
+      "category": "utility",
+      "rarity": "uncommon",
+      "effect": {
+        "type": "reset_items"
       }
     }
   ]

@@ -126,9 +126,9 @@ export function render(gameState) {
 
     // Visual effects based on sanity
     if (sanity < 20) {
-        document.body.style.filter = "sepia(100%) hue-rotate(300deg) blur(1.3px) saturate(200%)";
+        document.body.style.filter = "sepia(100%) hue-rotate(300deg) blur(0.8px) saturate(200%)";
     } else if (sanity < 50) {
-        document.body.style.filter = "sepia(50%) hue-rotate(300deg) blur(0.8px)";
+        document.body.style.filter = "sepia(50%) hue-rotate(300deg) blur(0.7px)";
     } else {
         document.body.style.filter = "none";
     }
@@ -418,11 +418,13 @@ export function renderPaymentItems(paymentItems, selectedIndices, onToggle, boss
                 { title: selectHint }
             ]);
         } else if (item.artifactInfo) {
-            // 3 stacked tooltips for artifact items
-            createTooltip(div, [
-                { title: item.artifactInfo.name, description: item.artifactInfo.description },
-                { title: selectHint }
-            ]);
+            const tooltips = [];
+            if (item.modifiers.length > 0) {
+                tooltips.push({ title: 'Modifiers', description: item.modifiers.map(m => `- ${m}`).join('\n') });
+            }
+            tooltips.push({ title: item.artifactInfo.name, description: item.artifactInfo.description });
+            tooltips.push({ title: selectHint });
+            createTooltip(div, tooltips);
         } else if (item.modifiers.length > 0) {
             // 2 stacked tooltips for modifier items
             createTooltip(div, [
