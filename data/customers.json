@@ -220,7 +220,7 @@
             "name": "Alien Scout",
             "hint": "Zognar requires radioactive swimmer. Many eyes preferred.",
             "avatar": "  oOo \n \\/|\\/ \n  / \\",
-            "demand": { "radioactivity": 9, "sanity": -3, "sentience": 2 },
+            "demand": { "savory": 5, "filling": 5, "health": -2, "radioactivity": 7, "containsBone": 1, "sentience": 2},
             "idealItem": "Three-Eyed Fish",
             "spawnDay": 4
         },
