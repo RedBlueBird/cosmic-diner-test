@@ -355,7 +355,7 @@
       "name": "Reset Button",
       "description": "Remove all selected countertop items and refund 100% of their fridge cost",
       "category": "utility",
-      "rarity": "uncommon",
+      "rarity": "common",
       "effect": {
         "type": "reset_items"
       }

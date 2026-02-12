@@ -27,6 +27,7 @@ export class CustomerManager {
     }
 
     nextCustomer() {
+        this.state.customerTransitioning = false;
         if (!this.state.isDayActive) return;
         if (this.state.customer && this.state.customer.isBoss) return;
 
@@ -264,6 +265,7 @@ export class CustomerManager {
 
     serveCustomer() {
         if (!this.state.isDayActive) return;
+        if (this.state.customerTransitioning) return;
 
         // Check if merchant is active - can't serve the merchant!
         if (this.callbacks.isMerchantActive && this.callbacks.isMerchantActive()) {
@@ -564,6 +566,7 @@ export class CustomerManager {
             this.defeatBoss();
         } else {
             // Regular customer — keep feedback visible with disabled button until nextCustomer()
+            this.state.customerTransitioning = true;
             this.callbacks.disableFeedbackAction("NEXT CUSTOMER...");
             this.advanceCustomer(500);
         }

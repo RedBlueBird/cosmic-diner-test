@@ -59,6 +59,7 @@ export class Game {
 
         // Customer state
         this.customer = null;
+        this.customerTransitioning = false;  // true during 500ms delay between customers
 
         // Customer feedback pending collection
         this.pendingFeedback = {

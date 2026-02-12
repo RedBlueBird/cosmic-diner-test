@@ -93,9 +93,9 @@
   {
     "id": "meditation_master",
     "name": "Meditation Master",
-    "description": "4 and 5 star ratings restore 5 sanity",
+    "description": "4 and 5 star ratings restore 10 sanity",
     "category": "sanity",
-    "effect": { "type": "serve_sanity_bonus", "value": 5, "condition": "excellent_or_perfect" }
+    "effect": { "type": "serve_sanity_bonus", "value": 10, "condition": "excellent_or_perfect" }
   },
   {
     "id": "caffeine_addiction",
