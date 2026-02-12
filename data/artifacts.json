@@ -121,28 +121,28 @@
   {
     "id": "lucid_state",
     "name": "Lucid State",
-    "description": "While below 20 sanity, all customer payments are doubled",
+    "description": "While below 20 sanity, all customer payments are 100% extra",
     "category": "sanity",
     "effect": { "type": "low_sanity_payment_bonus", "threshold": 20, "multiplier": 2 }
   },
   {
     "id": "michelin_star",
     "name": "Michelin Star",
-    "description": "All customer payments are 100% extra and customer per day increased by 1",
+    "description": "All customer payments are 100% extra and customers per day increased by 1",
     "category": "boss",
     "effect": { "type": "payment_and_extra_customer", "multiplier": 2, "extraCustomers": 1 }
   },
   {
     "id": "extended_bazaar",
     "name": "Extended Bazaar",
-    "description": "The Morning Merchant stocks 1 extra consumable and 1 extra food each visit",
+    "description": "The Merchant stocks 1 extra consumable and 1 extra food each visit",
     "category": "merchant",
     "effect": { "type": "merchant_stock_bonus", "value": 1 }
   },
   {
     "id": "merchants_favor",
     "name": "Merchant's Favor",
-    "description": "All Morning Merchant prices are 50% cheaper",
+    "description": "All Merchant prices are 50% cheaper",
     "category": "merchant",
     "effect": { "type": "merchant_price_discount", "value": 0.5 }
   },

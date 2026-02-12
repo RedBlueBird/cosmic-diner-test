@@ -322,7 +322,7 @@
     {
       "id": "wishing_well_penny",
       "name": "Wishing Well Penny",
-      "description": "Instantly unlocks a new artifact when consumed",
+      "description": "Instantly unlocks a new random artifact when consumed",
       "category": "utility",
       "rarity": "rare",
       "effect": {
@@ -363,7 +363,7 @@
     {
       "id": "lunch_rush",
       "name": "Lunch Rush",
-      "description": "Word gets out. 2 extra customers visit today only.",
+      "description": "Word gets out. 2 extra customers visit today only",
       "category": "utility",
       "rarity": "rare",
       "effect": {
