@@ -1,13 +1,14 @@
 // PaymentService.js - Distance/payment calculations
 
 import { DISTANCE_ATTRIBUTES, PAYMENT_BASE, PAYMENT_DECAY_BASE, PAYMENT_DISTANCE_EXPONENT, SATISFACTION_THRESHOLDS } from '../config.js';
+import { getDefaultAttributes } from '../data/DataStore.js';
 
 // Calculate Euclidean distance between food attributes and customer demand
 export function calculateDistance(foodAttrs, demandVector) {
     let sumSquares = 0;
 
     for (const attr of DISTANCE_ATTRIBUTES) {
-        const foodVal = foodAttrs[attr] || 0;
+        const foodVal = foodAttrs[attr] ?? getDefaultAttributes()[attr] ?? 0;
         const demandVal = demandVector[attr];
 
         // Skip attributes not specified in demand (undefined = don't care)

@@ -4,7 +4,12 @@
             "name": "Tired Salaryman",
             "hint": "Something filling and salty... I need the energy.",
             "avatar": "   O \n  /|\\ \n  / \\",
-            "demand": { "filling": 8, "salty": 6, "savory": 7, "temperature": 7 },
+            "demand": {
+                "filling": 9,
+                "salty": 6,
+                "savory": 8,
+                "temperature": 8
+            },
             "idealItem": "Beef Bowl",
             "spawnDay": 1
         },
@@ -12,7 +17,13 @@
             "name": "Gym Bro",
             "hint": "Pure protein. Cook it. No carbs!",
             "avatar": "  _O_ \n \\/|\\/ \n  / \\",
-            "demand": { "savory": 8, "filling": 7, "chew": 7, "temperature": 8, "health": 6 },
+            "demand": {
+                "savory": 9,
+                "filling": 8,
+                "chew": 8,
+                "temperature": 8,
+                "health": 7
+            },
             "idealItem": "Steak",
             "spawnDay": 1
         },
@@ -20,7 +31,12 @@
             "name": "Sad Student",
             "hint": "Just some warm bread... cheap and simple.",
             "avatar": "   O \n  /|\\ \n  / \\",
-            "demand": { "temperature": 7, "crunch": 6, "filling": 3, "containsGluten": 1 },
+            "demand": {
+                "temperature": 7,
+                "crunch": 8,
+                "filling": 3,
+                "containsGluten": 1
+            },
             "idealItem": "Toast",
             "spawnDay": 1
         },
@@ -28,7 +44,12 @@
             "name": "Construction Worker",
             "hint": "Meat! In bread! Filling!",
             "avatar": "  =O= \n  /|\\ \n  / \\",
-            "demand": { "savory": 7, "filling": 8, "chew": 6, "containsGluten": 1 },
+            "demand": {
+                "savory": 7,
+                "filling": 8,
+                "chew": 6,
+                "containsGluten": 1
+            },
             "idealItem": "Burger",
             "spawnDay": 1
         },
@@ -36,7 +57,12 @@
             "name": "Sushi Fanatic",
             "hint": "Fresh fish and rice. Must be RAW. Cold.",
             "avatar": "   O \n  <|\\ \n  / \\",
-            "demand": { "savory": 6, "temperature": 4, "isRaw": 1, "health": 7 },
+            "demand": {
+                "savory": 6,
+                "temperature": 4,
+                "isRaw": 1,
+                "health": 7
+            },
             "idealItem": "Sushi",
             "spawnDay": 1
         },
@@ -44,7 +70,11 @@
             "name": "Health Inspector",
             "hint": "Just a glass of water. I'm... inspecting.",
             "avatar": "  [O] \n  /|\\ \n  / \\",
-            "demand": { "moisture": 10, "health": 8, "calming": 2 },
+            "demand": {
+                "moisture": 10,
+                "health": 8,
+                "calming": 2
+            },
             "idealItem": "Water",
             "spawnDay": 1
         },
@@ -52,7 +82,13 @@
             "name": "College Student",
             "hint": "Cheap noodles in hot soup with egg. Ramen vibes.",
             "avatar": "   o \n  /|\\ \n  / \\",
-            "demand": { "savory": 7, "filling": 8, "moisture": 8, "temperature": 8, "containsGluten": 1 },
+            "demand": {
+                "savory": 7,
+                "filling": 8,
+                "moisture": 8,
+                "temperature": 8,
+                "containsGluten": 1
+            },
             "idealItem": "Ramen",
             "spawnDay": 1
         },
@@ -60,7 +96,13 @@
             "name": "Italian Chef",
             "hint": "Noodles! Tomato sauce! It must be tangy and savory!",
             "avatar": "  @O@ \n  /|\\ \n  / \\",
-            "demand": { "savory": 6, "sour": 4, "filling": 7, "temperature": 8, "containsGluten": 1 },
+            "demand": {
+                "savory": 6,
+                "sour": 4,
+                "filling": 7,
+                "temperature": 8,
+                "containsGluten": 1
+            },
             "idealItem": "Pasta",
             "spawnDay": 1
         },
@@ -68,7 +110,13 @@
             "name": "Cheese Lover",
             "hint": "Creamy. Cheesy. Comforting. Maximum cheese vibes.",
             "avatar": "   O \n <|||> \n  / \\",
-            "demand": { "savory": 7, "soft": 8, "calming": 5, "grease": 5, "salty": 5 },
+            "demand": {
+                "savory": 7,
+                "soft": 8,
+                "calming": 5,
+                "grease": 5,
+                "salty": 5
+            },
             "idealItem": "Mac and Cheese",
             "spawnDay": 1
         },
@@ -76,7 +124,13 @@
             "name": "Kid",
             "hint": "Cheese and bread together! Warm and gooey!",
             "avatar": "  ^o^ \n  /|\\ \n  / \\",
-            "demand": { "savory": 6, "soft": 7, "temperature": 8, "calming": 5, "isVegetarian": 1 },
+            "demand": {
+                "savory": 6,
+                "soft": 7,
+                "temperature": 8,
+                "calming": 5,
+                "isVegetarian": 1
+            },
             "idealItem": "Grilled Cheese",
             "spawnDay": 1
         },
@@ -84,7 +138,12 @@
             "name": "American Tourist",
             "hint": "BURGER! WITH CHEESE! The American dream!",
             "avatar": "  $O$ \n  /|\\ \n  / \\",
-            "demand": { "savory": 8, "filling": 9, "grease": 5, "salty": 6 },
+            "demand": {
+                "savory": 8,
+                "filling": 9,
+                "grease": 5,
+                "salty": 6
+            },
             "idealItem": "Cheeseburger",
             "spawnDay": 1
         },
@@ -92,7 +151,13 @@
             "name": "Breakfast Person",
             "hint": "Egg on toast. Simple breakfast. Crunchy!",
             "avatar": "   O \n -/|\\ \n  / \\",
-            "demand": { "savory": 5, "crunch": 6, "filling": 5, "temperature": 7, "isVegetarian": 1 },
+            "demand": {
+                "savory": 5,
+                "crunch": 6,
+                "filling": 5,
+                "temperature": 7,
+                "isVegetarian": 1
+            },
             "idealItem": "Egg Toast",
             "spawnDay": 1
         },
@@ -100,7 +165,13 @@
             "name": "Fast Food Fan",
             "hint": "Crispy! Salty! Greasy! Fried potato sticks!",
             "avatar": "   O \n >/|< \n  / \\",
-            "demand": { "salty": 7, "crunch": 8, "grease": 7, "temperature": 7, "isVegan": 1 },
+            "demand": {
+                "salty": 7,
+                "crunch": 8,
+                "grease": 7,
+                "temperature": 7,
+                "isVegan": 1
+            },
             "idealItem": "Salted Fries",
             "spawnDay": 1
         },
@@ -108,7 +179,13 @@
             "name": "Asian Foodie",
             "hint": "Rice fried with egg. Savory and filling.",
             "avatar": "   O \n  /|\\~ \n  / \\",
-            "demand": { "savory": 7, "filling": 8, "grease": 4, "temperature": 8, "isVegetarian": 1 },
+            "demand": {
+                "savory": 7,
+                "filling": 8,
+                "grease": 4,
+                "temperature": 8,
+                "isVegetarian": 1
+            },
             "idealItem": "Egg Fried Rice",
             "spawnDay": 1
         },
@@ -116,7 +193,12 @@
             "name": "Spice Addict",
             "hint": "Sushi but make it HURT. I want SPICY fish!",
             "avatar": "  ~O~ \n  /|\\ \n  / \\",
-            "demand": { "spicy": 5, "savory": 6, "temperature": 4, "isRaw": 1 },
+            "demand": {
+                "spicy": 5,
+                "savory": 6,
+                "temperature": 4,
+                "isRaw": 1
+            },
             "idealItem": "Spicy Sushi",
             "spawnDay": 1
         },
@@ -124,7 +206,12 @@
             "name": "Coffee Addict",
             "hint": "Pure black coffee. BITTER. ENERGIZING. No milk!",
             "avatar": "  *O* \n  /|\\ \n  / \\",
-            "demand": { "bitter": 8, "energizing": 9, "temperature": 8, "isVegan": 1 },
+            "demand": {
+                "bitter": 8,
+                "energizing": 9,
+                "temperature": 8,
+                "isVegan": 1
+            },
             "idealItem": "Black Coffee",
             "spawnDay": 1
         },
@@ -132,7 +219,13 @@
             "name": "Cafe Regular",
             "hint": "Coffee with milk. Creamy, mild, not too bitter.",
             "avatar": "   O \n ~/|\\ \n  / \\",
-            "demand": { "bitter": 4, "energizing": 6, "soft": 8, "temperature": 7, "calming": 2 },
+            "demand": {
+                "bitter": 4,
+                "energizing": 6,
+                "soft": 8,
+                "temperature": 7,
+                "calming": 2
+            },
             "idealItem": "Latte",
             "spawnDay": 1
         },
@@ -140,7 +233,12 @@
             "name": "Sweet Tooth",
             "hint": "COLD. SWEET. CREAMY. Frozen dessert!",
             "avatar": "  ^O^ \n  /|\\ \n  / \\",
-            "demand": { "sweet": 9, "soft": 10, "temperature": 1, "calming": 5 },
+            "demand": {
+                "sweet": 9,
+                "soft": 10,
+                "temperature": 1,
+                "calming": 5
+            },
             "idealItem": "Ice Cream",
             "spawnDay": 1
         },
@@ -148,7 +246,11 @@
             "name": "Health Nut",
             "hint": "Fresh vegetables. Crunchy. HEALTHY. No grease!",
             "avatar": "  +O+ \n  /|\\ \n  / \\",
-            "demand": { "crunch": 7, "health": 9, "isVegan": 1, "grease": 0 },
+            "demand": {
+                "crunch": 7,
+                "health": 9,
+                "isVegan": 1
+            },
             "idealItem": "Salad",
             "spawnDay": 1
         },
@@ -156,7 +258,13 @@
             "name": "Steak Expert",
             "hint": "A proper steak with pepper. Savory. Spicy kick.",
             "avatar": "  =O= \n  /|\\ \n  / \\",
-            "demand": { "savory": 9, "spicy": 5, "filling": 8, "chew": 8, "temperature": 8 },
+            "demand": {
+                "savory": 9,
+                "spicy": 5,
+                "filling": 8,
+                "chew": 8,
+                "temperature": 8
+            },
             "idealItem": "Peppered Steak",
             "spawnDay": 1
         },
@@ -164,7 +272,13 @@
             "name": "Tea Drinker",
             "hint": "Hot tea. Calming. Herbal. Simple pleasure.",
             "avatar": "   O \n  /|\\. \n  / \\",
-            "demand": { "calming": 8, "temperature": 8, "moisture": 9, "bitter": 3, "isVegan": 1 },
+            "demand": {
+                "calming": 8,
+                "temperature": 8,
+                "moisture": 9,
+                "bitter": 3,
+                "isVegan": 1
+            },
             "idealItem": "Tea",
             "spawnDay": 1
         },
@@ -172,7 +286,13 @@
             "name": "Potato Lover",
             "hint": "A warm, fluffy baked potato. Comfort food.",
             "avatar": "   O \n  /|\\ \n  / \\",
-            "demand": { "filling": 8, "soft": 7, "temperature": 8, "isVegan": 1, "calming": 3 },
+            "demand": {
+                "filling": 8,
+                "soft": 7,
+                "temperature": 8,
+                "isVegan": 1,
+                "calming": 3
+            },
             "idealItem": "Baked Potato",
             "spawnDay": 1
         },
@@ -180,7 +300,11 @@
             "name": "Vegetarian",
             "hint": "No meat! Something filling and vegetarian!",
             "avatar": "   O \n  /|\\ \n  / \\",
-            "demand": { "filling": 6, "isVegetarian": 1, "health": 6, "savory": 5 },
+            "demand": {
+                "filling": 7,
+                "isVegetarian": 1,
+                "savory": 5
+            },
             "idealItem": "Egg Rice",
             "spawnDay": 1
         },
@@ -188,7 +312,11 @@
             "name": "Night Shift Worker",
             "hint": "I need ENERGY. Something that will keep me AWAKE.",
             "avatar": "  zOz \n  /|\\ \n  / \\",
-            "demand": { "energizing": 8, "temperature": 7, "bitter": 5 },
+            "demand": {
+                "energizing": 9,
+                "temperature": 8,
+                "bitter": 8
+            },
             "idealItem": "Black Coffee",
             "spawnDay": 1
         },
@@ -196,7 +324,12 @@
             "name": "Stressed Manager",
             "hint": "I need something CALMING. Soothing. Please.",
             "avatar": "  @O@ \n  /|\\ \n  / \\",
-            "demand": { "calming": 7, "temperature": 8, "soft": 7, "health": 5 },
+            "demand": {
+                "calming": 6,
+                "temperature": 8,
+                "soft": 10,
+                "health": 6
+            },
             "idealItem": "Hot Milk",
             "spawnDay": 1
         },
@@ -204,7 +337,11 @@
             "name": "Pyromaniac",
             "hint": "I want to eat pure HEAT. BURNING. DANGEROUS.",
             "avatar": "  ( ) \n  /|\\ \n  / \\",
-            "demand": { "temperature": 15, "spicy": 3, "fear": 2, "health": -5 },
+            "demand": {
+                "temperature": 14,
+                "spicy": 3,
+                "health": -3
+            },
             "idealItem": "Fire",
             "spawnDay": 3
         },
@@ -212,7 +349,10 @@
             "name": "Chaos Enjoyer",
             "hint": "Microwave something! Give me MUTATION! RADIOACTIVE!",
             "avatar": "  ?O? \n  /|\\ \n  / \\",
-            "demand": { "radioactivity": 8, "savory": 5, "sentience": 1 },
+            "demand": {
+                "savory": 6,
+                "sentience": 2
+            },
             "idealItem": "Mystery Meat",
             "spawnDay": 4
         },
@@ -220,7 +360,14 @@
             "name": "Alien Scout",
             "hint": "Zognar requires radioactive swimmer. Many eyes preferred.",
             "avatar": "  oOo \n \\/|\\/ \n  / \\",
-            "demand": { "savory": 5, "filling": 5, "health": -2, "radioactivity": 7, "containsBone": 1, "sentience": 2},
+            "demand": {
+                "savory": 5,
+                "filling": 5,
+                "health": -2,
+                "radioactivity": 7,
+                "containsBone": 1,
+                "sentience": 2
+            },
             "idealItem": "Three-Eyed Fish",
             "spawnDay": 4
         },
@@ -228,7 +375,9 @@
             "name": "Mad Scientist",
             "hint": "Irradiated protein! For my experiments!",
             "avatar": "  (O) \n  /|\\ \n  / \\",
-            "demand": { "radioactivity": 7, "energizing": 3, "fear": 1 },
+            "demand": {
+                "radioactivity": 8
+            },
             "idealItem": "Glowing Egg",
             "spawnDay": 4
         },
@@ -236,7 +385,11 @@
             "name": "Void Cultist",
             "hint": "I seek the emptiness. The void calls.",
             "avatar": "  .O. \n  /|\\ \n  / \\",
-            "demand": { "voidLevel": 8, "sanity": -5, "fear": 3 },
+            "demand": {
+                "voidLevel": 8,
+                "sanity": -5,
+                "fear": 3
+            },
             "idealItem": "Void",
             "spawnDay": 4
         },
@@ -244,7 +397,13 @@
             "name": "Demon",
             "hint": "MEAT. BURNING. SPICY. INFERNAL.",
             "avatar": "  >O< \n /|||\\  \n  / \\",
-            "demand": { "spicy": 12, "temperature": 14, "savory": 6, "fear": 3 },
+            "demand": {
+                "spicy": 12, 
+                "temperature": 14, 
+                "savory": 6, 
+                "fear": 3,
+                "filling": 5
+            },
             "idealItem": "Inferno Meat",
             "spawnDay": 3
         },
@@ -252,7 +411,9 @@
             "name": "Ice Elemental",
             "hint": "COLDEST. Absolute zero. Freezing pain.",
             "avatar": "  *O* \n  \\|/ \n  / \\",
-            "demand": { "temperature": -5, "fear": 4, "sanity": -3 },
+            "demand": {
+                "temperature": -5
+            },
             "idealItem": "Absolute Zero",
             "spawnDay": 3
         },
@@ -260,7 +421,11 @@
             "name": "Depression Spirit",
             "hint": "Feed me sadness. Amplified despair.",
             "avatar": "  _O_ \n  /|\\ \n  / \\",
-            "demand": { "sadness": 15, "sanity": -8, "calming": -5 },
+            "demand": {
+                "sadness": 10,
+                "sanity": -5,
+                "calming": -5
+            },
             "idealItem": "Depression",
             "spawnDay": 3
         },
@@ -268,7 +433,11 @@
             "name": "Eldritch Being",
             "hint": "THE ABYSS. INFINITE VOID. EXISTENCE ERASED.",
             "avatar": " {oOo} \n \\/|\\/ \n  / \\",
-            "demand": { "voidLevel": 15, "sanity": -15, "fear": 10 },
+            "demand": {
+                "voidLevel": 15,
+                "sanity": -10,
+                "fear": 8
+            },
             "idealItem": "The Abyss",
             "spawnDay": 4
         },
@@ -276,7 +445,11 @@
             "name": "Fire Demon",
             "hint": "Burning grease! Uncontrollable flames!",
             "avatar": " \\|O|/ \n  /|\\ \n  / \\",
-            "demand": { "temperature": 15, "grease": 10, "fear": 6 },
+            "demand": {
+                "temperature": 15,
+                "grease": 10,
+                "fear": 6
+            },
             "idealItem": "Grease Fire",
             "spawnDay": 3
         },
@@ -284,7 +457,10 @@
             "name": "Salt Miner",
             "hint": "PURE SALT. CRYSTALLIZED. MAXIMUM MINERAL.",
             "avatar": "  #O# \n  /|\\ \n  / \\",
-            "demand": { "salty": 15, "crunch": 10 },
+            "demand": {
+                "salty": 10,
+                "crunch": 8
+            },
             "idealItem": "Salt Crystal",
             "spawnDay": 3
         },
@@ -292,7 +468,11 @@
             "name": "Sugar Rush",
             "hint": "PURE SUGAR! AMPLIFIED! MAXIMUM SWEETNESS!",
             "avatar": "  @O@ \n  /|\\ \n  / \\",
-            "demand": { "sweet": 15, "energizing": 10, "crunch": 6 },
+            "demand": {
+                "sweet": 10,
+                "energizing": 7,
+                "crunch": 5
+            },
             "idealItem": "Pure Sugar",
             "spawnDay": 3
         },
@@ -300,7 +480,11 @@
             "name": "Insomniac",
             "hint": "MAXIMUM CAFFEINE. I must NEVER sleep again.",
             "avatar": "  !O! \n  /|\\ \n  / \\",
-            "demand": { "energizing": 15, "bitter": 10, "temperature": 8 },
+            "demand": {
+                "energizing": 10,
+                "bitter": 9,
+                "temperature": 9
+            },
             "idealItem": "Espresso Shot",
             "spawnDay": 3
         },
@@ -308,7 +492,11 @@
             "name": "Fear Eater",
             "hint": "I consume terror. Pure, paralyzing fear.",
             "avatar": "  XOX \n  /|\\ \n  / \\",
-            "demand": { "fear": 15, "sanity": -10, "energizing": 8 },
+            "demand": {
+                "fear": 10,
+                "sanity": -7,
+                "energizing": 5
+            },
             "idealItem": "Terror",
             "spawnDay": 3
         },
@@ -316,7 +504,11 @@
             "name": "Crispy Connoisseur",
             "hint": "CRUNCH! Maximum crispy! I want it loud!",
             "avatar": "  CCC \n  /|\\ \n  / \\",
-            "demand": { "crunch": 9, "salty": 5, "temperature": 7 },
+            "demand": {
+                "crunch": 8,
+                "salty": 7,
+                "temperature": 7
+            },
             "idealItem": "Salted Fries",
             "spawnDay": 1
         },
@@ -324,7 +516,12 @@
             "name": "Greasy Gus",
             "hint": "Oil! Grease! The more the better!",
             "avatar": "  OOO \n  /|\\ \n  / \\",
-            "demand": { "grease": 8, "savory": 6, "filling": 6, "temperature": 8 },
+            "demand": {
+                "grease": 7,
+                "savory": 7,
+                "filling": 7,
+                "temperature": 8
+            },
             "idealItem": "Fried Meat",
             "spawnDay": 1
         },
@@ -332,7 +529,10 @@
             "name": "The Bitter One",
             "hint": "Bitter. Everything must be BITTER.",
             "avatar": "  >:( \n  /|\\ \n  / \\",
-            "demand": { "bitter": 9, "sweet": 0, "energizing": 6 },
+            "demand": {
+                "bitter": 8,
+                "energizing": 9
+            },
             "idealItem": "Black Coffee",
             "spawnDay": 1
         },
@@ -340,7 +540,10 @@
             "name": "Sentient Seeker",
             "hint": "I want food that THINKS. That KNOWS.",
             "avatar": "  ??? \n  /|\\ \n  / \\",
-            "demand": { "sentience": 8, "sanity": -4, "fear": 3 },
+            "demand": {
+                "sentience": 8,
+                "fear": 4
+            },
             "idealItem": "Sentient Cheese",
             "spawnDay": 4
         }
@@ -357,19 +560,37 @@
                 {
                     "name": "Appetizer",
                     "hint": "A PROPER salad! Fresh, crunchy, with oil dressing. HEALTHY!",
-                    "demand": { "crunch": 6, "sour": 4, "grease": 4, "health": 8, "isVegan": 1 },
+                    "demand": {
+                        "crunch": 6,
+                        "sour": 4,
+                        "grease": 4,
+                        "health": 8,
+                        "isVegan": 1
+                    },
                     "maxDistance": 8
                 },
                 {
                     "name": "Main Course",
                     "hint": "The ULTIMATE beef bowl! Savory, filling, with EGG! PERFECTION!",
-                    "demand": { "savory": 9, "salty": 6, "filling": 10, "temperature": 8, "calming": 4 },
+                    "demand": {
+                        "savory": 9,
+                        "salty": 6,
+                        "filling": 10,
+                        "temperature": 8,
+                        "calming": 4
+                    },
                     "maxDistance": 8
                 },
                 {
                     "name": "Dessert",
                     "hint": "A chocolate shake! COLD. SWEET. CREAMY. ICE COLD!",
-                    "demand": { "sweet": 9, "soft": 10, "moisture": 8, "temperature": 1, "calming": 4 },
+                    "demand": {
+                        "sweet": 9,
+                        "soft": 10,
+                        "moisture": 8,
+                        "temperature": 1,
+                        "calming": 4
+                    },
                     "maxDistance": 8
                 }
             ]

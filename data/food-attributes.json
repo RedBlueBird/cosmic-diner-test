@@ -4718,6 +4718,10 @@
       "health": 2
     },
     "Inferno Meat": {
+      "spicy": 12, 
+      "temperature": 14, 
+      "savory": 6, 
+      "fear": 3,
       "filling": 5
     },
     "Irradiated Egg": {
