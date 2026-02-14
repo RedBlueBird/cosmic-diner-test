@@ -30,15 +30,15 @@ export class OverseerManager {
                 type: "money", value: 30, culled: true, modifiers: [culledMod]
             });
             offerings.push({
-                label: "2 Uncommon Consumables",
+                label: "2 Consumables",
                 type: "consumable_grant", value: { rarity: "uncommon", count: 2 }, culled: true, modifiers: [culledMod]
             });
             offerings.push({
-                label: "Artifact (-$20)", description: `Lose $${OVERSEER_MONEY_PENALTY}. Gain a random artifact.`,
+                label: `1 Artifact (-$${OVERSEER_MONEY_PENALTY})`,
                 type: "artifact_penalty", value: OVERSEER_MONEY_PENALTY, culled: true, modifiers: [culledMod]
             });
             offerings.push({
-                label: "-50 Max Sanity, 5 Consumables", description: `Permanently lose ${OVERSEER_SANITY_REDUCTION} max sanity. Gain ${OVERSEER_BOSS_CONSUMABLE_COUNT} random consumables.`,
+                label: `${OVERSEER_BOSS_CONSUMABLE_COUNT} Consumables (-${OVERSEER_SANITY_REDUCTION} Max Sanity)`,
                 type: "sanity_penalty_consumables", value: OVERSEER_SANITY_REDUCTION, culled: true, modifiers: [culledMod]
             });
         } else if (day >= 5) {
@@ -47,11 +47,11 @@ export class OverseerManager {
                 type: "money", value: 25, culled: true, modifiers: [culledMod]
             });
             offerings.push({
-                label: "1 Common + 1 Uncommon",
+                label: "2 Consumable",
                 type: "consumable_grant", value: { mixed: true }, culled: true, modifiers: [culledMod]
             });
             offerings.push({
-                label: "Artifact (-$20)", description: `Lose $${OVERSEER_MONEY_PENALTY}. Gain a random artifact.`,
+                label: `1 Artifact (-$${OVERSEER_MONEY_PENALTY})`,
                 type: "artifact_penalty", value: OVERSEER_MONEY_PENALTY, culled: true, modifiers: [culledMod]
             });
         } else if (day >= 3) {
@@ -61,11 +61,11 @@ export class OverseerManager {
                 type: "money", value: moneyAmount, culled: true, modifiers: [culledMod]
             });
             offerings.push({
-                label: "2 Common Consumables",
+                label: "2 Consumables",
                 type: "consumable_grant", value: { rarity: "common", count: 2 }, culled: true, modifiers: [culledMod]
             });
             offerings.push({
-                label: "Artifact (-$20)", description: `Lose $${OVERSEER_MONEY_PENALTY}. Gain a random artifact.`,
+                label: `1 Artifact (-$${OVERSEER_MONEY_PENALTY})`,
                 type: "artifact_penalty", value: OVERSEER_MONEY_PENALTY, culled: true, modifiers: [culledMod]
             });
         } else if (day >= 2) {
@@ -74,7 +74,7 @@ export class OverseerManager {
                 type: "money", value: 10, culled: true, modifiers: [culledMod]
             });
             offerings.push({
-                label: "1 Common Consumable",
+                label: "1 Consumable",
                 type: "consumable_grant", value: { rarity: "common", count: 1 }, culled: true, modifiers: [culledMod]
             });
         } else {
@@ -83,7 +83,7 @@ export class OverseerManager {
                 type: "money", value: 5, culled: true, modifiers: [culledMod]
             });
             offerings.push({
-                label: "1 Common Consumable",
+                label: "1 Consumable",
                 type: "consumable_grant", value: { rarity: "common", count: 1 }, culled: true, modifiers: [culledMod]
             });
         }
@@ -98,15 +98,15 @@ export class OverseerManager {
         const { day, beatBoss } = runData;
 
         if (beatBoss) {
-            return "The space around it hums with approval that has no sound. You have earned its attention. That is rare. That is dangerous.";
+            return "The space around it hums with approval. That is rare. That is dangerous.";
         } else if (day >= 5) {
             return "It holds out its offering with the gravity of a last chance given freely.";
         } else if (day >= 4) {
-            return "Its silhouette leans forward. It presses an offering toward you with force behind it.";
+            return "Its silhouette leans forward. It presses an offering toward you.";
         } else if (day >= 3) {
-            return "It extends its offering slowly, as if giving you time to understand what you lost and what you might still become.";
+            return "It extends its offering slowly.";
         } else if (day >= 2) {
-            return "It regards you with something adjacent to recognition. It reaches into a fold of space that wasn't there a moment ago.";
+            return "It regards you with something adjacent to recognition.";
         }
         return "It tilts its head. A slow, pitying angle. It holds something out.";
     }

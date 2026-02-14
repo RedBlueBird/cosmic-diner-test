@@ -338,7 +338,7 @@
             "hint": "I want to eat pure HEAT. BURNING. DANGEROUS.",
             "avatar": "  ( ) \n  /|\\ \n  / \\",
             "demand": {
-                "temperature": 14,
+                "temperature": 12,
                 "spicy": 3,
                 "health": -3
             },

@@ -26,7 +26,7 @@
       "chew": 0
     },
     "Heat": {
-      "temperature": 12,
+      "temperature": 10,
       "spicy": 2,
       "health": -2
     },
@@ -38,6 +38,7 @@
       "containsGluten": 1
     },
     "Pepper": {
+      "temperature": 6,
       "spicy": 6,
       "bitter": 2,
       "crunch": 3,
@@ -182,6 +183,7 @@
       "temperature": 3
     },
     "Fear": {
+      "temperature": -2,
       "fear": 8,
       "sanity": -4,
       "energizing": 3,
@@ -4574,7 +4576,7 @@
       "containsGluten": 1
     },
     "Fire": {
-      "temperature": 14,
+      "temperature": 12,
       "spicy": 3,
       "health": -3,
       "isBurnt": 1
@@ -4644,6 +4646,7 @@
       "health": 2
     },
     "Ghost Pepper": {
+      "temperature": 10,
       "spicy": 13,
       "bitter": 3,
       "health": 3
@@ -5111,6 +5114,7 @@
       "health": 7
     },
     "Terror": {
+      "temperature": -4,
       "fear": 10,
       "sanity": -7,
       "energizing": 5,
