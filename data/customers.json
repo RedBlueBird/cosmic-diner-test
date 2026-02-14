@@ -434,8 +434,8 @@
             "hint": "THE ABYSS. INFINITE VOID. EXISTENCE ERASED.",
             "avatar": " {oOo} \n \\/|\\/ \n  / \\",
             "demand": {
-                "voidLevel": 15,
-                "sanity": -10,
+                "voidLevel": 10,
+                "sanity": -8,
                 "fear": 8
             },
             "idealItem": "The Abyss",

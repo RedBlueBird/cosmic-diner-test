@@ -168,8 +168,8 @@
     },
     "Void": {
       "voidLevel": 8,
-      "sanity": -5,
-      "fear": 3,
+      "sanity": -6,
+      "fear": 4,
       "health": -3,
       "temperature": 0,
       "moisture": 0,
@@ -178,7 +178,7 @@
     "Sadness": {
       "sadness": 8,
       "sanity": -3,
-      "calming": -3,
+      "calming": -4,
       "health": -1,
       "temperature": 3
     },
@@ -596,8 +596,8 @@
       "calming": 4
     },
     "The Abyss": {
-      "voidLevel": 15,
-      "sanity": -10,
+      "voidLevel": 10,
+      "sanity": -8,
       "fear": 8,
       "health": -8,
       "temperature": -5,
@@ -2536,7 +2536,8 @@
       "isVegetarian": 1
     },
     "Ice Cream Sandwich": {
-      "sweet": 4.5,
+      "sweet": 6,
+      "energizing": 6,
       "temperature": 4,
       "moisture": 3,
       "crunch": 4,
@@ -4436,7 +4437,8 @@
       "sweet": 9,
       "filling": 7,
       "soft": 7,
-      "energizing": 3
+      "energizing": 3,
+      "crunch": 4
     },
     "Chocolate Fountain": {
       "filling": 5
@@ -4635,7 +4637,11 @@
       "radioactivity": 3
     },
     "Garden Salad": {
-      "filling": 5
+      "filling": 5,
+      "crunch": 6,
+      "health": 9,
+      "isVegetarian": 1,
+      "isVegan": 1
     },
     "Gelatinous Meat": {
       "savory": 6,
@@ -4949,7 +4955,11 @@
       "isVegetarian": 1
     },
     "Pasta Bowl": {
-      "filling": 5
+      "filling": 8,
+      "savory": 6,
+      "sour": 4,
+      "temperature": 8,
+      "containsGluten": 1
     },
     "Pastry Tower": {
       "filling": 10
