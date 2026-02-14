@@ -16,7 +16,8 @@ export {
     hideFeedbackDisplay,
     hideGameOverDisplay,
     showCustomerView,
-    renderPaymentItems
+    renderPaymentItems,
+    updateOverseerDisplay
 } from './ui/ui.js';
 
 // Re-export from ui/tooltips.js

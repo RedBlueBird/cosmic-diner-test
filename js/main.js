@@ -54,6 +54,7 @@ function restartGame() {
     // Hide any open modals
     document.getElementById('fridge-modal').classList.add('hidden');
     document.getElementById('artifact-modal').classList.add('hidden');
+    document.getElementById('overseer-shop').classList.add('hidden');
 
     // Destroy old keybind listener before creating new game
     if (game && game.keybinds) {

@@ -733,3 +733,16 @@ h3 { margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
 /* Payment items in feedback view */
 .item-slot.binded { color: #ff6666; }
 .item-slot.binded.selected { background-color: #ff6666; color: #000; }
+
+/* Time Overseer Styles */
+#overseer-shop h4 {
+    margin: 8px 0 5px 0;
+    color: #ffff00;
+    font-size: 0.9em;
+    border-bottom: 1px solid #555;
+    padding-bottom: 3px;
+}
+
+/* Culled offerings (Time Overseer) */
+.item-slot.culled { color: #aaaaff; }
+.item-slot.culled.selected { background-color: #aaaaff; color: #000; }

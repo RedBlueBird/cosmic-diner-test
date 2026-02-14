@@ -467,11 +467,80 @@ export function hideGameOverDisplay() {
     document.getElementById('customer-view').classList.remove('hidden');
 }
 
-// Transition right panel to customer view from any state (feedback, merchant, gameover)
+// Update overseer display in right panel
+export function updateOverseerDisplay(offerings, selectedIndex, flavorText, onSelect, slotKeys = null, confirmKey = null) {
+    // Update panel title
+    document.getElementById('right-panel-title').textContent = 'MYSTERIOUS ENCOUNTER';
+
+    // Update avatar and name
+    const overseerAvatar = `  \\O/\n --|--\n  /|\\`;
+    document.getElementById('customer-avatar').textContent = overseerAvatar;
+    document.getElementById('customer-name').textContent = 'The Time Overseer';
+
+    // Show flavor text in the quote area, hide order line
+    const quoteParent = document.getElementById('customer-quote').parentElement;
+    quoteParent.classList.remove('hidden');
+    document.getElementById('customer-quote').textContent = flavorText;
+    document.getElementById('customer-order').parentElement.classList.add('hidden');
+
+    // Hide feedback/merchant, show customer + overseer shop
+    document.getElementById('feedback-view').classList.add('hidden');
+    document.getElementById('merchant-shop').classList.add('hidden');
+    document.getElementById('customer-view').classList.remove('hidden');
+    document.getElementById('overseer-shop').classList.remove('hidden');
+    document.getElementById('payment-items-list').innerHTML = '';
+
+    // Render offering items (item-slot divs, like payment items)
+    const offeringsDiv = document.getElementById('overseer-offerings');
+    offeringsDiv.innerHTML = '';
+
+    offerings.forEach((offering, index) => {
+        const div = document.createElement('div');
+        let className = 'item-slot';
+        if (offering.culled) className += ' culled';
+        if (selectedIndex === index) className += ' selected';
+        div.className = className;
+
+        const indicator = (offering.modifiers && offering.modifiers.length > 0) ? ' ✦' : '';
+        div.textContent = `[${index + 1}] ${offering.label}${indicator}`;
+
+        div.onclick = () => onSelect(index);
+
+        // Build tooltip: description + modifiers + keybind hint
+        const slotKey = slotKeys ? slotKeys[index] : (index + 1).toString();
+        const selectHint = `(Left-Click or Shift+${slotKey} to select)`;
+
+        const tooltipParts = [];
+        if (offering.description) {
+            tooltipParts.push({ title: offering.label, description: offering.description });
+        }
+        if (offering.modifiers && offering.modifiers.length > 0) {
+            tooltipParts.push({ title: 'Modifiers', description: offering.modifiers.map(m => `- ${m}`).join('\n') });
+        }
+        tooltipParts.push({ title: selectHint });
+        createTooltip(div, tooltipParts);
+
+        offeringsDiv.appendChild(div);
+    });
+
+    // Update action button text and tooltip
+    const actionBtn = document.getElementById('btn-overseer-action');
+    actionBtn.disabled = false;
+    clearTooltips(actionBtn);
+
+    const hasSelection = selectedIndex !== null;
+    actionBtn.textContent = hasSelection ? '[COLLECT]' : '[SKIP OFFERINGS]';
+
+    const keyHint = confirmKey ? `(Left-Click or ${confirmKey} to use)` : '(Left-Click to use)';
+    createTooltip(actionBtn, keyHint);
+}
+
+// Transition right panel to customer view from any state (feedback, merchant, gameover, overseer)
 export function showCustomerView() {
     document.getElementById('right-panel-title').textContent = 'CURRENT CUSTOMER';
     document.getElementById('feedback-view').classList.add('hidden');
     document.getElementById('merchant-shop').classList.add('hidden');
+    document.getElementById('overseer-shop').classList.add('hidden');
     document.getElementById('gameover-view').classList.add('hidden');
     document.getElementById('customer-quote').parentElement.classList.remove('hidden');
     document.getElementById('customer-order').parentElement.classList.remove('hidden');

@@ -9,9 +9,9 @@
   {
     "id": "stoics_resolve",
     "name": "Stoic's Resolve",
-    "description": "Maximum sanity increased to 150",
+    "description": "Increase max sanity by 50",
     "category": "sanity",
-    "effect": { "type": "max_sanity", "value": 150 }
+    "effect": { "type": "max_sanity", "value": 50 }
   },
   {
     "id": "expanded_countertop",

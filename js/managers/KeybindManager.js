@@ -126,7 +126,10 @@ export class KeybindManager {
         const fridge = document.getElementById('fridge-modal');
         if (fridge && !fridge.classList.contains('hidden')) return 'fridge';
 
-        // Check for merchant shop or feedback view (sub-contexts of gameplay)
+        // Check for overseer, merchant shop or feedback view (sub-contexts of gameplay)
+        const overseerShop = document.getElementById('overseer-shop');
+        if (overseerShop && !overseerShop.classList.contains('hidden')) return 'overseer';
+
         const merchantShop = document.getElementById('merchant-shop');
         if (merchantShop && !merchantShop.classList.contains('hidden')) return 'merchant';
 
@@ -211,6 +214,9 @@ export class KeybindManager {
                 break;
             case 'keybinds':
                 this.handleKeybinds(e);
+                break;
+            case 'overseer':
+                this.handleOverseer(e);
                 break;
             case 'merchant':
                 this.handleMerchant(e);
@@ -336,6 +342,34 @@ export class KeybindManager {
         }
 
         return null;
+    }
+
+    handleOverseer(e) {
+        // Confirm key = collect/skip (only without shift)
+        const normalized = this.normalizeKey(e.key);
+        const action = this.keyMap[normalized];
+
+        if (!e.shiftKey && action === 'confirm') {
+            e.preventDefault();
+            this.callbacks.onOverseerAction();
+            return;
+        }
+
+        // Shift + slot keys (1-9) = toggle offering selection
+        if (e.shiftKey) {
+            const slotAction = this.resolveShiftSlotAction(e);
+            if (slotAction) {
+                const slotNum = parseInt(slotAction.replace('slot', ''));
+                if (slotNum >= 1 && slotNum <= 9) {
+                    e.preventDefault();
+                    this.callbacks.onSelectOffering(slotNum - 1);
+                }
+                return;
+            }
+        }
+
+        // Fall through to gameplay for all other keys
+        this.handleGameplay(e);
     }
 
     handleMerchant(e) {

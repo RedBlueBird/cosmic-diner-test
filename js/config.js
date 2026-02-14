@@ -51,6 +51,12 @@ export const DEMAND_HINT_MODERATE_THRESHOLD = 3;
 // Consumable system
 export const MAX_CONSUMABLES = 5;
 
+// Overseer (meta-progression NPC)
+export const OVERSEER_MONEY_PENALTY = 20;
+export const OVERSEER_SANITY_REDUCTION = 50;
+export const OVERSEER_BOSS_CONSUMABLE_COUNT = 5;
+export const STOICS_RESOLVE_SANITY_BONUS = 50;
+
 export const APPLIANCE_UNLOCK_DAYS = {
     fridge: 1,
     pan: 1,

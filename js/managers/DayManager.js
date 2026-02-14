@@ -114,6 +114,7 @@ export class DayManager {
         this.state.isDayActive = false;
         this.callbacks.onLog(`GAME OVER: ${reason}`, "narrative");
         const totalServed = this.state.customersServedCount + (this.state.day - 1) * 3;
+        this.callbacks.onSaveRunData({ day: this.state.day, beatBoss: false });
         this.callbacks.showGameOver(reason, this.state.day, totalServed);
     }
 }

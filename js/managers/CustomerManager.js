@@ -267,6 +267,12 @@ export class CustomerManager {
         if (!this.state.isDayActive) return;
         if (this.state.customerTransitioning) return;
 
+        // Check if overseer is active - can't serve the overseer!
+        if (this.callbacks.isOverseerActive && this.callbacks.isOverseerActive()) {
+            this.callbacks.onLog("The Overseer does not require food. It requires a decision.", "error");
+            return;
+        }
+
         // Check if merchant is active - can't serve the merchant!
         if (this.callbacks.isMerchantActive && this.callbacks.isMerchantActive()) {
             this.callbacks.onLog("The merchant doesn't need serving - they're here to serve YOU!", "error");
@@ -629,6 +635,7 @@ export class CustomerManager {
     defeatBoss() {
         const bossName = this.state.customer.name;
         this.state.customersServedCount++;
+        this.callbacks.onSaveRunData({ day: this.state.day, beatBoss: true });
         this.callbacks.onRender();
 
         // Process end-of-day effects before showing victory

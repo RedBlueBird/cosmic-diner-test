@@ -20,7 +20,7 @@ export class ArtifactManager {
     }
 
     getMaxSanity() {
-        return runHook('getMaxSanity', this.state.activeArtifacts, { defaultValue: DEFAULT_MAX_SANITY });
+        return DEFAULT_MAX_SANITY + (this.state.maxSanityModifier || 0);
     }
 
     getCountertopCapacity() {

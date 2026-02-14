@@ -5,6 +5,7 @@
 
 const STORAGE_KEY = 'cosmicDiner_recipeBook';
 const KEYBINDINGS_STORAGE_KEY = 'cosmicDiner_keybindings';
+const RUN_DATA_STORAGE_KEY = 'cosmicDiner_lastRun';
 const VERSION = 1;
 const MAX_DISCOVERIES_PER_FOOD = 50; // Prevent quota issues
 
@@ -223,6 +224,32 @@ class PersistenceService {
      */
     clearKeybindings() {
         localStorage.removeItem(KEYBINDINGS_STORAGE_KEY);
+    }
+
+    /**
+     * Save run data for meta-progression (Time Overseer)
+     * @param {Object} data - { day, beatBoss }
+     */
+    saveRunData(data) {
+        try {
+            localStorage.setItem(RUN_DATA_STORAGE_KEY, JSON.stringify(data));
+        } catch (error) {
+            console.error('Error saving run data:', error);
+        }
+    }
+
+    /**
+     * Load last run data for meta-progression
+     * @returns {Object|null} { day, beatBoss } or null if no previous run
+     */
+    loadRunData() {
+        try {
+            const data = localStorage.getItem(RUN_DATA_STORAGE_KEY);
+            return data ? JSON.parse(data) : null;
+        } catch (error) {
+            console.error('Error loading run data:', error);
+            return null;
+        }
     }
 }
 

@@ -5,6 +5,7 @@ import { registerHandler } from './EffectHandlerRegistry.js';
 import { getArtifactById, getRecipeResult, getAllFoods } from '../data/DataStore.js';
 import { getItemName, createItemObject, hasTemporaryModifier } from '../utils/ItemUtils.js';
 import { isSimpleDish } from '../services/RecipeService.js';
+import { STOICS_RESOLVE_SANITY_BONUS } from '../config.js';
 
 // --- Helper ---
 
@@ -13,15 +14,6 @@ function getOrdinalSuffix(n) {
     const v = n % 100;
     return s[(v - 20) % 10] || s[v] || s[0];
 }
-
-// =============================================================================
-// getMaxSanity — ArtifactManager
-// =============================================================================
-
-registerHandler('getMaxSanity', 'stoics_resolve', (_context, currentValue) => {
-    const artifact = getArtifactById('stoics_resolve');
-    return artifact.effect.value;
-});
 
 // =============================================================================
 // getCountertopCapacity — ArtifactManager
@@ -243,6 +235,10 @@ registerHandler('startOfDay', 'morning_prep', (context) => {
 registerHandler('onArtifactAcquired', 'rent_negotiator', (context) => {
     context.state.rentFrozenUntilDay = context.state.day + 1;
     context.log("Rent increase frozen for the next day!", "artifact");
+});
+
+registerHandler('onArtifactAcquired', 'stoics_resolve', (context) => {
+    context.state.maxSanityModifier = (context.state.maxSanityModifier || 0) + STOICS_RESOLVE_SANITY_BONUS;
 });
 
 // =============================================================================

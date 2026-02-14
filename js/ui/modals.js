@@ -149,6 +149,7 @@ export function showGameOver(reason, day, customersServed) {
     document.getElementById('customer-view').classList.add('hidden');
     document.getElementById('feedback-view').classList.add('hidden');
     document.getElementById('merchant-shop').classList.add('hidden');
+    document.getElementById('overseer-shop').classList.add('hidden');
     document.getElementById('gameover-view').classList.remove('hidden');
 }
 
@@ -176,6 +177,7 @@ export function showVictory(day, money, sanity, customersServed, bossName = "THE
     document.getElementById('customer-view').classList.add('hidden');
     document.getElementById('feedback-view').classList.add('hidden');
     document.getElementById('merchant-shop').classList.add('hidden');
+    document.getElementById('overseer-shop').classList.add('hidden');
     document.getElementById('gameover-view').classList.remove('hidden');
 }
 

@@ -11,8 +11,10 @@ import { ApplianceManager } from '../managers/ApplianceManager.js';
 import { CustomerManager } from '../managers/CustomerManager.js';
 import { DayManager } from '../managers/DayManager.js';
 import { MerchantManager } from '../managers/MerchantManager.js';
+import { OverseerManager } from '../managers/OverseerManager.js';
 import { RecipeBookManager } from '../managers/RecipeBookManager.js';
 import { KeybindManager } from '../managers/KeybindManager.js';
+import persistenceService from '../services/PersistenceService.js';
 
 export class Game {
     constructor() {
@@ -47,6 +49,7 @@ export class Game {
         this.rentFrozenUntilDay = 0;
         this.cosmicInsuranceUsed = false;
         this.sanityCheckUsed = false;
+        this.maxSanityModifier = 0;
 
         // Consumables system
         this.consumableInventory = {};
@@ -87,7 +90,13 @@ export class Game {
         this.log("=== STARTING DAY 1 ===", "system");
         this.log(`Rent due at end of shift: $${this.rent}`);
 
-        this.customers.nextCustomer();
+        // Check for previous run data (Time Overseer meta-progression)
+        const lastRun = persistenceService.loadRunData();
+        if (lastRun) {
+            this.overseer.showOverseer(lastRun);
+        } else {
+            this.customers.nextCustomer();
+        }
 
         // Initialize Chef's Intuition hover
         this.artifacts.initChefIntuitionHover();
@@ -164,7 +173,9 @@ export class Game {
                 btn.textContent = '[' + text + ']';
             },
             grantConsumable: (id, qty) => this.consumables.grantConsumable(id, qty),
-            grantArtifact: (id) => this.artifacts.activateArtifact(id)
+            grantArtifact: (id) => this.artifacts.activateArtifact(id),
+            onSaveRunData: (data) => persistenceService.saveRunData(data),
+            isOverseerActive: () => this.overseer ? this.overseer.isOverseerActive() : false
         });
 
         // Day Manager
@@ -178,7 +189,8 @@ export class Game {
             showArtifactSelection: () => this.artifacts.showArtifactSelection(),
             onShowMerchant: () => this.merchant.showMerchant(),
             addToCountertop: (item, mods, silent) => this.appliances.addToCountertop(item, mods, silent),
-            showGameOver: (reason, day, totalServed) => UI.showGameOver(reason, day, totalServed)
+            showGameOver: (reason, day, totalServed) => UI.showGameOver(reason, day, totalServed),
+            onSaveRunData: (data) => persistenceService.saveRunData(data)
         });
 
         // Merchant Manager
@@ -194,6 +206,21 @@ export class Game {
                 const btn = document.getElementById('btn-leave-shop');
                 btn.disabled = true;
                 btn.textContent = '[' + text + ']';
+            }
+        });
+
+        // Overseer Manager
+        this.overseer = new OverseerManager(state, {
+            onLog: (msg, type) => this.log(msg, type),
+            onRender: () => this.render(),
+            onNextCustomer: () => this.customers.nextCustomer(),
+            grantConsumable: (id, qty) => this.consumables.grantConsumable(id, qty),
+            grantArtifact: () => this.artifacts.grantArtifactFromConsumable(),
+            getMaxSanity: () => this.artifacts.getMaxSanity(),
+            updateOverseerDisplay: (offerings, selectedIndex, flavorText, onSelect) => UI.updateOverseerDisplay(offerings, selectedIndex, flavorText, onSelect, this.getMerchantSlotKeys(), this.keybinds.getKeyForAction('confirm')),
+            disableOverseerButtons: () => {
+                const btn = document.getElementById('btn-overseer-action');
+                if (btn) { btn.disabled = true; btn.textContent = '[DEPARTING...]'; }
             }
         });
 
@@ -217,6 +244,8 @@ export class Game {
                 this.discardConsumable(id);
             },
             onCloseFridge: () => this.closeFridge(),
+            onOverseerAction: () => this.overseerAction(),
+            onSelectOffering: (index) => this.overseer.selectOffering(index),
             onDismissMerchant: () => this.dismissMerchant(),
             onBuyMerchantItem: (index) => this.buyMerchantItemByIndex(index),
             onCollectPayment: () => this.collectPayment(),
@@ -232,6 +261,14 @@ export class Game {
                 }
                 // Refresh appliance tooltips and re-render for consumable keys
                 UI.refreshApplianceTooltips(this.keybinds);
+                // Refresh overseer/merchant/feedback tooltips if active
+                if (this.overseer.isOverseerActive()) {
+                    this.overseer.refreshDisplay();
+                } else if (this.merchant.isMerchantActive()) {
+                    this.merchant.updateMerchantUI();
+                } else if (this.pendingFeedback.active) {
+                    UI.showFeedbackDisplay(this.pendingFeedback, (index) => this.togglePaymentSelection(index), this.getPaymentSlotKeys(), this.keybinds.getKeyForAction('confirm'));
+                }
                 this.render();
             },
         });
@@ -416,6 +453,14 @@ export class Game {
 
     isMerchantActive() {
         return this.merchant.isMerchantActive();
+    }
+
+    isOverseerActive() {
+        return this.overseer.isOverseerActive();
+    }
+
+    overseerAction() {
+        this.overseer.overseerAction();
     }
 
     endDay() {
