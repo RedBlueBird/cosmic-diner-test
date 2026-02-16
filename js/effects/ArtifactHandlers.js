@@ -313,13 +313,13 @@ registerHandler('preventSanityGameOver', 'sanity_check', (context, prevented) =>
 // modifyPayment — michelin_star
 // =============================================================================
 
-registerHandler('modifyPayment', 'michelin_star', (context, current) => {
-    const artifact = getArtifactById('michelin_star');
-    return {
-        multiplier: current.multiplier * artifact.effect.multiplier,
-        reasons: [...current.reasons, "Michelin Star"]
-    };
-});
+// registerHandler('modifyPayment', 'michelin_star', (context, current) => {
+//     const artifact = getArtifactById('michelin_star');
+//     return {
+//         multiplier: current.multiplier * artifact.effect.multiplier,
+//         reasons: [...current.reasons, "Michelin Star"]
+//     };
+// });
 
 // =============================================================================
 // getCustomersPerDay — michelin_star

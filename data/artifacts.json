@@ -128,9 +128,9 @@
   {
     "id": "michelin_star",
     "name": "Michelin Star",
-    "description": "All customer payments are 100% extra and customers per day increased by 1",
+    "description": "Customers per day increased by 1",
     "category": "boss",
-    "effect": { "type": "payment_and_extra_customer", "multiplier": 2, "extraCustomers": 1 }
+    "effect": { "type": "payment_and_extra_customer", "multiplier": 1, "extraCustomers": 1 }
   },
   {
     "id": "extended_bazaar",
