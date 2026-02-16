@@ -1,6 +1,6 @@
 // CustomerManager.js - Customer and serving logic
 
-import { FEEDBACK_CATEGORIES, TASTE_TEST_SANITY_COST, TERRIBLE_SERVICE_SANITY_PENALTY, POOR_SERVICE_SANITY_PENALTY, BOSS_FAILURE_SANITY_PENALTY, MAX_CONSUMABLES } from '../config.js';
+import { FEEDBACK_CATEGORIES, TASTE_TEST_SANITY_COST, TERRIBLE_SERVICE_SANITY_PENALTY, POOR_SERVICE_SANITY_PENALTY, BOSS_FAILURE_SANITY_PENALTY, MAX_CONSUMABLES, RECENT_CUSTOMER_QUEUE_SIZE } from '../config.js';
 import { getCustomerTypes, getBossForDay, getArtifactById, getConsumables } from '../data/DataStore.js';
 import { getItemName, getFoodAttributes } from '../utils/ItemUtils.js';
 import { getTasteFeedback, getDemandHints } from '../services/FeedbackService.js';
@@ -43,8 +43,14 @@ export class CustomerManager {
 
         const customerTypes = getCustomerTypes();
         const availableCustomers = customerTypes.filter(c => (c.spawnDay || 1) <= this.state.day);
-        const template = availableCustomers[Math.floor(Math.random() * availableCustomers.length)];
+        const recentNames = new Set(this.state.recentCustomers);
+        const freshCustomers = availableCustomers.filter(c => !recentNames.has(c.name));
+        const pool = freshCustomers.length > 0 ? freshCustomers : availableCustomers;
+        const template = pool[Math.floor(Math.random() * pool.length)];
         this.state.customer = { ...template };
+
+        this.state.recentCustomers.push(template.name);
+        if (this.state.recentCustomers.length > RECENT_CUSTOMER_QUEUE_SIZE) this.state.recentCustomers.shift();
 
         const orderHints = getDemandHints(this.state.customer.demand);
         this.state.customer.orderHints = orderHints;

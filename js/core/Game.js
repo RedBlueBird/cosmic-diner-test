@@ -63,6 +63,7 @@ export class Game {
         // Customer state
         this.customer = null;
         this.customerTransitioning = false;  // true during 500ms delay between customers
+        this.recentCustomers = [];           // Queue of last 3 customer names (persists across days)
 
         // Customer feedback pending collection
         this.pendingFeedback = {

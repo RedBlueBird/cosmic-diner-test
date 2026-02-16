@@ -51,6 +51,9 @@ export const DEMAND_HINT_MODERATE_THRESHOLD = 3;
 // Consumable system
 export const MAX_CONSUMABLES = 5;
 
+// Customer spawning
+export const RECENT_CUSTOMER_QUEUE_SIZE = 5;
+
 // Overseer (meta-progression NPC)
 export const OVERSEER_MONEY_PENALTY = 20;
 export const OVERSEER_SANITY_REDUCTION = 50;
